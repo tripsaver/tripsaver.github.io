@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TravelFinds — Hotels, Flights & Weekend Deals</title>
+  <meta name="description" content="TravelFinds — Compare hotels, flights, buses and weekend packages. Affiliate-ready static site for GitHub Pages." />
+  <meta name="keywords" content="hotels, travel deals, weekend trips, booking, Agoda, Booking.com, TravelPayouts" />
+  <style>
+    :root{--accent:#0077cc;--muted:#6b7280;--bg:#f6f8fb;--card:#fff;--max:1100px;--radius:12px}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;background:var(--bg);margin:0;color:#0f172a}
+    .wrap{max-width:var(--max);margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;gap:12px;justify-content:space-between}
+    .branding{display:flex;gap:12px;align-items:center}
+    .logo{font-weight:800;color:var(--accent);font-size:20px}
+    nav a{color:#0f172a;text-decoration:none;margin-left:12px;font-weight:600}
+    .search{background:#fff;padding:18px;border-radius:14px;box-shadow:0 8px 20px rgba(12,18,28,0.06);margin-top:16px}
+    .tabs{display:flex;gap:8px}
+    .tab{padding:8px 14px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+    .tab.active{background:var(--accent);color:#fff}
+    .row{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+    input,select,textarea{padding:10px;border-radius:8px;border:1px solid #e6e9ef;min-width:150px}
+    .btn{background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;border:none;cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:18px}
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 20px rgba(12,18,28,0.04)}
+    .card h4{margin:6px 0 4px}
+    .price{font-weight:700;color:var(--accent)}
+    footer{margin-top:28px;color:var(--muted);font-size:13px}
+    .small{font-size:13px;color:var(--muted)}
+    .hero{display:flex;gap:20px;align-items:center}
+    .hero img{width:220px;border-radius:12px}
+    .pill{padding:6px 10px;border-radius:999px;background:#eef6ff;color:var(--accent);font-weight:700}
+    .badge{background:#f0f7ef;color:#0b6d2b;padding:4px 8px;border-radius:8px;font-size:12px}
+    .container-card{display:flex;gap:14px;flex-wrap:wrap}
+    .content{margin-top:18px}
+    .meta{color:var(--muted);font-size:13px}
+    a.aff{color:#fff;text-decoration:none}
+    .topbar{display:flex;gap:8px;align-items:center}
+    /* responsive */
+    @media (max-width:760px){header{flex-direction:column;align-items:flex-start}.hero{flex-direction:column;align-items:flex-start}.row{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="branding">
+        <div class="logo">TravelFinds</div>
+        <div class="small">Hotels · Flights · Buses · Weekend Trips</div>
+      </div>
+      <nav id="nav">
+        <a href="#/">Home</a>
+        <a href="#/bangalore">Bangalore</a>
+        <a href="#/coorg">Coorg</a>
+        <a href="#/hotels">Hotels</a>
+        <a href="#/flights">Flights</a>
+        <a href="#/contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="app">
+      <!-- Content injected by JS router -->
+    </main>
+
+    <footer>
+      <div class="small">© TravelFinds — Affiliate template. Please add <strong>Affiliate Disclosure</strong> and <strong>Privacy Policy</strong> pages when going live.</div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple client-side router + static content (SPA). Replace card hrefs with affiliate deep-links.
+    const routes = {
+      '/': homePage,
+      '/bangalore': cityPage('Bangalore','Cozy hotels & nearby weekend stays', [
+        sampleHotel('City Center Stay (Bangalore)','Bangalore • Business Hotel','₹2,499','https://example.com/affiliate-agoda-link'),
+        sampleHotel('Bengaluru Boutique Hotel','MG Road • Boutique','₹3,199','https://example.com/affiliate-booking-link'),
+        sampleHotel('Airport Transit Hotel','Near BLR Airport','₹1,999','https://example.com/affiliate-booking-link')
+      ]),
+      '/coorg': cityPage('Coorg','Hills & Coffee estate resorts', [
+        sampleHotel('Coorg Valley Resort','Coorg • Resort','₹3,999','https://example.com/affiliate-booking-link'),
+        sampleHotel('Plantation Homestay','Near Madikeri','₹2,499','https://example.com/affiliate-agoda-link')
+      ]),
+      '/hotels': hotelsPage,
+      '/flights': flightsPage,
+      '/contact': contactPage,
+      '/disclosure': disclosurePage
+    };
+
+    function sampleHotel(title, subtitle, price, link){
+      return {title,subtitle,price,link}
+    }
+
+    function renderCard(h){
+      return `
+        <article class="card">
+          <div class="meta">${h.subtitle}</div>
+          <h4>${h.title}</h4>
+          <div class="small">4.2 • Free cancellation • Breakfast available</div>
+          <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="price">${h.price}</div>
+              <div class="small">per night</div>
+            </div>
+            <div>
+              <a class="btn" href="${h.link}" target="_blank" rel="nofollow noopener">Book</a>
+            </div>
+          </div>
+        </article>
+      `
+    }
+
+    function homePage(){
+      return `
+        <section class="search">
+          <div class="hero">
+            <div>
+              <div class="pill">Launch in Minutes</div>
+              <h1 style="margin:12px 0">Find the best hotels, flights & weekend deals</h1>
+              <p class="meta">Quick comparisons and affiliate links from Booking.com, Agoda, TravelPayouts and more.</p>
+              <div style="margin-top:12px" class="row">
+                <input id="homeFrom" placeholder="From / City" />
+                <input id="homeTo" placeholder="To / Destination" />
+                <input id="homeDate" type="date" />
+                <select id="homeGuests"><option>1 guest</option><option>2 guests</option></select>
+                <button class="btn" onclick="alert('This is a demo search. Replace with your affiliate API.')">Search</button>
+              </div>
+            </div>
+            <img src="https://images.unsplash.com/photo-1501117716987-c8e12ff2f3d3?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=6c5a3d4b2b8f1693b7f3ab0c5d0b3d2e" alt="travel" />
+          </div>
+
+          <div class="content">
+            <h3>Top Deals</h3>
+            <div class="grid">
+              ${renderCard({title:'Coorg Valley Resort',subtitle:'Coorg • Resort',price:'₹3,999',link:'https://example.com/affiliate-booking-link'})}
+              ${renderCard({title:'City Center Stay',subtitle:'Bangalore • Business Hotel',price:'₹2,499',link:'https://example.com/affiliate-agoda-link'})}
+              ${renderCard({title:'BLR → DEL Flight',subtitle:'One-way • Economy',price:'₹3,199',link:'https://example.com/affiliate-flight-link'})}
+            </div>
+          </div>
+
+          <section style="margin-top:18px" class="card">
+            <h4>Quick Setup</h4>
+            <ol class="small">
+              <li>Sign up for Booking.com, Agoda, TravelPayouts and get affiliate/deep links.</li>
+              <li>Edit this file and replace <code>https://example.com/affiliate-...</code> links with your affiliate links.</li>
+              <li>Deploy to GitHub Pages (index.html in repo root) and start promoting.</li>
+            </ol>
+          </section>
+        </section>
+      `
+    }
+
+    function cityPage(city,desc,hotels){
+      return function(){
+        return `
+          <section>
+            <div class="card">
+              <h2>${city} — ${desc}</h2>
+              <p class="meta">Handpicked hotels and weekend stays near ${city}.</p>
+            </div>
+            <div class="grid">
+              ${hotels.map(renderCard).join('
+')}
+            </div>
+            <div class="card" style="margin-top:14px">
+              <h4>Tips for ${city}</h4>
+              <ul class="small"><li>Book mid-week for lower prices.</li><li>Check cancellation policy before booking.</li></ul>
+            </div>
+          </section>
+        `
+      }
+    }
+
+    function hotelsPage(){
+      const list = [
+        sampleHotel('Luxury Beach Resort','Goa • Beachfront','₹8,999','https://example.com/affiliate-booking-link'),
+        sampleHotel('Hilltop Escape','Munnar • Resort','₹4,499','https://example.com/affiliate-agoda-link'),
+        sampleHotel('Budget Stay','Pune • Budget Hotel','₹1,299','https://example.com/affiliate-booking-link')
+      ];
+      return `
+        <section>
+          <h2>Hotels</h2>
+          <div class="grid">
+            ${list.map(renderCard).join('
+')}
+          </div>
+        </section>
+      `
+    }
+
+    function flightsPage(){
+      const flights = [
+        {title:'BLR → DEL',subtitle:'Economy • Non-stop',price:'₹3,199',link:'https://example.com/affiliate-flight-link'},
+        {title:'BLR → BOM',subtitle:'Economy • 1 stop',price:'₹2,799',link:'https://example.com/affiliate-flight-link'}
+      ];
+      return `
+        <section>
+          <h2>Flights</h2>
+          <div class="grid">
+            ${flights.map(renderCard).join('
+')}
+          </div>
+        </section>
+      `
+    }
+
+    function contactPage(){
+      return `
+        <section>
+          <h2>Contact</h2>
+          <div class="card">
+            <p class="small">For partnerships and additions, email: <strong>youremail@example.com</strong></p>
+            <form onsubmit="event.preventDefault();alert('Contact form demo — connect via email.')">
+              <div class="row"><input placeholder="Your name" required /></div>
+              <div class="row"><input type="email" placeholder="Email" required /></div>
+              <div class="row"><textarea placeholder="Message" rows="4"></textarea></div>
+              <div style="margin-top:8px"><button class="btn">Send</button></div>
+            </form>
+          </div>
+        </section>
+      `
+    }
+
+    function disclosurePage(){
+      return `
+        <section>
+          <h2>Affiliate Disclosure & Privacy</h2>
+          <div class="card small">
+            <p>Some links on TravelFinds are affiliate links. If you click and make a purchase, we may earn a commission at no extra cost to you. We only recommend products and services we trust.</p>
+            <p>Privacy: We do not store payment details. For queries, contact <strong>youremail@example.com</strong>.</p>
+          </div>
+        </section>
+      `
+    }
+
+    // Router logic
+    function mount(){
+      const path = location.hash.replace('#','') || '/';
+      const route = routes[path] || routes['/'];
+      const content = (typeof route === 'function') ? route() : '<div class="card">Page not found</div>';
+      document.getElementById('app').innerHTML = content;
+      // highlight nav
+      document.querySelectorAll('nav a').forEach(a=>{ a.style.opacity = (a.getAttribute('href')===('#'+path))? '1' : '0.7' });
+    }
+
+    window.addEventListener('hashchange', mount);
+    window.addEventListener('load', mount);
+
+    // Helpful console reminder
+    console.log('Ready: Replace example affiliate links with your Booking/Agoda/TravelPayouts links. Add index.html to repo root and enable Pages (branch main, root).');
+  </script>
+
+  <!-- Deployment notes
+       1) Create a repo named "sudc.github.io" (or any project name) and push this file as index.html at root.
+       2) Settings -> Pages -> Deploy from branch: main -> folder: / (root)
+       3) Add your affiliate deep links (Booking.com/Agoda/TravelPayouts) replacing the example.com links.
+       4) Add an Affiliate Disclosure and Privacy Policy pages (already included at #/disclosure route).
+       5) SEO: create separate static pages for city keywords for better ranking (I can generate 10 pages for you).
+  -->
+</body>
+</html>
