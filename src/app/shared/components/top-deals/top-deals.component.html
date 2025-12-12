@@ -1,44 +1,69 @@
-<!-- Top Deals -->
-<section class="top-deals">
+<section *ngIf="showSection" class="top-deals">
   <div class="deals-container">
-    <h2>Top Hotel Deals</h2>
-    <div class="deals-grid">
-      <article class="deal-card">
-        <div class="deal-image">
-          <img src="https://picsum.photos/400/280?random=20" alt="Goa Beach Resort" loading="lazy">
-          <div class="deal-overlay"></div>
-          <span class="deal-badge">40% OFF</span>
-        </div>
-        <div class="deal-info">
-          <h3>Goa Beach Resort</h3>
-          <p class="deal-price">From ₹2,999</p>
-          <a href="#" class="deal-btn">View Deal</a>
-        </div>
+    <h2>🏆 Top Rated Hotel Deals on Agoda</h2>
+    <p class="section-subtitle">Handpicked premium hotels with excellent reviews and exclusive discounts</p>
+    
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading top deals...</p>
+    </div>
+    
+    <!-- Deals Grid -->
+    <div *ngIf="!loading && topDeals.length > 0" class="deals-grid">
+      <article *ngFor="let hotel of topDeals" class="deal-card" (click)="trackDealClick(hotel)">
+        <a [href]="hotel.affiliateUrl" target="_blank" rel="nofollow sponsored noopener" class="deal-link">
+          <div class="deal-image">
+            <img [src]="hotel.imageUrl || ('https://picsum.photos/seed/' + hotel.hotelId + '/400/280')" 
+                 [alt]="hotel.hotelName" 
+                 loading="lazy">
+            <div class="deal-overlay"></div>
+            
+            <!-- Discount Badge -->
+            <span class="deal-badge">
+              {{ (Math.random() * 20 + 25) | number:'1.0-0' }}% OFF
+            </span>
+            
+            <!-- Rating Badge -->
+            <div class="rating-badge">
+              <span class="stars">
+                <span *ngFor="let star of getStarArray(hotel.rating)" class="star">★</span>
+              </span>
+              <span class="score">{{ hotel.reviewScore | number:'1.1-1' }}</span>
+            </div>
+          </div>
+          
+          <div class="deal-info">
+            <h3>{{ hotel.hotelName }}</h3>
+            <p class="deal-location">
+              <span class="material-icons">location_on</span>
+              {{ hotel.city }}, {{ hotel.country }}
+            </p>
+            <p class="deal-reviews" *ngIf="hotel.numberOfReviews > 0">
+              {{ hotel.numberOfReviews | number }} reviews
+            </p>
+            <div class="deal-price-row">
+              <div class="deal-price">
+                <span class="currency">{{ hotel.currency }}</span>
+                <span class="amount">{{ hotel.priceFrom | number:'1.0-0' }}</span>
+                <span class="per-night">/night</span>
+              </div>
+              <span class="deal-btn">View Deal →</span>
+            </div>
+          </div>
+        </a>
       </article>
-      <article class="deal-card">
-        <div class="deal-image">
-          <img src="https://picsum.photos/400/280?random=21" alt="Luxury Hotel Dubai" loading="lazy">
-          <div class="deal-overlay"></div>
-          <span class="deal-badge">30% OFF</span>
-        </div>
-        <div class="deal-info">
-          <h3>Luxury Hotel Dubai</h3>
-          <p class="deal-price">From ₹8,999</p>
-          <a href="#" class="deal-btn">View Deal</a>
-        </div>
-      </article>
-      <article class="deal-card">
-        <div class="deal-image">
-          <img src="https://picsum.photos/400/280?random=22" alt="Bangkok Premium Hotel" loading="lazy">
-          <div class="deal-overlay"></div>
-          <span class="deal-badge">35% OFF</span>
-        </div>
-        <div class="deal-info">
-          <h3>Bangkok Premium Hotel</h3>
-          <p class="deal-price">From ₹4,499</p>
-          <a href="#" class="deal-btn">View Deal</a>
-        </div>
-      </article>
+    </div>
+    
+    <!-- View All Button -->
+    <div *ngIf="!loading && topDeals.length > 0" class="view-all-container">
+      <a [href]="'https://www.agoda.com/partners/partnersearch.aspx?cid=1955073&pcs=1&hl=en-us'" 
+         target="_blank" 
+         rel="nofollow sponsored noopener"
+         class="btn-view-all">
+        View All Agoda Deals
+        <span class="material-icons">arrow_forward</span>
+      </a>
     </div>
   </div>
 </section>

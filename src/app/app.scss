@@ -51,34 +51,143 @@ header nav a {
 
 /* Styles moved to individual components for better organization */
 
-/* Shared Agoda widget styles (moved out of large component files to reduce component CSS size) */
+/* Shared Agoda widget styles - Centralized for consistency */
 .agoda-widget-section,
 .agoda-widget-hero {
-  padding: 2.5rem 1.25rem;
+  padding: 4rem 1.5rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
   overflow: hidden;
-}
 
-.agoda-widget-section .agoda-widget-wrapper,
-.agoda-widget-hero .agoda-widget-wrapper {
-  max-width: 380px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-}
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
 
-.agoda-widget-section .section-header,
-.agoda-widget-hero .section-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
+  .section-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+    z-index: 1;
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    p {
+      font-size: 1.125rem;
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 500;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .agoda-widget-wrapper {
+    max-width: 380px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    background: white;
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    padding: 2rem 1.5rem;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      border-radius: 1.25rem 1.25rem 0 0;
+    }
+
+    #adgshp-30325076 {
+      width: 100% !important;
+      max-width: 340px;
+      margin: 0 auto;
+      
+      iframe {
+        border-radius: 0.75rem;
+      }
+    }
+  }
+
+  .widget-footer-text {
+    text-align: center;
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 1;
+
+    p {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+
+      i {
+        color: #fbbf24;
+        margin-right: 0.5rem;
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {
   .agoda-widget-section,
-  .agoda-widget-hero { padding: 1.5rem 1rem; }
-  .agoda-widget-section .agoda-widget-wrapper,
-  .agoda-widget-hero .agoda-widget-wrapper { max-width: 100%; padding: 1rem; }
+  .agoda-widget-hero {
+    padding: 3rem 1rem;
+
+    .section-header h2 {
+      font-size: 2rem;
+    }
+
+    .section-header p {
+      font-size: 1rem;
+    }
+
+    .agoda-widget-wrapper {
+      max-width: 100%;
+      padding: 1.5rem 1rem;
+      min-height: 420px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .agoda-widget-section,
+  .agoda-widget-hero {
+    padding: 2.5rem 1rem;
+
+    .section-header h2 {
+      font-size: 1.75rem;
+    }
+
+    .agoda-widget-wrapper {
+      padding: 1rem;
+      min-height: 400px;
+    }
+  }
 }

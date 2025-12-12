@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AgodaDataService, Hotel } from '../../../core/services/provider-data';
+import { AgodaDataService, AgodaHotel } from '../../../core/services/agoda-data/agoda-data.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -12,15 +12,20 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./agoda-hotels.component.scss']
 })
 export class AgodaHotelsComponent implements OnInit, OnDestroy {
-  featuredHotels: Hotel[] = [];
-  loading = true;
+  featuredHotels: AgodaHotel[] = [];
+  loading = false;
   error: string | null = null;
+  showSection = false; // Only show if data source is configured
   private destroy$ = new Subject<void>();
 
   constructor(private agodaService: AgodaDataService) {}
 
   ngOnInit(): void {
-    this.loadFeaturedHotels();
+    // Only load if data source is available
+    if (this.agodaService.isDataSourceAvailable()) {
+      this.showSection = true;
+      this.loadFeaturedHotels();
+    }
   }
 
   ngOnDestroy(): void {
@@ -32,34 +37,29 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = null;
 
-    this.agodaService.loadHotelsFromCsv()
+    this.agodaService.getFeaturedHotels(12)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: () => {
-          // After CSV loads, get featured hotels
-          this.agodaService.getFeaturedHotels(12)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe({
-              next: (hotels: Hotel[]) => {
-                this.featuredHotels = hotels;
-                this.loading = false;
-              },
-              error: (err: any) => {
-                console.error('Error loading featured hotels:', err);
-                this.error = 'Failed to load featured hotels. Please try again later.';
-                this.loading = false;
-              }
-            });
-        },
-        error: (err: any) => {
-          console.error('Error loading Agoda hotels CSV:', err);
-          this.error = 'Failed to load hotel data. Please try again later.';
+        next: (hotels: AgodaHotel[]) => {
+          this.featuredHotels = hotels;
           this.loading = false;
+          
+          // Hide section if no hotels found
+          if (hotels.length === 0) {
+            this.showSection = false;
+            console.info('ℹ️ No hotels data available. Configure Google Drive link in agoda-affiliate.config.ts');
+          }
+        },
+        error: (err) => {
+          this.loading = false;
+          this.error = 'Unable to load hotels. Please check your configuration.';
+          this.showSection = false;
+          console.error('Error loading hotels:', err);
         }
       });
   }
 
-  trackHotelClick(hotel: Hotel): void {
+  trackHotelClick(hotel: AgodaHotel): void {
     console.log(`Agoda Hotel Clicked: ${hotel.hotelName} (ID: ${hotel.hotelId})`);
     // Add analytics tracking here
   }

@@ -1,11 +1,17 @@
 <section class="featured-deals">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-title">🔥 Trending Deals & Offers</h2>
-      <p class="section-subtitle">Don't miss out on these hot deals!</p>
+      <h2 class="section-title">🔥 Trending Hotel Deals from Agoda</h2>
+      <p class="section-subtitle">Exclusive discounts on top-rated hotels worldwide</p>
     </div>
 
-    <div class="deals-grid">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Finding the best deals for you...</p>
+    </div>
+
+    <div *ngIf="!loading" class="deals-grid">
       <div 
         *ngFor="let deal of deals" 
         class="deal-card"
@@ -13,43 +19,72 @@
       >
         <div class="deal-badge">{{ deal.discount }}</div>
         
-        <div class="deal-image" *ngIf="deal.image">
-          <img [src]="deal.image" [alt]="deal.title">
-        </div>
-        <div class="deal-image placeholder" *ngIf="!deal.image">
-          <span class="material-icons">local_offer</span>
+        <div class="deal-image">
+          <img [src]="deal.image || ('https://picsum.photos/seed/' + deal.id + '/400/300')" 
+               [alt]="deal.title"
+               loading="lazy">
+          <div class="deal-overlay"></div>
+          
+          <!-- Rating if available -->
+          <div *ngIf="deal.rating" class="rating-overlay">
+            <span class="stars">{{ deal.rating }}⭐</span>
+          </div>
         </div>
 
         <div class="deal-content">
-          <span class="deal-category">{{ deal.category }}</span>
+          <span class="deal-category">
+            <span class="material-icons">hotel</span>
+            {{ deal.category }}
+          </span>
           <h3 class="deal-title">{{ deal.title }}</h3>
-          <p class="deal-description">{{ deal.description }}</p>
+          <p class="deal-description">
+            <span class="material-icons">location_on</span>
+            {{ deal.description }}
+          </p>
+          
+          <!-- Price Info -->
+          <div *ngIf="deal.currentPrice" class="price-info">
+            <span class="original-price" *ngIf="deal.originalPrice">
+              {{ deal.currency }} {{ deal.originalPrice | number:'1.0-0' }}
+            </span>
+            <span class="current-price">
+              {{ deal.currency }} {{ deal.currentPrice | number:'1.0-0' }}
+              <small>/night</small>
+            </span>
+          </div>
           
           <div class="deal-footer">
             <span class="deal-platform">
-              <span class="material-icons">store</span>
+              <img src="https://cdn6.agoda.net/images/kite-js/logo/agoda/color-default.svg" 
+                   alt="Agoda" 
+                   style="height: 16px; width: auto;">
               {{ deal.platform }}
-            </span>
-            <span class="deal-expiry" *ngIf="getDaysRemaining(deal.expiryDate) !== null">
-              <span class="material-icons">schedule</span>
-              {{ getDaysRemaining(deal.expiryDate) }}d left
             </span>
           </div>
 
-          <button class="deal-button" [attr.data-category]="deal.category.toLowerCase()">
-            <span *ngIf="deal.category === 'Hotels' || deal.category === 'Flights'">Book Now</span>
-            <span *ngIf="deal.category === 'Health'">Book Test</span>
-            <span *ngIf="deal.category === 'Insurance'">Get Quote</span>
-            <span *ngIf="deal.category === 'Deals'">View Deal</span>
+          <button class="deal-button">
+            <span>Book Now</span>
             <span class="material-icons">arrow_forward</span>
           </button>
         </div>
       </div>
     </div>
 
-    <div class="no-deals" *ngIf="deals.length === 0">
-      <span class="material-icons">hourglass_empty</span>
-      <p>No deals available at the moment. Check back soon!</p>
+    <div class="no-deals" *ngIf="!loading && deals.length === 0">
+      <span class="material-icons">info</span>
+      <p>Configure your Agoda data source to see trending deals!</p>
+      <small>Add your Google Drive link in agoda-affiliate.config.ts</small>
+    </div>
+
+    <!-- View All Agoda Deals -->
+    <div *ngIf="!loading && deals.length > 0" class="view-all-container">
+      <a href="https://www.agoda.com/deals?cid=1955073" 
+         target="_blank" 
+         rel="nofollow sponsored noopener"
+         class="btn-view-all-deals">
+        Explore All Agoda Deals
+        <span class="material-icons">explore</span>
+      </a>
     </div>
   </div>
 </section>

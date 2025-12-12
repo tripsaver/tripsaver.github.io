@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of, forkJoin } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
+import { AGODA_CONFIG, getAgodaHotelLink, getAgodaDataSource } from '../../config/agoda-affiliate.config';
 
 export interface AgodaHotel {
   hotelId: string;
@@ -40,21 +41,40 @@ export interface CityIndex {
   providedIn: 'root'
 })
 export class AgodaDataService {
-  // Path to split CSV files by city
-  private readonly DATA_DIR = 'assets/data/hotels';
-  private readonly INDEX_PATH = `${this.DATA_DIR}/index.json`;
+  // Get paths from centralized config
+  private readonly DATA_SOURCE = getAgodaDataSource('hotels');
+  private readonly DATA_PATH = this.DATA_SOURCE?.path;
+  private readonly INDEX_PATH = this.DATA_SOURCE?.indexPath;
+  private readonly IS_GOOGLE_DRIVE = this.DATA_PATH?.includes('drive.google.com');
   
   private cityIndex: CityIndex | null = null;
   private cityCache = new Map<string, AgodaHotel[]>();
+  private allHotelsCache: AgodaHotel[] | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Check if data source is enabled
+    if (!this.DATA_SOURCE?.enabled) {
+      console.warn('⚠️ Agoda hotels data source is disabled. Update agoda-affiliate.config.ts to enable.');
+    }
+  }
 
   /**
-   * Load city index to see available cities
+   * Check if data source is properly configured
+   */
+  isDataSourceAvailable(): boolean {
+    return !!this.DATA_SOURCE?.enabled && !!this.DATA_PATH;
+  }
+
+  /**
+   * Load city index to see available cities (only for local split files)
    */
   private loadCityIndex(): Observable<CityIndex> {
     if (this.cityIndex) {
       return of(this.cityIndex);
+    }
+
+    if (!this.INDEX_PATH) {
+      return of({ cities: {}, total_cities: 0, total_hotels: 0, csv_headers: [] });
     }
     
     return this.http.get<CityIndex>(this.INDEX_PATH).pipe(
@@ -70,9 +90,20 @@ export class AgodaDataService {
   }
 
   /**
-   * Load hotels for a specific city
+   * Load hotels for a specific city (only for local split files)
    */
   loadHotelsByCity(cityName: string): Observable<AgodaHotel[]> {
+    // If Google Drive, can't load by city - load all and filter
+    if (this.IS_GOOGLE_DRIVE) {
+      return this.loadHotelData().pipe(
+        map((hotels: AgodaHotel[]) => 
+          hotels.filter((h: AgodaHotel) => 
+            h.city.toLowerCase() === cityName.toLowerCase()
+          )
+        )
+      );
+    }
+
     // Check cache first
     if (this.cityCache.has(cityName)) {
       return of(this.cityCache.get(cityName)!);
@@ -87,7 +118,7 @@ export class AgodaDataService {
         return cityInfo.filename;
       }),
       switchMap((filename: string) => {
-        const csvPath = `${this.DATA_DIR}/${filename}`;
+        const csvPath = `${this.DATA_PATH}/${filename}`;
         return this.http.get(csvPath, { responseType: 'text' }).pipe(
           map((csvData: string) => {
             const hotels = this.parseCSV(csvData);
@@ -131,10 +162,37 @@ export class AgodaDataService {
   }
 
   /**
-   * Load featured hotels from popular cities
+   * Load featured hotels from popular cities or Google Drive
    */
   loadHotelData(): Observable<AgodaHotel[]> {
-    // Load from top cities by default
+    // Return empty if not configured
+    if (!this.isDataSourceAvailable()) {
+      console.warn('⚠️ Agoda data source not configured');
+      return of([]);
+    }
+
+    // Check cache
+    if (this.allHotelsCache) {
+      return of(this.allHotelsCache);
+    }
+
+    // If Google Drive, load directly
+    if (this.IS_GOOGLE_DRIVE) {
+      return this.http.get(this.DATA_PATH!, { responseType: 'text' }).pipe(
+        map((csvData: string) => {
+          const hotels = this.parseCSV(csvData);
+          this.allHotelsCache = hotels;
+          return hotels;
+        }),
+        catchError((error: any) => {
+          console.error('Failed to load hotels from Google Drive:', error);
+          console.info('💡 Make sure your Google Drive link is publicly accessible');
+          return of([]);
+        })
+      );
+    }
+
+    // Otherwise, load from local split files
     const popularCities = [
       'Mumbai', 'Delhi', 'Bangalore', 'Goa', 'Jaipur',
       'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Udaipur'
@@ -228,10 +286,10 @@ export class AgodaDataService {
   }
 
   /**
-   * Build Agoda affiliate URL for a hotel
+   * Build Agoda affiliate URL for a hotel using centralized config
    */
   private buildAffiliateUrl(hotelId: string): string {
-    return `https://www.agoda.com/partners/partnersearch.aspx?pcs=10&cid=1955073&hl=en-us&hid=${hotelId}`;
+    return getAgodaHotelLink({ hotelId, pcs: '10' });
   }
 
   /**

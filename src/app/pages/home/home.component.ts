@@ -51,7 +51,6 @@ interface Deal {
 })
 export class HomeComponent implements OnInit {
   categories: Category[] = [];
-  featuredDeals: Deal[] = [];
   isMenuOpen = false;
 
   constructor(
@@ -74,7 +73,6 @@ export class HomeComponent implements OnInit {
     
     // Load data
     this.loadCategories();
-    this.loadFeaturedDeals();
   }
 
   loadCategories(): void {
@@ -87,42 +85,6 @@ export class HomeComponent implements OnInit {
           console.error('Error loading categories:', error);
         }
       });
-  }
-
-  loadFeaturedDeals(): void {
-    // Sample deals - replace with actual data from affiliate-links.json or API
-    this.featuredDeals = [
-      {
-        id: '1',
-        title: 'Flat 30% Off on Mumbai Hotels',
-        description: 'Book luxury hotels in Mumbai and save big',
-        platform: 'Booking.com',
-        discount: '30% OFF',
-        affiliateUrl: 'PLACEHOLDER_AFFILIATE_LINK',
-        category: 'Hotels',
-        expiryDate: '2025-12-31'
-      },
-      {
-        id: '2',
-        title: 'Delhi to Goa Flights Starting ₹2999',
-        description: 'Limited time offer on domestic flights',
-        platform: 'Cleartrip',
-        discount: '₹2999',
-        affiliateUrl: 'PLACEHOLDER_AFFILIATE_LINK',
-        category: 'Flights',
-        expiryDate: '2025-12-20'
-      },
-      {
-        id: '3',
-        title: 'Full Body Checkup @ ₹999',
-        description: 'Comprehensive health package with 60+ tests',
-        platform: 'Healthians',
-        discount: '50% OFF',
-        affiliateUrl: 'PLACEHOLDER_AFFILIATE_LINK',
-        category: 'Health',
-        expiryDate: '2025-12-25'
-      }
-    ];
   }
 
   toggleMenu() {
