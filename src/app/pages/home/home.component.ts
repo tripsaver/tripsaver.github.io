@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { PopularDestinationsComponent } from '../../shared/components/popular-destinations/popular-destinations.component';
 import { TopDealsComponent } from '../../shared/components/top-deals/top-deals.component';
 import { HeroBannerComponent } from '../../shared/components/hero-banner/hero-banner.component';
@@ -34,7 +33,6 @@ interface Deal {
   standalone: true,
   imports: [
     CommonModule, 
-    SearchBarComponent, 
     PopularDestinationsComponent, 
     TopDealsComponent,
     HeroBannerComponent,
