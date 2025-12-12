@@ -12,7 +12,7 @@
     <nav [class.mobile-open]="isMenuOpen">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
       <a routerLink="/hotels" routerLinkActive="active" (click)="closeMenu()">Hotels</a>
-      <a routerLink="/flights" routerLinkActive="active" (click)="closeMenu()">Flights</a>
+      <!-- <a routerLink="/flights" routerLinkActive="active" (click)="closeMenu()">Flights</a> -->
       <a routerLink="/deals" routerLinkActive="active" (click)="closeMenu()">Deals</a>
       <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a>
       <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a>
@@ -31,16 +31,16 @@
         <span class="material-icons">hotel</span>
         <div class="quick-cta-text">
           <strong>Compare Hotel Prices</strong>
-          <small>Booking.com, Agoda, MMT</small>
+          <small>Agoda</small>
         </div>
       </a>
-      <a routerLink="/flights" class="quick-cta-card">
+      <!-- <a routerLink="/flights" class="quick-cta-card">
         <span class="material-icons">flight</span>
         <div class="quick-cta-text">
           <strong>Find Cheap Flights</strong>
           <small>All Airlines, Best Deals</small>
         </div>
-      </a>
+      </a> -->
       <a routerLink="/deals" class="quick-cta-card">
         <span class="material-icons">local_offer</span>
         <div class="quick-cta-text">
