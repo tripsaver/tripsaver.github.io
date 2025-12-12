@@ -338,40 +338,56 @@ section {
 
 /* Categories Section */
 .categories-section {
-  padding: 5rem 1.5rem;
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  padding: 6rem 1.5rem;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #ffffff 100%);
   position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+    opacity: 1;
+  }
 
   .container {
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
   }
 
   .section-header {
     text-align: center;
-    margin-bottom: 3.5rem;
+    margin-bottom: 4rem;
     animation: fadeInDown 0.6s ease-out;
 
     h2 {
-      font-size: 2.75rem;
-      font-weight: 800;
+      font-size: 3rem;
+      font-weight: 900;
       color: #0f172a;
-      margin-bottom: 1rem;
-      letter-spacing: -0.5px;
-      line-height: 1.2;
-      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      margin-bottom: 1.25rem;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     p {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: #64748b;
       font-weight: 500;
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
-      line-height: 1.6;
+      line-height: 1.7;
+      letter-spacing: 0.3px;
     }
   }
 }
@@ -640,14 +656,14 @@ section {
   }
 
   .categories-section {
-    padding: 3rem 1rem;
+    padding: 5rem 1rem;
 
     .section-header h2 {
-      font-size: 2rem;
+      font-size: 2.5rem;
     }
 
     .section-header p {
-      font-size: 1rem;
+      font-size: 1.15rem;
     }
   }
 }
@@ -702,14 +718,15 @@ section {
   }
 
   .categories-section {
-    padding: 2.5rem 1rem;
+    padding: 4rem 1rem;
 
     .section-header h2 {
-      font-size: 1.75rem;
+      font-size: 2rem;
+      letter-spacing: -0.5px;
     }
 
     .section-header p {
-      font-size: 0.95rem;
+      font-size: 1.05rem;
     }
   }
 
