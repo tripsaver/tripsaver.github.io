@@ -1,0 +1,128 @@
+.top-deals {
+  padding: 3rem 1.5rem;
+  background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+  
+  .deals-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #0f172a;
+    }
+  }
+  
+  .deals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+  
+  .deal-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+    transition: all 0.3s ease;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    
+    &:hover {
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+      transform: translateY(-4px);
+      
+      .deal-image img {
+        transform: scale(1.05);
+      }
+    }
+  }
+  
+  .deal-image {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    
+    .deal-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.25), transparent);
+    }
+  }
+  
+  .deal-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    z-index: 10;
+  }
+  
+  .deal-info {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #0f172a;
+    }
+    
+    .deal-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 1rem;
+      margin-top: auto;
+    }
+    
+    .deal-btn {
+      display: block;
+      text-align: center;
+      padding: 0.75rem 1rem;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .top-deals {
+    padding: 2rem 1rem;
+    
+    .deals-container h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .deals-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+}

@@ -2,11 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>TripSaver</title>
+  <title>TripSaver — Save on Hotels & Deals</title>
   <base href="/">
   <meta name="agd-partner-manual-verification" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Find the best hotel deals, compare prices from top providers and save on your next trip with TripSaver.">
+  <meta name="keywords" content="hotels, hotel deals, hotel booking, destinations, travel offers, TripSaver">
+  <meta name="author" content="TripSaver">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://example.com/">
+  <meta property="og:site_name" content="TripSaver">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TripSaver — Save on Hotels & Deals">
+  <meta property="og:description" content="Find the best hotel deals, compare prices from top providers and save on your next trip with TripSaver.">
+  <meta property="og:url" content="https://example.com/">
+  <meta property="og:image" content="https://example.com/assets/images/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@TripSaver">
+  <meta name="twitter:title" content="TripSaver — Save on Hotels & Deals">
+  <meta name="twitter:description" content="Find the best hotel deals, compare prices from top providers and save on your next trip with TripSaver.">
+  <meta name="theme-color" content="#0d6efd">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- JSON-LD structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://example.com/#organization",
+        "name": "TripSaver",
+        "url": "https://example.com/",
+        "logo": "https://example.com/assets/images/logo.png"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://example.com/#website",
+        "url": "https://example.com/",
+        "name": "TripSaver",
+        "publisher": {
+          "@id": "https://example.com/#organization"
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://example.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <app-root></app-root>

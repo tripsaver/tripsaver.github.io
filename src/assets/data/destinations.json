@@ -1,0 +1,17 @@
+[
+  { "id": "goa", "name": "Goa" },
+  { "id": "dubai", "name": "Dubai" },
+  { "id": "bangkok", "name": "Bangkok" },
+  { "id": "bangalore", "name": "Bangalore" },
+  { "id": "mumbai", "name": "Mumbai" },
+  { "id": "delhi", "name": "Delhi" },
+  { "id": "singapore", "name": "Singapore" },
+  { "id": "phuket", "name": "Phuket" },
+  { "id": "paris", "name": "Paris" },
+  { "id": "london", "name": "London" },
+  { "id": "new-york", "name": "New York" },
+  { "id": "tokyo", "name": "Tokyo" },
+  { "id": "bali", "name": "Bali" },
+  { "id": "maldives", "name": "Maldives" },
+  { "id": "las-vegas", "name": "Las Vegas" }
+]
