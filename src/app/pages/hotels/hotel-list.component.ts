@@ -8,49 +8,43 @@ import { AffiliateService } from '../../core/services/affiliate/affiliate.servic
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="max-w-6xl mx-auto px-4 py-6">
-      <h1 class="text-3xl font-bold mb-2">Hotel Search Results</h1>
-      <p class="text-gray-600 mb-4" *ngIf="q">Results for <strong>"{{q}}"</strong></p>
-      <div *ngIf="!q" class="bg-blue-50 p-4 rounded-lg text-blue-900">Enter a search query to find hotels.</div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        <div *ngFor="let h of hotels" class="card p-4 border border-gray-200">
-          <img [src]="h.image" alt="{{h.name}}" loading="lazy" class="w-full h-40 object-cover rounded-lg mb-3">
-          <h3 class="text-lg font-bold mb-1">{{h.name}}</h3>
-          <p class="text-sm text-gray-600 mb-3">{{h.location}}</p>
-          
-          <!-- Price Summary -->
-          <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-3 rounded-lg mb-3">
-            <div *ngIf="h.bestPrice" class="flex items-center justify-between">
-              <div>
-                <small class="text-gray-600">Best Price</small>
-                <div class="text-xl font-bold text-blue-600">₹{{h.bestPrice}}</div>
-                <small class="text-gray-500">via {{h.bestProvider}}</small>
-              </div>
-              <button (click)="toggleCompare(h)" class="text-xs bg-white px-2 py-1 rounded border border-blue-300 text-blue-600 hover:bg-blue-50 font-semibold">
-                {{h.showCompare ? '▼ Hide' : '▶ Compare'}}
-              </button>
-            </div>
-          </div>
+    <div class="container results-page">
+      <h1 class="page-title">Hotel Search Results</h1>
+      <p class="subtitle" *ngIf="q">Results for <strong>"{{q}}"</strong></p>
+      <div *ngIf="!q" class="empty-note">Enter a search query to find hotels.</div>
 
-          <!-- Compare Prices (Expandable) -->
-          <div *ngIf="h.showCompare && h.prices" class="mb-3 border-t pt-3">
-            <h4 class="text-sm font-semibold mb-2">All Provider Prices</h4>
-            <div class="space-y-2">
-              <div *ngFor="let p of h.prices" class="flex justify-between items-center text-sm p-2 bg-gray-50 rounded">
-                <span class="font-medium">{{p.provider}}</span>
-                <span class="font-bold text-gray-900">₹{{p.price}}</span>
-                <a [href]="p.url" target="_blank" rel="noopener" class="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700">Book</a>
+      <div class="results-grid mt-6">
+        <article *ngFor="let h of hotels" class="result-card card">
+          <div class="result-media">
+            <img [src]="h.image || ('https://picsum.photos/seed/'+h.id+'/600/400')" alt="{{h.name}}" loading="lazy">
+          </div>
+          <div class="result-body">
+            <h3 class="result-title">{{h.name}}</h3>
+            <p class="result-location">{{h.location}}</p>
+
+            <div class="price-box">
+              <div class="price-left">
+                <small>Best Price</small>
+                <div class="price">₹{{h.bestPrice || '––'}}</div>
+                <small class="provider">via {{h.bestProvider || '—'}}</small>
+              </div>
+              <button (click)="toggleCompare(h)" class="compare-toggle">{{h.showCompare ? 'Hide ▴' : 'Compare ▸'}}</button>
+            </div>
+
+            <div *ngIf="h.showCompare && h.prices" class="compare-list">
+              <div *ngFor="let p of h.prices" class="compare-row">
+                <span class="provider-name">{{p.provider}}</span>
+                <span class="provider-price">₹{{p.price}}</span>
+                <a [href]="p.url" target="_blank" rel="noopener" class="provider-book">Book</a>
               </div>
             </div>
-          </div>
 
-          <!-- Action Buttons -->
-          <div class="flex gap-2">
-            <a [routerLink]="['/hotel', h.id]" class="btn-primary flex-1 text-center">View Details</a>
-            <a *ngIf="h.bestUrl" [href]="h.bestUrl" target="_blank" rel="noopener" class="btn-accent flex-1 text-center">Book Now</a>
+            <div class="result-actions">
+              <a [routerLink]="['/hotel', h.id]" class="btn btn-primary">View Details</a>
+              <a *ngIf="h.bestUrl" [href]="h.bestUrl" target="_blank" rel="noopener" class="btn btn-accent">Book Now</a>
+            </div>
           </div>
-        </div>
+        </article>
       </div>
     </div>
   `

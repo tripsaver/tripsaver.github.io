@@ -1,13 +1,26 @@
-<form class="flex flex-col sm:flex-row gap-3 sm:gap-2 bg-white p-4 sm:p-3 rounded-2xl sm:rounded-xl shadow-2xl w-full max-w-4xl" aria-label="Hotel search" (submit)="onSubmit($event)">
-  <div class="relative flex-1">
+<form class="search-form" aria-label="Hotel search" (submit)="onSubmit($event)">
+  <div class="search-field destination">
+    <label for="sb-destination" class="sr-only">Destination</label>
     <input id="sb-destination" name="destination" type="text" placeholder="Where are you going?" aria-label="Destination"
       (input)="onInputChange($any($event.target).value)"
-      [value]="destination" autocomplete="off" class="w-full px-4 py-3 sm:py-2 border-2 border-gray-200 rounded-xl sm:rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition text-base sm:text-sm">
-    <ul *ngIf="filtered.length" class="absolute left-0 right-0 top-full mt-2 bg-white list-none m-0 p-2 rounded-xl shadow-2xl max-h-64 overflow-auto z-30 border border-gray-100">
-      <li *ngFor="let d of filtered" (click)="onInputChange(d.name); destination = d.name;" class="px-4 py-3 cursor-pointer hover:bg-blue-50 rounded-lg font-medium transition text-sm sm:text-xs">{{d.name}}</li>
+      [value]="destination" autocomplete="off" class="input-text">
+
+    <ul *ngIf="filtered.length" class="autocomplete">
+      <li *ngFor="let d of filtered" (click)="onInputChange(d.name); destination = d.name;" class="autocomplete-item">{{d.name}}</li>
     </ul>
   </div>
-  <input id="sb-checkin" name="checkin" type="date" aria-label="Check in" (change)="checkin = $any($event.target).value" class="px-4 py-3 sm:py-2 border-2 border-gray-200 rounded-xl sm:rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition text-base sm:text-sm">
-  <input id="sb-checkout" name="checkout" type="date" aria-label="Check out" (change)="checkout = $any($event.target).value" class="px-4 py-3 sm:py-2 border-2 border-gray-200 rounded-xl sm:rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition text-base sm:text-sm">
-  <button type="submit" class="btn-accent whitespace-nowrap">Search</button>
+
+  <div class="search-field date">
+    <label for="sb-checkin" class="sr-only">Check in</label>
+    <input id="sb-checkin" name="checkin" type="date" aria-label="Check in" (change)="checkin = $any($event.target).value" class="input-date">
+  </div>
+
+  <div class="search-field date">
+    <label for="sb-checkout" class="sr-only">Check out</label>
+    <input id="sb-checkout" name="checkout" type="date" aria-label="Check out" (change)="checkout = $any($event.target).value" class="input-date">
+  </div>
+
+  <div class="search-field action">
+    <button type="submit" class="btn btn-accent">Search</button>
+  </div>
 </form>

@@ -1,14 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SeoService } from './core/services/seo/seo.service';
-import { SearchBarComponent } from './shared/components/search-bar/search-bar.component';
-import { PopularDestinationsComponent } from './shared/components/popular-destinations/popular-destinations.component';
-import { TopDealsComponent } from './shared/components/top-deals/top-deals.component';
+// Note: keep component imports local to pages that render them to avoid unused warnings
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SearchBarComponent, PopularDestinationsComponent, TopDealsComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })
