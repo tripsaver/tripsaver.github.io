@@ -50,6 +50,7 @@ interface Deal {
 export class HomeComponent implements OnInit {
   categories: Category[] = [];
   featuredDeals: Deal[] = [];
+  isMenuOpen = false;
 
   constructor(
     private http: HttpClient,
@@ -120,5 +121,20 @@ export class HomeComponent implements OnInit {
         expiryDate: '2025-12-25'
       }
     ];
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+    // Prevent body scroll when menu is open
+    if (this.isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
+    document.body.style.overflow = '';
   }
 }

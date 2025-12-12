@@ -4,17 +4,23 @@
   <div class="hero-content">
     <div class="hero-text">
       <h1 class="hero-title">
-        Save Big on Your Next Trip
-        <span class="hero-highlight">& More</span>
+        Compare Best Hotel & Flight Prices
+        <span class="hero-highlight">Save Up to 50%</span>
       </h1>
       <p class="hero-subtitle">
-        Compare prices across top platforms and get the best deals on hotels, flights, health services, and more!
+        Top Deals from Booking.com, Agoda, MakeMyTrip & Goibibo - All in One Place!
       </p>
       
-      <button class="hero-cta" (click)="scrollToCategories()">
-        Explore Deals
-        <span class="material-icons">trending_down</span>
-      </button>
+      <div class="hero-cta-group">
+        <a routerLink="/hotels" class="hero-cta primary">
+          <span class="material-icons">hotel</span>
+          Compare Best Hotel Prices Now
+        </a>
+        <a routerLink="/deals" class="hero-cta secondary">
+          <span class="material-icons">local_offer</span>
+          Top Deals from Agoda & MMT
+        </a>
+      </div>
     </div>
 
     <div class="quick-links">

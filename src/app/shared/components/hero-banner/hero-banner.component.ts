@@ -1,25 +1,33 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-hero-banner',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './hero-banner.component.html',
   styleUrls: ['./hero-banner.component.scss']
 })
 export class HeroBannerComponent {
   quickLinks = [
-    { name: 'Hotels', icon: 'hotel', url: '#hotels' },
-    { name: 'Flights', icon: 'flight', url: '#flights' },
-    { name: 'Health', icon: 'medical_services', url: '#health' },
-    { name: 'Insurance', icon: 'security', url: '#insurance' }
+    { name: 'Hotels', icon: 'hotel', url: '/hotels', isRoute: true },
+    { name: 'Flights', icon: 'flight', url: '/flights', isRoute: true },
+    { name: 'Deals', icon: 'local_offer', url: '/deals', isRoute: true },
+    { name: 'Contact', icon: 'contact_mail', url: '/contact', isRoute: true }
   ];
 
+  constructor(private router: Router) {}
+
   onQuickLinkClick(url: string): void {
-    const element = document.querySelector(url);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Check if it's a route or scroll anchor
+    if (url.startsWith('/')) {
+      this.router.navigate([url]);
+    } else {
+      const element = document.querySelector(url);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   }
 
