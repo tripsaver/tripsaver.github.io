@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { AnalyticsService } from '../../core/services/analytics/analytics.service';
@@ -26,11 +26,17 @@ interface Deal {
   styleUrl: './deals.component.scss'
 })
 export class DealsComponent implements OnInit {
-  constructor(
-    private titleService: Title,
-    private metaService: Meta,
-    private analytics: AnalyticsService
-  ) {}
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
+  private analytics = inject(AnalyticsService);
+  
+  deals: Deal[] = [];
+  filteredDeals: Deal[] = [];
+  activeFilter: string = 'all';
+
+  constructor() {
+    this.initializeDeals();
+  }
 
   ngOnInit() {
     this.titleService.setTitle('Best Travel Deals & Offers Today - Up to 50% Off | TripSaver');
@@ -44,7 +50,8 @@ export class DealsComponent implements OnInit {
     });
   }
 
-  deals: Deal[] = [
+  private initializeDeals() {
+    this.deals = [
     {
       id: 1,
       title: 'Goa Beach Resorts Under ₹2,000',
@@ -56,7 +63,7 @@ export class DealsComponent implements OnInit {
       discount: '46% OFF',
       validUntil: '2025-12-31',
       platform: 'Booking.com',
-      affiliateUrl: 'https://www.booking.com/deals/goa-hotels?aid=REPLACE_WITH_AFFILIATE_ID',
+      affiliateUrl: this.analytics.addUTMToUrl('https://www.booking.com/deals/goa-hotels?aid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_deals', 'affiliate'),
       featured: true
     },
     {
@@ -70,7 +77,7 @@ export class DealsComponent implements OnInit {
       discount: '52% OFF',
       validUntil: '2025-12-25',
       platform: 'MakeMyTrip',
-      affiliateUrl: 'https://www.makemytrip.com/flights/delhi-mumbai?campaign=REPLACE_WITH_AFFILIATE_ID',
+      affiliateUrl: this.analytics.addUTMToUrl('https://www.makemytrip.com/flights/delhi-mumbai?campaign=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_deals', 'affiliate'),
       featured: true
     },
     {
@@ -84,7 +91,7 @@ export class DealsComponent implements OnInit {
       discount: '25% OFF',
       validUntil: '2025-12-28',
       platform: 'MakeMyTrip',
-      affiliateUrl: 'https://www.makemytrip.com/holidays/india/packages?campaign=REPLACE_WITH_AFFILIATE_ID',
+      affiliateUrl: this.analytics.addUTMToUrl('https://www.makemytrip.com/holidays/india/packages?campaign=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_deals', 'affiliate'),
       featured: true
     },
     {
@@ -98,7 +105,7 @@ export class DealsComponent implements OnInit {
       discount: '50% OFF',
       validUntil: '2025-12-20',
       platform: 'Agoda',
-      affiliateUrl: 'https://www.agoda.com/deals/bangalore?cid=REPLACE_WITH_AFFILIATE_ID',
+      affiliateUrl: this.analytics.addUTMToUrl('https://www.agoda.com/deals/bangalore?cid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_deals', 'affiliate'),
       featured: false
     },
     {
@@ -112,7 +119,7 @@ export class DealsComponent implements OnInit {
       discount: '56% OFF',
       validUntil: '2025-12-18',
       platform: 'Goibibo',
-      affiliateUrl: 'https://www.goibibo.com/flights/deals?utm_source=REPLACE_WITH_AFFILIATE_ID',
+      affiliateUrl: this.analytics.addUTMToUrl('https://www.goibibo.com/flights/deals?utm_source=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_deals', 'affiliate'),
       featured: false
     },
     {
@@ -126,7 +133,7 @@ export class DealsComponent implements OnInit {
       discount: '25% OFF',
       validUntil: '2025-12-30',
       platform: 'Booking.com',
-      affiliateUrl: 'https://www.booking.com/packages/kerala?aid=REPLACE_WITH_AFFILIATE_ID',
+      affiliateUrl: this.analytics.addUTMToUrl('https://www.booking.com/packages/kerala?aid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_deals', 'affiliate'),
       featured: false
     },
     {
@@ -140,7 +147,7 @@ export class DealsComponent implements OnInit {
       discount: '40% OFF',
       validUntil: '2025-12-22',
       platform: 'MakeMyTrip',
-      affiliateUrl: 'https://www.makemytrip.com/hotels/jaipur-heritage?campaign=REPLACE_WITH_AFFILIATE_ID',
+      affiliateUrl: this.analytics.addUTMToUrl('https://www.makemytrip.com/hotels/jaipur-heritage?campaign=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_deals', 'affiliate'),
       featured: false
     },
     {
@@ -154,19 +161,15 @@ export class DealsComponent implements OnInit {
       discount: '26% OFF',
       validUntil: '2025-12-24',
       platform: 'Agoda',
-      affiliateUrl: 'https://www.agoda.com/packages/ooty?cid=REPLACE_WITH_AFFILIATE_ID',
+      affiliateUrl: this.analytics.addUTMToUrl('https://www.agoda.com/packages/ooty?cid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_deals', 'affiliate'),
       featured: false
     }
-  ];
+    ];
+    
+    this.filteredDeals = this.deals;
+  }
 
   selectedCategory: string = 'all';
-
-  get filteredDeals(): Deal[] {
-    if (this.selectedCategory === 'all') {
-      return this.deals;
-    }
-    return this.deals.filter(deal => deal.category === this.selectedCategory);
-  }
 
   get featuredDeals(): Deal[] {
     return this.deals.filter(deal => deal.featured);
@@ -174,6 +177,14 @@ export class DealsComponent implements OnInit {
 
   filterDeals(category: string) {
     this.selectedCategory = category;
+    this.activeFilter = category;
+    
+    if (category === 'all') {
+      this.filteredDeals = this.deals;
+    } else {
+      this.filteredDeals = this.deals.filter(deal => deal.category === category);
+    }
+    
     this.analytics.trackFilter('deal_category', category);
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { AnalyticsService } from '../../core/services/analytics/analytics.service';
@@ -22,11 +22,15 @@ interface Destination {
   styleUrl: './hotels.component.scss'
 })
 export class HotelsComponent implements OnInit {
-  constructor(
-    private titleService: Title,
-    private metaService: Meta,
-    private analytics: AnalyticsService
-  ) {}
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
+  private analytics = inject(AnalyticsService);
+  
+  destinations: Destination[] = [];
+
+  constructor() {
+    this.initializeDestinations();
+  }
 
   ngOnInit() {
     this.titleService.setTitle('Best Hotel Deals in India - Compare Prices | TripSaver');
@@ -40,7 +44,8 @@ export class HotelsComponent implements OnInit {
     });
   }
 
-  destinations: Destination[] = [
+  private initializeDestinations() {
+    this.destinations = [
     {
       name: 'Goa',
       image: 'https://picsum.photos/400/300?random=1',
@@ -57,9 +62,9 @@ export class HotelsComponent implements OnInit {
       description: 'Garden city with pleasant weather and modern amenities',
       popularHotels: 180,
       avgPrice: '₹3,000',
-      bookingUrl: 'https://www.booking.com/searchresults.html?ss=Bangalore&aid=REPLACE_WITH_AFFILIATE_ID',
-      agodaUrl: 'https://www.agoda.com/search?city=11304&cid=REPLACE_WITH_AFFILIATE_ID',
-      mmtUrl: 'https://www.makemytrip.com/hotels/hotels-in-bangalore.html?campaign=REPLACE_WITH_AFFILIATE_ID'
+      bookingUrl: this.analytics.addUTMToUrl('https://www.booking.com/searchresults.html?ss=Bangalore&aid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      agodaUrl: this.analytics.addUTMToUrl('https://www.agoda.com/search?city=11304&cid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      mmtUrl: this.analytics.addUTMToUrl('https://www.makemytrip.com/hotels/hotels-in-bangalore.html?campaign=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate')
     },
     {
       name: 'Manali',
@@ -67,9 +72,9 @@ export class HotelsComponent implements OnInit {
       description: 'Stunning Himalayan views, adventure sports, and serene valleys',
       popularHotels: 120,
       avgPrice: '₹2,800',
-      bookingUrl: 'https://www.booking.com/searchresults.html?ss=Manali&aid=REPLACE_WITH_AFFILIATE_ID',
-      agodaUrl: 'https://www.agoda.com/search?city=11058&cid=REPLACE_WITH_AFFILIATE_ID',
-      mmtUrl: 'https://www.makemytrip.com/hotels/hotels-in-manali.html?campaign=REPLACE_WITH_AFFILIATE_ID'
+      bookingUrl: this.analytics.addUTMToUrl('https://www.booking.com/searchresults.html?ss=Manali&aid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      agodaUrl: this.analytics.addUTMToUrl('https://www.agoda.com/search?city=11058&cid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      mmtUrl: this.analytics.addUTMToUrl('https://www.makemytrip.com/hotels/hotels-in-manali.html?campaign=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate')
     },
     {
       name: 'Ooty',
@@ -77,9 +82,9 @@ export class HotelsComponent implements OnInit {
       description: 'Queen of hill stations with tea gardens and cool climate',
       popularHotels: 95,
       avgPrice: '₹2,200',
-      bookingUrl: 'https://www.booking.com/searchresults.html?ss=Ooty&aid=REPLACE_WITH_AFFILIATE_ID',
-      agodaUrl: 'https://www.agoda.com/search?city=12640&cid=REPLACE_WITH_AFFILIATE_ID',
-      mmtUrl: 'https://www.makemytrip.com/hotels/hotels-in-ooty.html?campaign=REPLACE_WITH_AFFILIATE_ID'
+      bookingUrl: this.analytics.addUTMToUrl('https://www.booking.com/searchresults.html?ss=Ooty&aid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      agodaUrl: this.analytics.addUTMToUrl('https://www.agoda.com/search?city=12640&cid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      mmtUrl: this.analytics.addUTMToUrl('https://www.makemytrip.com/hotels/hotels-in-ooty.html?campaign=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate')
     },
     {
       name: 'Jaipur',
@@ -87,9 +92,9 @@ export class HotelsComponent implements OnInit {
       description: 'Pink city with majestic forts, palaces, and rich culture',
       popularHotels: 150,
       avgPrice: '₹2,600',
-      bookingUrl: 'https://www.booking.com/searchresults.html?ss=Jaipur&aid=REPLACE_WITH_AFFILIATE_ID',
-      agodaUrl: 'https://www.agoda.com/search?city=11097&cid=REPLACE_WITH_AFFILIATE_ID',
-      mmtUrl: 'https://www.makemytrip.com/hotels/hotels-in-jaipur.html?campaign=REPLACE_WITH_AFFILIATE_ID'
+      bookingUrl: this.analytics.addUTMToUrl('https://www.booking.com/searchresults.html?ss=Jaipur&aid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      agodaUrl: this.analytics.addUTMToUrl('https://www.agoda.com/search?city=11097&cid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      mmtUrl: this.analytics.addUTMToUrl('https://www.makemytrip.com/hotels/hotels-in-jaipur.html?campaign=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate')
     },
     {
       name: 'Kerala',
@@ -97,11 +102,12 @@ export class HotelsComponent implements OnInit {
       description: 'God\'s own country with backwaters, houseboats, and beaches',
       popularHotels: 200,
       avgPrice: '₹3,200',
-      bookingUrl: 'https://www.booking.com/searchresults.html?ss=Kerala&aid=REPLACE_WITH_AFFILIATE_ID',
-      agodaUrl: 'https://www.agoda.com/search?city=17249&cid=REPLACE_WITH_AFFILIATE_ID',
-      mmtUrl: 'https://www.makemytrip.com/hotels/hotels-in-kerala.html?campaign=REPLACE_WITH_AFFILIATE_ID'
+      bookingUrl: this.analytics.addUTMToUrl('https://www.booking.com/searchresults.html?ss=Kerala&aid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      agodaUrl: this.analytics.addUTMToUrl('https://www.agoda.com/search?city=17249&cid=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate'),
+      mmtUrl: this.analytics.addUTMToUrl('https://www.makemytrip.com/hotels/hotels-in-kerala.html?campaign=REPLACE_WITH_AFFILIATE_ID', 'tripsaver_hotels', 'affiliate')
     }
-  ];
+    ];
+  }
 
   trackAffiliateClick(platform: string, destination: string) {
     const dest = this.destinations.find(d => d.name === destination);
