@@ -5,11 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { Title, Meta } from '@angular/platform-browser';
 import { PopularDestinationsComponent } from '../../shared/components/popular-destinations/popular-destinations.component';
 import { TopDealsComponent } from '../../shared/components/top-deals/top-deals.component';
-import { HeroBannerComponent } from '../../shared/components/hero-banner/hero-banner.component';
 import { FeaturedDealsComponent } from '../../shared/components/featured-deals/featured-deals.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { AgodaHotelsComponent } from '../../shared/components/agoda-hotels/agoda-hotels.component';
-import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { RequirementFormComponent, UserRequirements } from '../../shared/components/requirement-form/requirement-form.component';
 import { RecommendationResultComponent } from '../../shared/components/recommendation-result/recommendation-result.component';
 
@@ -42,11 +40,9 @@ interface Deal {
     RouterLinkActive,
     PopularDestinationsComponent, 
     TopDealsComponent,
-    HeroBannerComponent,
     FeaturedDealsComponent,
     FooterComponent,
     AgodaHotelsComponent,
-    SearchBarComponent,
     RequirementFormComponent,
     RecommendationResultComponent
   ],

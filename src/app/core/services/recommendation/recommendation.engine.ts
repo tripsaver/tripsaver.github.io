@@ -13,7 +13,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { getActivePartners, getPartner, buildPartnerUrl, PartnerConfig } from '../config/partners.config';
+import { getActivePartners, getPartner, buildPartnerUrl, PartnerConfig } from '../../config/partners.config';
 
 export interface UserPreferences {
   destination: string;
@@ -59,13 +59,13 @@ export class RecommendationEngine {
     }
     
     // Score all partners
-    const scored = activePartners.map(partner => ({
+    const scored = activePartners.map((partner: PartnerConfig) => ({
       partner,
       score: this.calculateScore(partner.id, prefs)
     }));
     
     // Sort by score (highest first)
-    scored.sort((a, b) => b.score - a.score);
+    scored.sort((a: any, b: any) => b.score - a.score);
     
     // Build recommendation results
     const primary = scored[0]?.score > 0 
