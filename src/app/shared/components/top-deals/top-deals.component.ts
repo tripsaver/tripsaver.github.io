@@ -97,3 +97,4 @@ export class TopDealsComponent implements OnInit, OnDestroy {
       affiliateUrl: `https://www.agoda.com/search?city=${item.city}&cid=1955073`
     }));
   }
+}
