@@ -172,4 +172,8 @@ export class HomeComponent implements OnInit {
     this.isMenuOpen = false;
     document.body.style.overflow = '';
   }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
