@@ -66,31 +66,5 @@
   </div>
 </form>
 
-<!-- Comparison Results Section -->
-<div *ngIf="showComparison" class="comparison-overlay">
-  <div class="comparison-container">
-    <div class="comparison-header">
-      <h3>✨ Best Options for "{{ destination }}"</h3>
-      <button class="close-btn" (click)="closeComparison()" aria-label="Close comparison">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <div *ngIf="isLoadingComparison" class="comparison-loading">
-      <div class="spinner-large"></div>
-      <p>Finding best deals for you...</p>
-    </div>
-
-    <div *ngIf="!isLoadingComparison && comparisonResults.length > 0" class="comparison-grid">
-      <app-comparison-card 
-        *ngFor="let result of comparisonResults" 
-        [result]="result">
-      </app-comparison-card>
-    </div>
-
-    <div *ngIf="!isLoadingComparison && comparisonResults.length === 0" class="no-comparison-results">
-      <i class="fas fa-exclamation-circle"></i>
-      <p>No comparison results found. Try a different search.</p>
-    </div>
-  </div>
+<!-- Search results handled by parent component -->
 </div>
