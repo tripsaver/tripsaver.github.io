@@ -21,10 +21,16 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
   constructor(private agodaService: AgodaDataService) {}
 
   ngOnInit(): void {
-    // Only load if data source is available
+    // Always show section
+    this.showSection = true;
+    
+    // Try to load real data, fall back to sample data
     if (this.agodaService.isDataSourceAvailable()) {
-      this.showSection = true;
       this.loadFeaturedHotels();
+    } else {
+      // Show sample hotels if no data source
+      this.loading = false;
+      this.featuredHotels = this.getSampleHotels();
     }
   }
 
@@ -41,20 +47,21 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (hotels: AgodaHotel[]) => {
-          this.featuredHotels = hotels;
           this.loading = false;
           
-          // Hide section if no hotels found
+          // Use real data if available, otherwise use sample data
           if (hotels.length === 0) {
-            this.showSection = false;
-            console.info('ℹ️ No hotels data available. Configure Google Drive link in agoda-affiliate.config.ts');
+            this.featuredHotels = this.getSampleHotels();
+            console.info('ℹ️ No hotels data available. Showing sample hotels. Configure Google Drive link in agoda-affiliate.config.ts');
+          } else {
+            this.featuredHotels = hotels;
           }
         },
         error: (err) => {
           this.loading = false;
-          this.error = 'Unable to load hotels. Please check your configuration.';
-          this.showSection = false;
-          console.error('Error loading hotels:', err);
+          // Show sample data on error
+          this.featuredHotels = this.getSampleHotels();
+          console.warn('Unable to load hotels data. Showing sample hotels.', err);
         }
       });
   }
@@ -66,5 +73,37 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
 
   getStarArray(rating: number): number[] {
     return Array(Math.floor(rating)).fill(0);
+  }
+
+  private getSampleHotels(): AgodaHotel[] {
+    const sampleCities = [
+      { city: 'Mumbai', country: 'India', hotel: 'Taj Mahal Palace' },
+      { city: 'Goa', country: 'India', hotel: 'Radisson Blu Resort' },
+      { city: 'Dubai', country: 'UAE', hotel: 'Burj Al Arab Jumeirah' },
+      { city: 'Bangkok', country: 'Thailand', hotel: 'Mandarin Oriental' },
+      { city: 'Singapore', country: 'Singapore', hotel: 'Marina Bay Sands' },
+      { city: 'Bali', country: 'Indonesia', hotel: 'Four Seasons Resort' },
+      { city: 'Paris', country: 'France', hotel: 'Hotel Plaza Athénée' },
+      { city: 'London', country: 'UK', hotel: 'The Savoy' },
+      { city: 'New York', country: 'USA', hotel: 'The Plaza Hotel' },
+      { city: 'Tokyo', country: 'Japan', hotel: 'Park Hyatt Tokyo' }
+    ];
+
+    return sampleCities.map((item, index) => ({
+      hotelId: `sample-${index + 1}`,
+      hotelName: item.hotel,
+      city: item.city,
+      country: item.country,
+      rating: 4 + Math.random(),
+      reviewScore: 8.5 + Math.random() * 1.5,
+      numberOfReviews: Math.floor(1000 + Math.random() * 4000),
+      priceFrom: Math.floor(80 + Math.random() * 220),
+      currency: 'USD',
+      imageUrl: `https://picsum.photos/seed/${item.city}/400/300`,
+      description: `Experience luxury at ${item.hotel} in ${item.city}`,
+      amenities: ['Free WiFi', 'Pool', 'Spa', 'Restaurant'],
+      coordinates: { latitude: 0, longitude: 0 },
+      affiliateUrl: `https://www.agoda.com/search?city=${item.city}&cid=1955073`
+    }));
   }
 }

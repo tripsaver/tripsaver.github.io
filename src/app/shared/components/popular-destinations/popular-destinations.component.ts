@@ -39,8 +39,10 @@ export class PopularDestinationsComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
+    // Always show section
+    this.showSection = true;
+    
     if (this.agodaService.isDataSourceAvailable()) {
-      this.showSection = true;
       this.loadPopularDestinations();
     } else {
       this.loading = false;
@@ -96,8 +98,11 @@ export class PopularDestinationsComponent implements OnInit, OnDestroy {
       city: cityInfo.city,
       country: cityInfo.country,
       imageUrl: `https://picsum.photos/seed/${cityInfo.city}/400/280`,
-      affiliateUrl: getAgodaHotelLink({ city: cityInfo.city })
+      affiliateUrl: getAgodaHotelLink({ city: cityInfo.city }),
+      topHotel: undefined
     }));
+    this.showSection = true;
+    console.info('ℹ️ Showing sample destinations. Configure data source for real hotel data.');
   }
 
   trackDestinationClick(destination: Destination): void {
