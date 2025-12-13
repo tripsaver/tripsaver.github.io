@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AgodaDataService, AgodaHotel } from '../../../core/services/agoda-data/agoda-data.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, timeout } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { getAgodaHotelLink } from '../../../core/config/agoda-affiliate.config';
 
 interface Destination {
@@ -42,11 +43,15 @@ export class PopularDestinationsComponent implements OnInit, OnDestroy {
     // Always show section
     this.showSection = true;
     
+    // Try to load real data from Agoda CSV
     if (this.agodaService.isDataSourceAvailable()) {
+      this.loading = true;
       this.loadPopularDestinations();
     } else {
+      // Use sample data only if CSV not configured
       this.loading = false;
       this.loadSampleDestinations();
+      console.info('ℹ️ Agoda CSV not configured. Using sample destinations.');
     }
   }
 
@@ -60,9 +65,25 @@ export class PopularDestinationsComponent implements OnInit, OnDestroy {
     
     // Load hotels for popular cities
     this.agodaService.loadHotelData()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        timeout(8000), // 8 second timeout
+        takeUntil(this.destroy$),
+        catchError((error) => {
+          console.warn('Failed to load destinations from CSV, using sample data:', error);
+          return of([]);
+        })
+      )
       .subscribe({
         next: (hotels) => {
+          this.loading = false;
+          
+          if (hotels.length === 0) {
+            // No data from CSV, use sample
+            this.loadSampleDestinations();
+            console.info('ℹ️ No destination data from CSV. Using sample destinations.');
+            return;
+          }
+          
           this.destinations = this.popularCities.map(cityInfo => {
             // Find top-rated hotel for this city
             const cityHotels = hotels
@@ -78,16 +99,20 @@ export class PopularDestinationsComponent implements OnInit, OnDestroy {
               topHotel: topHotel,
               affiliateUrl: topHotel ? topHotel.affiliateUrl : getAgodaHotelLink({ city: cityInfo.city })
             };
-          }).filter(d => d.topHotel); // Only show cities with hotels in our data
+          });
 
-          // Take top 6 destinations
-          this.destinations = this.destinations.slice(0, 6);
-          this.loading = false;
+          // If no cities have hotels, use sample
+          if (this.destinations.filter(d => d.topHotel).length === 0) {
+            this.loadSampleDestinations();
+            console.info('ℹ️ No matching cities in CSV. Using sample destinations.');
+          } else {
+            console.log(`✅ Loaded ${this.destinations.length} destinations from Agoda CSV`);
+          }
         },
         error: (error) => {
+          this.loading = false;
           console.error('Error loading destinations:', error);
           this.loadSampleDestinations();
-          this.loading = false;
         }
       });
   }

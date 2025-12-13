@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AgodaDataService, AgodaHotel } from '../../../core/services/agoda-data/agoda-data.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, timeout } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-agoda-hotels',
@@ -24,13 +25,15 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
     // Always show section
     this.showSection = true;
     
-    // Try to load real data, fall back to sample data
+    // Try to load real data from Agoda CSV
     if (this.agodaService.isDataSourceAvailable()) {
+      this.loading = true;
       this.loadFeaturedHotels();
     } else {
-      // Show sample hotels if no data source
+      // Use sample data only if CSV not configured
       this.loading = false;
       this.featuredHotels = this.getSampleHotels();
+      console.info('ℹ️ Agoda CSV not configured. Using sample data.');
     }
   }
 
@@ -44,7 +47,14 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
     this.error = null;
 
     this.agodaService.getFeaturedHotels(12)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        timeout(8000), // 8 second timeout
+        takeUntil(this.destroy$),
+        catchError((err) => {
+          console.warn('Failed to load hotels from CSV, using sample data:', err);
+          return of([]);
+        })
+      )
       .subscribe({
         next: (hotels: AgodaHotel[]) => {
           this.loading = false;
@@ -52,16 +62,17 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
           // Use real data if available, otherwise use sample data
           if (hotels.length === 0) {
             this.featuredHotels = this.getSampleHotels();
-            console.info('ℹ️ No hotels data available. Showing sample hotels. Configure Google Drive link in agoda-affiliate.config.ts');
+            console.info('ℹ️ No hotels data from CSV. Using sample hotels.');
           } else {
             this.featuredHotels = hotels;
+            console.log(`✅ Loaded ${hotels.length} hotels from Agoda CSV`);
           }
         },
         error: (err) => {
           this.loading = false;
           // Show sample data on error
           this.featuredHotels = this.getSampleHotels();
-          console.warn('Unable to load hotels data. Showing sample hotels.', err);
+          console.warn('Error loading hotels, using sample data:', err);
         }
       });
   }
