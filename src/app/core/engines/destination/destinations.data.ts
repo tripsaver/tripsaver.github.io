@@ -9,11 +9,11 @@ export type DestinationCategory =
   | 'Beach' | 'Mountain' | 'Hill' | 'Heritage' | 'Spiritual'
   | 'Adventure' | 'Nature' | 'Wildlife' | 'City' | 'Coastal'
   | 'Backwaters' | 'Party' | 'Romantic' | 'Snow' | 'Ski'
-  | 'Colonial' | 'Island' | 'Culture';
+  | 'Colonial' | 'Island' | 'Culture' | 'Lake';
 
 export type ClimateType = 
   | 'tropical' | 'cold' | 'hot' | 'moderate' | 'humid'
-  | 'cool' | 'extreme' | 'cold_desert';
+  | 'cool' | 'extreme' | 'cold_desert' | 'wet';
 
 export type BudgetType = 'budget' | 'moderate' | 'premium';
 
