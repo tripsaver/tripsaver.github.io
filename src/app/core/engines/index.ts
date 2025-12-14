@@ -9,6 +9,8 @@
  * import { EngineFactory, RecommendationEngine, TripReadinessEngine } from '@core/engines';
  */
 
+// TEMPORARILY DISABLED TO TEST BUILD
+/*
 // Base Engine
 export * from './base.engine';
 
@@ -25,6 +27,7 @@ export * from './destination/destinations.data';
 export { TripReadinessScoringEngine } from './trip-readiness/trip-readiness-scoring.engine';
 export { DestinationScoringEngine } from './destination-scoring/destination-scoring.engine';
 export type { ScoredDestination } from './destination-scoring/destination-scoring.engine';
+*/
 
 /**
  * ARCHITECTURE OVERVIEW
