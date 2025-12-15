@@ -1,18 +1,15 @@
 <!-- HEADER -->
-<header>
+<header class="main-header">
   <div class="header-container">
     <div class="logo">TripSaver</div>
-    
-    <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="isMenuOpen" aria-label="Toggle menu">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
+
+    <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="isMenuOpen">
+      <span></span><span></span><span></span>
     </button>
-    
+
     <nav [class.mobile-open]="isMenuOpen">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
+      <a routerLink="/" routerLinkActive="active" (click)="closeMenu()">Home</a>
       <a routerLink="/hotels" routerLinkActive="active" (click)="closeMenu()">Hotels</a>
-      <!-- <a routerLink="/flights" routerLinkActive="active" (click)="closeMenu()">Flights</a> -->
       <a routerLink="/deals" routerLinkActive="active" (click)="closeMenu()">Deals</a>
       <a routerLink="/how-it-works" routerLinkActive="active" (click)="closeMenu()">How It Works</a>
       <a routerLink="/methodology" routerLinkActive="active" (click)="closeMenu()">Methodology</a>
@@ -22,417 +19,80 @@
   </div>
 </header>
 
-<!-- AI-POWERED DESTINATION FINDER -->
+<!-- HERO / FINDER -->
 <section class="finder-section">
-  <div class="finder-background">
-    <div class="finder-gradient"></div>
-    <div class="finder-pattern"></div>
-  </div>
-
   <div class="finder-container">
-    <!-- Left Content -->
+
+    <!-- LEFT -->
     <div class="finder-content">
-      <span class="finder-badge">✨ AI-Powered</span>
-      
-      <h1 class="finder-title">
-        Find Your <span class="highlight">Perfect Destination</span>
-      </h1>
-      
-      <p class="finder-description">
-        Answer 4 simple questions. Get recommendations backed by smart algorithms, not guesses. Discover the destination that matches YOUR travel style.
-      </p>
-      
-      <div class="finder-perks">
-        <div class="perk-item">
-          <span class="perk-icon">🎯</span>
-          <span>Smarter than opinions</span>
-        </div>
-        <div class="perk-item">
-          <span class="perk-icon">🔒</span>
-          <span>No hidden agendas</span>
-        </div>
-        <div class="perk-item">
-          <span class="perk-icon">⚡</span>
-          <span>Takes 60 seconds</span>
-        </div>
-      </div>
-
-      <div class="finder-stats">
-        <div class="stat">
-          <strong>45+</strong>
-          <span>Destinations</span>
-        </div>
-        <div class="stat">
-          <strong>110</strong>
-          <span>Scoring Points</span>
-        </div>
-        <div class="stat">
-          <strong>100%</strong>
-          <span>Transparent</span>
-        </div>
-      </div>
+      <span class="finder-badge">✨ AI Powered</span>
+      <h1>Find Your <span>Perfect Destination</span></h1>
+      <p>Answer 4 quick questions and get smart travel recommendations.</p>
     </div>
 
-    <!-- Right Form -->
-    <div class="finder-form-wrapper">
-      <div class="finder-card">
-        <div class="finder-intro">
-          <div class="intro-icon">🤖</div>
-          <h2 class="intro-title">AI-Powered Destination Finder</h2>
-          <p class="intro-subtitle">Let our intelligent algorithm find your perfect destination based on your preferences</p>
+    <!-- RIGHT FORM -->
+    <div class="finder-card">
+      <form (ngSubmit)="submitDestinationPreferences()" novalidate>
+
+        <!-- Month -->
+        <div class="finder-field">
+          <label>📅 Travel Month</label>
+          <select [(ngModel)]="travelMonth" name="travelMonth" required>
+            <option value="" disabled>Pick a month</option>
+            <option *ngFor="let m of monthOptions" [value]="m">{{ m }}</option>
+          </select>
         </div>
 
-        <form (ngSubmit)="submitDestinationPreferences()" class="finder-form" novalidate>
-          
-          <!-- When -->
-          <div class="finder-field">
-            <label for="travel-month" class="finder-label">
-              <span class="field-emoji">📅</span>
-              When are you traveling?
-            </label>
-            <select 
-              id="travel-month"
-              [(ngModel)]="travelMonth"
-              name="travelMonth"
-              class="finder-input"
-              required>
-              <option value="" disabled selected>Pick a month</option>
-              <option *ngFor="let month of monthOptions" [value]="month">{{ month }}</option>
-            </select>
-          </div>
+        <!-- Budget -->
+        <div class="finder-field">
+          <label>💰 Budget</label>
+          <select [(ngModel)]="budgetRange" name="budgetRange" required>
+            <option value="" disabled>Select budget</option>
+            <option *ngFor="let b of budgetOptions" [value]="b.value">
+              {{ b.label }}
+            </option>
+          </select>
+        </div>
 
-          <!-- Budget -->
-          <div class="finder-field">
-            <label for="budget-range" class="finder-label">
-              <span class="field-emoji">💰</span>
-              What's your budget?
-            </label>
-            <select 
-              id="budget-range"
-              [(ngModel)]="budgetRange"
-              name="budgetRange"
-              class="finder-input"
-              required>
-              <option value="" disabled selected>Select range</option>
-              <option *ngFor="let option of budgetOptions" [value]="option.value">
-                {{ option.label }}
-              </option>
-            </select>
-          </div>
+        <!-- Interests -->
+        <div class="finder-field">
+          <label>🎯 Interests</label>
 
-          <!-- Interests -->
-          <div class="finder-field interests-field">
-            <label class="finder-label">
-              <span class="field-emoji">🎯</span>
-              What interests you? (Select all that apply)
-            </label>
-            <div class="finder-interests-grid">
-              <button 
-                *ngFor="let interest of interestOptions"
-                type="button"
-                class="interest-card"
-                [class.selected]="isInterestSelected(interest.value)"
-                (click)="toggleInterest(interest.value)">
-                <span class="interest-label">{{ interest.label }}</span>
-                <span class="interest-check">✓</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Climate -->
-          <div class="finder-field">
-            <label for="climate" class="finder-label">
-              <span class="field-emoji">🌤️</span>
-              Climate preference
-            </label>
-            <select 
-              id="climate"
-              [(ngModel)]="climatePreference"
-              name="climatePreference"
-              class="finder-input"
-              required>
-              <option value="" disabled selected>Choose climate</option>
-              <option *ngFor="let option of climateOptions" [value]="option.value">
-                {{ option.label }}
-              </option>
-            </select>
-          </div>
-
-          <!-- CTA Buttons -->
-          <div class="finder-actions">
-            <button type="submit" class="btn-finder-primary">
-              <span>Get My Recommendation</span>
-              <span class="btn-arrow">→</span>
-            </button>
-            <button type="button" class="btn-finder-secondary" (click)="resetForm()">
-              Clear Form
+          <div class="finder-interests-grid">
+            <button
+              *ngFor="let interest of interestOptions"
+              type="button"
+              class="interest-card"
+              [class.selected]="isInterestSelected(interest.value)"
+              (click)="toggleInterest(interest.value)"
+            >
+              <span class="interest-icon">{{ interest.icon }}</span>
+              <span>{{ interest.label }}</span>
+              <span class="interest-check">✓</span>
             </button>
           </div>
-
-        </form>
-
-        <div class="finder-trust-note">
-          <span>🔒</span>
-          <span>No spam. No tracking. Completely private.</span>
         </div>
-      </div>
+
+        <!-- Climate -->
+        <div class="finder-field">
+          <label>🌤️ Climate</label>
+          <select [(ngModel)]="climatePreference" name="climatePreference" required>
+            <option value="" disabled>Select climate</option>
+            <option *ngFor="let c of climateOptions" [value]="c.value">
+              {{ c.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- CTA -->
+        <button class="btn-primary" type="submit">
+          Get Recommendation →
+        </button>
+
+      </form>
     </div>
+
   </div>
 </section>
 
-<!-- About TripSaver Section -->
-<section class="about-tripsaver">
-  <div class="container">
-    <p class="about-text">
-      TripSaver is a travel recommendation platform that helps users choose the most suitable booking website based on their travel preferences. We redirect users to trusted partners like Agoda and MakeMyTrip to complete bookings.
-    </p>
-  </div>
-</section>
-
-<!-- Requirement Form Modal -->
-<app-requirement-form 
-  *ngIf="showRequirementForm"
-  (formSubmit)="handleFormSubmit($event)"
-  (closeForm)="closeRequirementForm()">
-</app-requirement-form>
-
-<!-- Recommendation Result Modal -->
-<app-recommendation-result
-  *ngIf="showRecommendationResult && userRequirements"
-  [requirements]="userRequirements"
-  (closeResult)="closeRecommendationResult()">
-</app-recommendation-result>
-
-<!-- QUICK ACTION CTAs - Visible Without Scrolling -->
-<section class="quick-cta-bar" style="display: none;">
-  <div class="container">
-    <div class="quick-cta-grid">
-      <a routerLink="/hotels" class="quick-cta-card">
-        <span class="material-icons">hotel</span>
-        <div class="quick-cta-text">
-          <strong>Compare Hotel Prices</strong>
-          <small>Agoda</small>
-        </div>
-      </a>
-      <!-- <a routerLink="/flights" class="quick-cta-card">
-        <span class="material-icons">flight</span>
-        <div class="quick-cta-text">
-          <strong>Find Cheap Flights</strong>
-          <small>All Airlines, Best Deals</small>
-        </div>
-      </a> -->
-      <a routerLink="/deals" class="quick-cta-card">
-        <span class="material-icons">local_offer</span>
-        <div class="quick-cta-text">
-          <strong>Today's Top Deals</strong>
-          <small>Up to 50% Off</small>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- AGODA WIDGET - PRIME POSITION UNDER HERO -->
-<!-- <section class="agoda-widget-hero">
-  <div class="container">
-    <div class="section-header">
-      <h2>🏨 Search Hotels Instantly</h2>
-      <p>Compare prices and book your perfect stay with exclusive Agoda deals</p>
-    </div>
-    <div class="agoda-widget-wrapper">
-      <div id="adgshp-30325076"></div>
-    </div>
-    <div class="widget-footer-text">
-      <p><i class="fas fa-shield-alt"></i> Secure booking • Best price guarantee • Instant confirmation</p>
-    </div>
-  </div>
-</section> -->
-
-<!-- CATEGORY CARDS SECTION -->
-<!-- <section id="categories" class="categories-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Browse by Category</h2>
-      <p>Explore deals across different categories and save on everything you need</p>
-    </div>
-    <app-category-cards [categories]="categories"></app-category-cards>
-  </div>
-</section> -->
-
-<!-- FEATURED DEALS SECTION -->
-<section id="deals">
-  <!-- <app-featured-deals></app-featured-deals> -->
-</section>
-
-<!-- EXISTING COMPONENTS -->
-<app-popular-destinations></app-popular-destinations>
-
-<!-- AGODA HOTELS FROM CSV DATA -->
-<app-agoda-hotels></app-agoda-hotels>
-
-<app-top-deals></app-top-deals>
-
-<!-- AI RECOMMENDATIONS - Shown after form submission -->
-<app-smart-recommendations *ngIf="showSmartRecommendations"></app-smart-recommendations>
-
-<!-- TRAVEL GUIDES / DESTINATION GUIDES -->
-<section class="destination-guides-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>📚 Destination Guides</h2>
-      <p>Expert tips and insights for your next trip with the best hotel deals</p>
-    </div>
-    <div class="guides-grid">
-      <article class="guide-card">
-        <div class="guide-image">
-          <img src="https://picsum.photos/seed/goa-guide/400/250" alt="Goa Hotels Guide" loading="lazy">
-          <div class="guide-overlay"></div>
-          <span class="guide-badge badge-popular">🔥 Popular</span>
-        </div>
-        <div class="guide-body">
-          <h3>Top Hotels in Goa</h3>
-          <p>Discover the best beachfront resorts and budget hotels in Goa with exclusive Agoda deals</p>
-          <a href="https://www.agoda.com/search?city=8883&cid=1955073" 
-             target="_blank" 
-             rel="nofollow sponsored noopener"
-             class="guide-link">
-            <span class="material-icons">hotel</span>
-            Browse Goa Hotels →
-          </a>
-        </div>
-      </article>
-
-      <article class="guide-card">
-        <div class="guide-image">
-          <img src="https://picsum.photos/seed/bangkok-guide/400/250" alt="Bangkok Hotels Guide" loading="lazy">
-          <div class="guide-overlay"></div>
-          <span class="guide-badge badge-budget">💰 Budget</span>
-        </div>
-        <div class="guide-body">
-          <h3>Budget Hotels Bangkok</h3>
-          <p>Save more with our curated list of affordable stays in Bangkok's best neighborhoods</p>
-          <a href="https://www.agoda.com/search?city=1216&cid=1955073" 
-             target="_blank" 
-             rel="nofollow sponsored noopener"
-             class="guide-link">
-            <span class="material-icons">hotel</span>
-            Browse Bangkok Hotels →
-          </a>
-        </div>
-      </article>
-
-      <article class="guide-card">
-        <div class="guide-image">
-          <img src="https://picsum.photos/seed/dubai-guide/400/250" alt="Dubai Hotels Guide" loading="lazy">
-          <div class="guide-overlay"></div>
-          <span class="guide-badge badge-luxury">✨ Luxury</span>
-        </div>
-        <div class="guide-body">
-          <h3>Luxury Stay Dubai</h3>
-          <p>Experience world-class hospitality in Dubai's finest 5-star hotels and resorts</p>
-          <a href="https://www.agoda.com/search?city=5085&cid=1955073" 
-             target="_blank" 
-             rel="nofollow sponsored noopener"
-             class="guide-link">
-            <span class="material-icons">hotel</span>
-            Browse Dubai Hotels →
-          </a>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- WHY CHOOSE US -->
-<section class="why-choose-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>What Makes TripSaver Unique?</h2>
-      <p>We solve the confusion, not compete with booking platforms</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon-circle">
-          <span class="material-icons">apps</span>
-        </div>
-        <h3>Too Many Apps?</h3>
-        <p>Stop juggling multiple platforms. Get one clear recommendation in 60 seconds.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon-circle">
-          <span class="material-icons">psychology</span>
-        </div>
-        <h3>Confusing Offers?</h3>
-        <p>No more analysis paralysis. We guide you to the platform that fits your needs best.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon-circle">
-          <span class="material-icons">gps_fixed</span>
-        </div>
-        <h3>Wrong Platform?</h3>
-        <p>Budget traveler on a luxury site? Business trip on a leisure app? We match you right.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon-circle">
-          <span class="material-icons">schedule</span>
-        </div>
-        <h3>Wasting Time?</h3>
-        <p>Answer 4 simple questions. Get your recommended platform. Done in 1 minute.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS / FAQ -->
-<section class="how-it-works-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>How Do We Decide Recommendations?</h2>
-      <p>Transparent, preference-based guidance</p>
-    </div>
-    <div class="how-it-works-content">
-      <div class="explanation-card">
-        <div class="explanation-icon">
-          <span class="material-icons">lightbulb</span>
-        </div>
-        <p class="explanation-text">
-          We use a <strong>preference-based recommendation model</strong> that considers your travel type, destination, 
-          and platform strengths such as inventory coverage, cancellation flexibility, and payment options. 
-          <strong>We do not compare live prices or availability.</strong>
-        </p>
-      </div>
-      
-      <div class="features-breakdown">
-        <div class="breakdown-item">
-          <span class="material-icons">check_circle</span>
-          <span>Your travel preferences (solo, couple, family, business)</span>
-        </div>
-        <div class="breakdown-item">
-          <span class="material-icons">check_circle</span>
-          <span>Destination type (domestic vs international)</span>
-        </div>
-        <div class="breakdown-item">
-          <span class="material-icons">check_circle</span>
-          <span>Platform strengths (luxury, budget, flexibility)</span>
-        </div>
-        <div class="breakdown-item">
-          <span class="material-icons">check_circle</span>
-          <span>Payment & cancellation preferences</span>
-        </div>
-      </div>
-
-      <div class="learn-more-cta">
-        <a routerLink="/how-it-works" class="learn-more-btn" (click)="scrollToTop()">
-          <span class="material-icons">article</span>
-          Learn More About Our Process
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<app-footer id="footer"></app-footer>
+<app-footer></app-footer>
