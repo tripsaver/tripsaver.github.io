@@ -57,7 +57,7 @@ app.post('/api/destinations', async (req, res) => {
       body: JSON.stringify({
         dataSource: 'Cluster0',
         database: 'tripsaver',
-        collection: 'destination'
+        collection: 'destinations'
       })
     });
 
