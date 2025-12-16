@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map, catchError, of } from 'rxjs';
+import { Observable, map, catchError, of, timeout } from 'rxjs';
 import { Destination } from '../../engines/destination/destinations.data';
 
 interface MongoDocument {
@@ -48,6 +48,7 @@ export class MongoDBService {
   /**
    * Get all destinations from MongoDB
    * Uses CORS proxy for GitHub Pages compatibility
+   * Includes 5-second timeout to prevent hanging
    */
   getAllDestinations(): Observable<Destination[]> {
     const mongoUrl = `${this.CONFIG.dataApiUrl}/action/find`;
@@ -57,21 +58,22 @@ export class MongoDBService {
       collection: 'destinations'
     };
 
-    // Try direct MongoDB API first
+    // Try direct MongoDB API first (with 5-second timeout)
     return this.http.post<MongoResponse<Destination>>(
       mongoUrl,
       body,
       { headers: this.getHeaders() }
     ).pipe(
+      timeout(5000), // 5-second timeout
       map(response => {
         console.log('✅ MongoDB Direct API Response:', response);
         return response.documents || [];
       }),
       catchError(error => {
-        console.error('❌ Direct API failed:', error.status);
+        console.error('❌ Direct API failed:', error.status || 'timeout');
         console.warn('⚠️ Trying CORS Proxy...');
         
-        // If direct fails, try CORS proxy
+        // If direct fails, try CORS proxy (with 5-second timeout)
         const corsProxyUrl = `https://cors-anywhere.herokuapp.com/${mongoUrl}`;
         
         return this.http.post<MongoResponse<Destination>>(
@@ -79,12 +81,13 @@ export class MongoDBService {
           body,
           { headers: this.getHeaders() }
         ).pipe(
+          timeout(5000), // 5-second timeout for proxy
           map(response => {
             console.log('✅ CORS Proxy Response:', response);
             return response.documents || [];
           }),
           catchError(proxyError => {
-            console.error('❌ CORS Proxy also failed:', proxyError.status);
+            console.error('❌ CORS Proxy also failed:', proxyError.status || 'timeout');
             console.warn('⚠️ Falling back to static data');
             return of([]);
           })
