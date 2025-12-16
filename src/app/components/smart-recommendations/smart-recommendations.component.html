@@ -87,26 +87,26 @@
           {{ isScoreExpanded(i) ? '▼ Hide Score Details' : '🔍 View Score Breakdown' }}
         </button>
 
-        <div *ngIf="isScoreExpanded(i)" class="breakdown" [ngIf]="getScoreBreakdown(rec) as breakdown">
+        <div *ngIf="isScoreExpanded(i)" class="breakdown">
           <div class="breakdown-row">
             <span>Timing</span>
-            <span>{{ breakdown.timing.score }} / {{ breakdown.timing.max }}</span>
+            <span>{{ getScoreBreakdown(rec).timing.score }} / {{ getScoreBreakdown(rec).timing.max }}</span>
           </div>
           <div class="breakdown-row">
             <span>Budget Match</span>
-            <span>{{ breakdown.budget.score }} / {{ breakdown.budget.max }}</span>
+            <span>{{ getScoreBreakdown(rec).budget.score }} / {{ getScoreBreakdown(rec).budget.max }}</span>
           </div>
           <div class="breakdown-row">
             <span>Interest Match</span>
-            <span>{{ breakdown.interest.score }} / {{ breakdown.interest.max }}</span>
+            <span>{{ getScoreBreakdown(rec).interest.score }} / {{ getScoreBreakdown(rec).interest.max }}</span>
           </div>
           <div class="breakdown-row">
             <span>Climate</span>
-            <span>{{ breakdown.climate.score }} / {{ breakdown.climate.max }}</span>
+            <span>{{ getScoreBreakdown(rec).climate.score }} / {{ getScoreBreakdown(rec).climate.max }}</span>
           </div>
           <div class="breakdown-total">
             <strong>Total Score:</strong>
-            <strong>{{ breakdown.total }} / {{ breakdown.totalMax }}</strong>
+            <strong>{{ getScoreBreakdown(rec).total }} / {{ getScoreBreakdown(rec).totalMax }}</strong>
           </div>
         </div>
 

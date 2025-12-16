@@ -5,15 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Title, Meta } from '@angular/platform-browser';
 
-import { PopularDestinationsComponent } from '../../shared/components/popular-destinations/popular-destinations.component';
-import { TopDealsComponent } from '../../shared/components/top-deals/top-deals.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { AgodaHotelsComponent } from '../../shared/components/agoda-hotels/agoda-hotels.component';
-import {
-  RequirementFormComponent,
-  UserRequirements
-} from '../../shared/components/requirement-form/requirement-form.component';
-import { RecommendationResultComponent } from '../../shared/components/recommendation-result/recommendation-result.component';
 import { SmartRecommendationsComponent } from '../../components/smart-recommendations/smart-recommendations.component';
 
 interface Category {
@@ -32,12 +24,7 @@ interface Category {
     RouterLink,
     RouterLinkActive,
     FormsModule,
-    PopularDestinationsComponent,
-    TopDealsComponent,
     FooterComponent,
-    AgodaHotelsComponent,
-    RequirementFormComponent,
-    RecommendationResultComponent,
     SmartRecommendationsComponent
   ],
   templateUrl: './home.component.html',
