@@ -7,7 +7,7 @@
 
 import { Injectable, inject } from '@angular/core';
 import { BaseEngine, BaseEngineConfig, BaseEngineResult } from '../base.engine';
-import { Destination } from '../destination/destinations.data';
+import { Destination, DESTINATIONS_DATA } from '../destination/destinations.data';
 import { MongoDBService } from '../../services/mongodb/mongodb.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -53,20 +53,16 @@ export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput
     }
 
     // Fetch destinations from MongoDB
-    const destinations = await firstValueFrom(this.mongoService.getAllDestinations());
+    let destinations = await firstValueFrom(this.mongoService.getAllDestinations());
     
     console.log(`📊 Destinations fetched from MongoDB: ${destinations.length}`);
     
+    // If MongoDB returns empty, use static fallback data
     if (destinations.length === 0) {
-      this.logError('❌ No destinations found in MongoDB - check collection or credentials');
-      console.warn('⚠️ DestinationScoringEngine failing - MongoDB empty');
-      return {
-        engineName: this.config.name,
-        timestamp: new Date(),
-        success: false,
-        recommendations: [],
-        totalDestinationsScored: 0
-      };
+      console.warn('⚠️ MongoDB empty or unreachable');
+      console.log('✅ Using static destination data fallback');
+      destinations = Object.values(DESTINATIONS_DATA) as Destination[];
+      console.log(`📊 Loaded ${destinations.length} destinations from static data`);
     }
 
     const scored: ScoredDestination[] = [];

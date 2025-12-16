@@ -71,27 +71,10 @@ export class MongoDBService {
       }),
       catchError(error => {
         console.error('❌ Direct API failed:', error.status || 'timeout');
-        console.warn('⚠️ Trying CORS Proxy...');
-        
-        // If direct fails, try CORS proxy (with 5-second timeout)
-        const corsProxyUrl = `https://cors-anywhere.herokuapp.com/${mongoUrl}`;
-        
-        return this.http.post<MongoResponse<Destination>>(
-          corsProxyUrl,
-          body,
-          { headers: this.getHeaders() }
-        ).pipe(
-          timeout(5000), // 5-second timeout for proxy
-          map(response => {
-            console.log('✅ CORS Proxy Response:', response);
-            return response.documents || [];
-          }),
-          catchError(proxyError => {
-            console.error('❌ CORS Proxy also failed:', proxyError.status || 'timeout');
-            console.warn('⚠️ Falling back to static data');
-            return of([]);
-          })
-        );
+        console.warn('⚠️ CORS Proxy disabled (requires manual activation at https://cors-anywhere.herokuapp.com/corsdemo)');
+        console.warn('⚠️ Falling back to static destination data (this works perfectly!)');
+        console.info('ℹ️ For production: Deploy backend to Render.com or similar service');
+        return of([]);
       })
     );
   }
