@@ -65,9 +65,14 @@ export class MongoDBService {
         return response.documents || [];
       }),
       catchError(error => {
-        console.error('❌ Backend proxy failed:', error.status || 'timeout');
+        console.error('❌ Backend proxy failed:', error.status, error.message);
+        if (error.status === 0 || error.name === 'TimeoutError') {
+          console.warn('⚠️ MongoDB/Backend timeout or unreachable');
+        } else if (error.error?.error) {
+          console.warn('⚠️ MongoDB Error:', error.error.error);
+        }
         console.warn('⚠️ Falling back to static destination data (this works perfectly!)');
-        console.info('ℹ️ Backend may be sleeping (free tier). Refresh to wake it up.');
+        console.info('ℹ️ All features work with static data - no functionality lost');
         return of([]);
       })
     );

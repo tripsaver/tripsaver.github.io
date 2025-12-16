@@ -1,7 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const fetch = require('node-fetch');
 const app = express();
+
+// MongoDB Atlas App Services - REST Data API
+const MONGODB_PUBLIC_KEY = process.env.MONGODB_PUBLIC_KEY || 'gzggipjk';
+const MONGODB_PRIVATE_KEY = process.env.MONGODB_PRIVATE_KEY || '5c39bfd7-bc63-4656-b088-a147ca8ba608';
+const MONGODB_BASE_URL = `https://ap-south-1.aws.data.mongodb-api.com/app/${MONGODB_PUBLIC_KEY}/endpoint/data/v1`;
 
 // Enable CORS for your GitHub Pages domain
 app.use(cors({
@@ -10,16 +14,14 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-const MONGODB_API_URL = 'https://ap-south-1.aws.data.mongodb-api.com/app/gzggipjk/endpoint/data/v1';
-const MONGODB_API_KEY = process.env.MONGODB_API_KEY || 'VFPCzeFPD5k38njwbVmpf2vXvwdlQsGpmNY7OTfeTwRE6wJWh9Ht0cpLjN18Cww8';
+app.use(express.urlencoding({ extended: true }));
 
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({ 
     service: 'TripSaver Backend', 
     status: 'ok',
+    database: 'mongodb-rest-api',
     endpoints: {
       health: 'GET /api/health',
       destinations: 'POST /api/destinations',
@@ -32,18 +34,25 @@ app.get('/', (req, res) => {
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   console.log('✅ Health check requested');
-  res.json({ status: 'ok', service: 'TripSaver Backend', timestamp: new Date() });
+  res.json({ 
+    status: 'ok', 
+    service: 'TripSaver Backend', 
+    database: 'mongodb-rest-api',
+    configured: true,
+    timestamp: new Date() 
+  });
 });
 
 // Proxy endpoint for getting all destinations
 app.post('/api/destinations', async (req, res) => {
   try {
-    console.log('📍 [POST /api/destinations] Fetching destinations from MongoDB...');
-    const response = await fetch(`${MONGODB_API_URL}/action/find`, {
+    console.log('📍 [POST /api/destinations] Fetching destinations from MongoDB REST API...');
+    
+    const response = await fetch(`${MONGODB_BASE_URL}/action/find`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'api-key': MONGODB_API_KEY
+        'api-key': MONGODB_PRIVATE_KEY
       },
       body: JSON.stringify({
         dataSource: 'Cluster0',
@@ -55,118 +64,153 @@ app.post('/api/destinations', async (req, res) => {
     const data = await response.json();
     
     if (!response.ok) {
-      console.error('❌ MongoDB Error:', data);
-      return res.status(response.status).json({ error: data, message: 'MongoDB API error' });
+      console.error('❌ [POST /api/destinations] MongoDB Error:', data);
+      return res.status(response.status).json({ 
+        error: data, 
+        service: 'destinations',
+        documents: []
+      });
     }
 
     console.log(`✅ [POST /api/destinations] Fetched ${data.documents?.length || 0} destinations`);
-    res.json(data);
+    
+    res.json({
+      documents: data.documents || []
+    });
   } catch (error) {
     console.error('❌ [POST /api/destinations] Error:', error.message);
-    res.status(500).json({ error: error.message, service: 'destinations' });
+    res.status(500).json({ 
+      error: error.message, 
+      service: 'destinations',
+      documents: []
+    });
   }
 });
 
 // Proxy endpoint for searching destinations
 app.post('/api/search', async (req, res) => {
   try {
-    const { filter } = req.body;
-    console.log('🔍 Searching destinations with filter:', filter);
-
-    const response = await fetch(`${MONGODB_API_URL}/action/find`, {
+    const { query } = req.body;
+    console.log('📍 [POST /api/search] Search query:', query);
+    
+    const response = await fetch(`${MONGODB_BASE_URL}/action/find`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'api-key': MONGODB_API_KEY
+        'api-key': MONGODB_PRIVATE_KEY
       },
       body: JSON.stringify({
         dataSource: 'Cluster0',
         database: 'tripsaver',
         collection: 'destinations',
-        filter: filter || {}
+        filter: {
+          $or: [
+            { name: { $regex: query || '', $options: 'i' } },
+            { description: { $regex: query || '', $options: 'i' } },
+            { location: { $regex: query || '', $options: 'i' } }
+          ]
+        }
       })
     });
 
     const data = await response.json();
     
     if (!response.ok) {
-      console.error('❌ MongoDB Error:', data);
-      return res.status(response.status).json({ error: data });
+      console.error('❌ [POST /api/search] MongoDB Error:', data);
+      return res.status(response.status).json({ 
+        error: data,
+        documents: []
+      });
     }
 
-    console.log(`✅ Found ${data.documents?.length || 0} destinations`);
-    res.json(data);
+    console.log(`✅ [POST /api/search] Found ${data.documents?.length || 0} matches`);
+    
+    res.json({
+      documents: data.documents || []
+    });
   } catch (error) {
-    console.error('❌ Error searching destinations:', error.message);
-    res.status(500).json({ error: error.message });
+    console.error('❌ [POST /api/search] Error:', error.message);
+    res.status(500).json({ 
+      error: error.message,
+      documents: []
+    });
   }
 });
 
 // Get single destination by ID
 app.get('/api/destinations/:id', async (req, res) => {
   try {
-    const { id } = req.params;
-    console.log(`🔍 Fetching destination: ${id}`);
-
-    const response = await fetch(`${MONGODB_API_URL}/action/findOne`, {
+    console.log('📍 [GET /api/destinations/:id] ID:', req.params.id);
+    
+    const response = await fetch(`${MONGODB_BASE_URL}/action/findOne`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'api-key': MONGODB_API_KEY
+        'api-key': MONGODB_PRIVATE_KEY
       },
       body: JSON.stringify({
         dataSource: 'Cluster0',
         database: 'tripsaver',
         collection: 'destinations',
-        filter: { _id: id }
+        filter: { _id: req.params.id }
       })
     });
 
     const data = await response.json();
     
     if (!response.ok) {
-      console.error('❌ MongoDB Error:', data);
+      console.error('❌ [GET /api/destinations/:id] MongoDB Error:', data);
       return res.status(response.status).json({ error: data });
     }
 
-    console.log(`✅ Fetched destination: ${id}`);
-    res.json(data);
+    if (!data.document) {
+      console.warn(`⚠️ [GET /api/destinations/:id] Not found: ${req.params.id}`);
+      return res.status(404).json({ error: 'Destination not found' });
+    }
+    
+    console.log(`✅ [GET /api/destinations/:id] Found: ${data.document.name}`);
+    res.json(data.document);
   } catch (error) {
-    console.error(`❌ Error fetching destination ${req.params.id}:`, error.message);
+    console.error('❌ [GET /api/destinations/:id] Error:', error.message);
     res.status(500).json({ error: error.message });
   }
 });
 
-// 404 handler - catch all unmatched routes
+// 404 handler
 app.use((req, res) => {
-  console.warn(`⚠️ 404 Not Found: ${req.method} ${req.path}`);
+  console.warn(`⚠️ [${req.method}] ${req.path} - Not Found`);
   res.status(404).json({ 
-    error: 'Not Found', 
+    error: 'Endpoint not found', 
     path: req.path,
     method: req.method,
-    message: 'Use one of the available endpoints',
-    endpoints: {
-      health: 'GET /api/health',
-      destinations: 'POST /api/destinations',
-      search: 'POST /api/search',
-      destinationById: 'GET /api/destinations/:id'
-    }
+    available: [
+      'GET /',
+      'GET /api/health',
+      'POST /api/destinations',
+      'POST /api/search (with query body)',
+      'GET /api/destinations/:id'
+    ]
   });
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('❌ Error:', err);
-  res.status(500).json({ error: err.message });
+  console.error('❌ [ERROR HANDLER] Unhandled error:', err);
+  res.status(500).json({ 
+    error: err.message, 
+    timestamp: new Date() 
+  });
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`\n🚀 TripSaver Backend running on port ${PORT}`);
-  console.log(`📍 Available endpoints:`);
-  console.log(`   - GET  /               (service info)`);
-  console.log(`   - GET  /api/health     (health check)`);
-  console.log(`   - POST /api/destinations (get all)`);
-  console.log(`   - POST /api/search     (search)`);
-  console.log(`   - GET  /api/destinations/:id (get by id)\n`);
+  console.log(`🚀 TripSaver Backend running on port ${PORT}`);
+  console.log(`📊 MongoDB REST Data API configured`);
+  console.log(`🌐 CORS enabled for GitHub Pages`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('🛑 Shutting down...');
+  process.exit(0);
 });

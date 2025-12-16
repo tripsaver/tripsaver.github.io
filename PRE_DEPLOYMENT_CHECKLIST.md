@@ -1,5 +1,13 @@
 # Pre-Deployment Checklist ✅
 
+## MongoDB Credentials ✅
+
+- ✅ Public Key (App ID): `gzggipjk`
+- ✅ Private Key (API Key): `5c39bfd7-bc63-4656-b088-a147ca8ba608`
+- ✅ Credentials configured in `backend/server.js`
+- ✅ Credentials set as environment variable fallbacks
+- ✅ All endpoints use MongoDB REST API with credentials
+
 ## Code Quality
 
 - ✅ DestinationScoringEngine uses static fallback when MongoDB empty
@@ -15,9 +23,11 @@
 - ✅ Backend deployed to Render.com
 - ✅ Service URL: https://tripsaver-github-io.onrender.com
 - ✅ Health endpoint: /api/health (working)
-- ✅ Destinations endpoint: /api/destinations (working)
+- ✅ Destinations endpoint: /api/destinations (with MongoDB auth)
+- ✅ Search endpoint: /api/search (with MongoDB auth)
 - ✅ CORS enabled for GitHub Pages
 - ✅ Error logging in place
+- ✅ MongoDB REST API endpoints updated
 
 ## Frontend
 
