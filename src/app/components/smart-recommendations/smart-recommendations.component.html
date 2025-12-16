@@ -13,7 +13,7 @@
           <select 
             id="month"
             [(ngModel)]="preferences.month" 
-            (change)="getRecommendations()"
+            [disabled]="areInputsDisabled()"
             class="form-input">
             <option [value]="1">January</option>
             <option [value]="2">February</option>
@@ -35,7 +35,7 @@
           <select 
             id="budget"
             [(ngModel)]="preferences.budget" 
-            (change)="getRecommendations()"
+            [disabled]="areInputsDisabled()"
             class="form-input">
             <option value="budget">Budget (₹10k-20k)</option>
             <option value="moderate">Moderate (₹15k-30k)</option>
@@ -51,15 +51,25 @@
             <input 
               type="checkbox" 
               [checked]="preferences.categories.includes(cat)"
-              (change)="toggleCategory(cat); getRecommendations()">
+              [disabled]="areInputsDisabled()"
+              (change)="toggleCategory(cat)">
             <span>{{ cat }}</span>
           </label>
         </div>
       </div>
+
+      <!-- ✅ EXPLICIT ACTION BUTTON -->
+      <button 
+        (click)="getRecommendations()" 
+        [disabled]="isButtonDisabled()"
+        class="get-recommendations-btn"
+        [class.loading]="uiState.loading">
+        {{ getButtonLabel() }}
+      </button>
     </div>
 
     <!-- RESULTS SECTION -->
-    <div class="results" *ngIf="!isLoading && recommendations.length > 0">
+    <div class="results" *ngIf="!uiState.loading && recommendations.length > 0">
       <h3>✨ Recommended for You</h3>
       <p class="results-subtitle">Based on your preferences, here are our top recommendations</p>
 
@@ -118,19 +128,19 @@
     </div>
 
     <!-- LOADING STATE -->
-    <div *ngIf="isLoading" class="loading-state">
+    <div *ngIf="uiState.loading" class="loading-state">
       <div class="spinner"></div>
       <p>Finding perfect destinations for you...</p>
     </div>
 
     <!-- ERROR STATE -->
-    <div *ngIf="error" class="error-message">
-      ⚠️ {{ error }}
+    <div *ngIf="uiState.error" class="error-message">
+      ⚠️ {{ uiState.error }}
     </div>
 
     <!-- EMPTY STATE -->
-    <div *ngIf="!isLoading && recommendations.length === 0 && !error" class="empty-state">
-      <p>Select your preferences above to get personalized recommendations</p>
+    <div *ngIf="!uiState.loading && recommendations.length === 0 && !uiState.error" class="empty-state">
+      <p>Select your preferences above and click "Get Recommendations" to discover personalized destinations</p>
     </div>
   </div>
 </section>

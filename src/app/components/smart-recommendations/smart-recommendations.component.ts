@@ -23,10 +23,18 @@ import { DESTINATIONS_DATA } from '../../core/engines/destination/destinations.d
 export class SmartRecommendationsComponent implements OnInit {
   private recommendationEngine = inject(RecommendationEngine);
   
+  // ✅ Single source of truth for preferences (NEVER reset)
   preferences = {
     month: new Date().getMonth() + 1,
     budget: 'moderate' as 'budget' | 'moderate' | 'premium',
     categories: [] as string[]
+  };
+  
+  // ✅ Separate UI state (can change independently)
+  uiState = {
+    loading: false,
+    hasResults: false,
+    error: null as string | null
   };
   
   availableCategories = [
@@ -37,16 +45,29 @@ export class SmartRecommendationsComponent implements OnInit {
   
   recommendations: EnhancedRecommendation[] = [];
   expandedScores: Set<number> = new Set();
-  isLoading = false;
-  error = '';
   
   // Booking modal state
   isBookingModalOpen = false;
   selectedDestination: any = null;
 
   ngOnInit(): void {
-    // Auto-load recommendations with current month
-    this.getRecommendations();
+    // Don't auto-load - wait for user to click button
+    // User will see empty state with instructions
+  }
+
+  // ✅ Button label based on state
+  getButtonLabel(): string {
+    return this.uiState.hasResults ? '🔄 Refine Recommendations' : '🔍 Get Recommendations';
+  }
+
+  // ✅ Button disabled only during loading
+  isButtonDisabled(): boolean {
+    return this.uiState.loading;
+  }
+
+  // ✅ Inputs disabled during loading (but NOT cleared)
+  areInputsDisabled(): boolean {
+    return this.uiState.loading;
   }
 
   toggleCategory(category: string): void {
@@ -56,6 +77,7 @@ export class SmartRecommendationsComponent implements OnInit {
     } else {
       this.preferences.categories.push(category);
     }
+    // Don't auto-trigger - wait for explicit button click
   }
 
   toggleScoreDetails(index: number): void {
@@ -150,8 +172,9 @@ export class SmartRecommendationsComponent implements OnInit {
   }
 
   async getRecommendations(): Promise<void> {
-    this.isLoading = true;
-    this.error = '';
+    // ✅ Only change UI state, NEVER touch preferences
+    this.uiState.loading = true;
+    this.uiState.error = null;
     this.recommendations = [];
     this.expandedScores.clear();
 
@@ -168,17 +191,20 @@ export class SmartRecommendationsComponent implements OnInit {
       
       if (result.success) {
         this.recommendations = result.recommendations.slice(0, 6); // Top 6
+        this.uiState.hasResults = true;
       } else {
-        this.error = 'Failed to generate recommendations. Please try again.';
+        this.uiState.error = 'Failed to generate recommendations. Your preferences are saved — please try again.';
+        // ✅ Fallback handling
+        this.useFallbackRecommendations();
       }
     } catch (err: any) {
       console.error('Recommendation error:', err);
-      this.error = 'An error occurred. Please try again later.';
+      this.uiState.error = 'An error occurred. Your preferences are saved — please try again later.';
       
-      // Fallback to simple scoring without MongoDB
+      // ✅ Fallback to simple scoring without MongoDB
       this.useFallbackRecommendations();
     } finally {
-      this.isLoading = false;
+      this.uiState.loading = false;
     }
   }
 
