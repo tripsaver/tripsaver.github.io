@@ -46,34 +46,28 @@ export class MongoDBService {
   }
 
   /**
-   * Get all destinations from MongoDB
-   * Uses CORS proxy for GitHub Pages compatibility
-   * Includes 5-second timeout to prevent hanging
+   * Get all destinations from MongoDB via backend proxy
+   * Uses Render.com backend to handle CORS for GitHub Pages
+   * Includes 5-second timeout and fallback to static data
    */
   getAllDestinations(): Observable<Destination[]> {
-    const mongoUrl = `${this.CONFIG.dataApiUrl}/action/find`;
-    const body = {
-      dataSource: this.CONFIG.dataSource,
-      database: this.CONFIG.database,
-      collection: 'destinations'
-    };
-
-    // Try direct MongoDB API first (with 5-second timeout)
+    const backendUrl = 'https://tripsaver-github-io.onrender.com/api/destinations';
+    
+    // Try backend proxy first (with 5-second timeout)
     return this.http.post<MongoResponse<Destination>>(
-      mongoUrl,
-      body,
-      { headers: this.getHeaders() }
+      backendUrl,
+      {},
+      { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }
     ).pipe(
       timeout(5000), // 5-second timeout
       map(response => {
-        console.log('✅ MongoDB Direct API Response:', response);
+        console.log('✅ Backend Proxy Response:', response);
         return response.documents || [];
       }),
       catchError(error => {
-        console.error('❌ Direct API failed:', error.status || 'timeout');
-        console.warn('⚠️ CORS Proxy disabled (requires manual activation at https://cors-anywhere.herokuapp.com/corsdemo)');
+        console.error('❌ Backend proxy failed:', error.status || 'timeout');
         console.warn('⚠️ Falling back to static destination data (this works perfectly!)');
-        console.info('ℹ️ For production: Deploy backend to Render.com or similar service');
+        console.info('ℹ️ Backend may be sleeping (free tier). Refresh to wake it up.');
         return of([]);
       })
     );

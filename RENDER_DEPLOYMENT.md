@@ -35,8 +35,10 @@ Click **Create Web Service** and wait 2-3 minutes for deployment.
 ### Step 5: Get Your Backend URL
 Once deployed, you'll see:
 ```
-Service is live at https://tripsaver-backend.onrender.com
+Service is live at https://tripsaver-github-io.onrender.com
 ```
+
+✅ **Your Backend is Already Deployed:** https://tripsaver-github-io.onrender.com
 
 Copy this URL! You'll need it next.
 
@@ -51,10 +53,11 @@ Replace the `getAllDestinations()` method with:
 ```typescript
 /**
  * Get all destinations from MongoDB via backend proxy
- * (Avoids CORS issues with GitHub Pages)
+ * Uses Render.com backend to handle CORS for GitHub Pages
+ * Includes 5-second timeout and fallback to static data
  */
 getAllDestinations(): Observable<Destination[]> {
-  const backendUrl = 'https://tripsaver-backend.onrender.com/api/destinations';
+  const backendUrl = 'https://tripsaver-github-io.onrender.com/api/destinations';
   
   return this.http.post<MongoResponse<Destination>>(
     backendUrl,
@@ -81,7 +84,7 @@ getAllDestinations(): Observable<Destination[]> {
 
 ### Test Backend Health
 ```bash
-curl https://tripsaver-backend.onrender.com/api/health
+curl https://tripsaver-github-io.onrender.com/api/health
 ```
 
 Should return:
