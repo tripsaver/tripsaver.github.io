@@ -5,11 +5,9 @@
  * Comprehensive scoring engine for destinations based on multiple factors
  */
 
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BaseEngine, BaseEngineConfig, BaseEngineResult } from '../base.engine';
 import { Destination, DESTINATIONS_DATA } from '../destination/destinations.data';
-import { MongoDBService } from '../../services/mongodb/mongodb.service';
-import { firstValueFrom } from 'rxjs';
 
 export interface UserPreferences {
   categories: string[];
@@ -37,7 +35,6 @@ export interface DestinationScoringResult extends BaseEngineResult {
 
 @Injectable()
 export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput, DestinationScoringResult> {
-  private mongoService = inject(MongoDBService);
   
   protected config: BaseEngineConfig = {
     name: 'DestinationScoringEngine',
