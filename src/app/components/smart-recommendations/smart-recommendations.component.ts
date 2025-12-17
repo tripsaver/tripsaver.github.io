@@ -164,6 +164,19 @@ export class SmartRecommendationsComponent implements OnInit {
     };
   }
 
+  // ✅ NEW: Calculate interest match score for safety check
+  private calculateInterestMatchScore(dest: any): number {
+    if (this.preferences.categories.length === 0) {
+      return 0;
+    }
+    
+    const matches = dest.categories.filter((cat: string) => 
+      this.preferences.categories.includes(cat)
+    );
+    
+    return matches.length > 0 ? Math.min(25, matches.length * 12) : 0;
+  }
+
   getMonthName(month: number): string {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -215,9 +228,26 @@ export class SmartRecommendationsComponent implements OnInit {
       // Run UI updates in Angular zone to ensure change detection
       this.ngZone.run(() => {
         if (result.success && result.recommendations.length > 0) {
-          this.recommendations = result.recommendations.slice(0, 6); // Top 6
-          this.uiState.hasResults = true;
-          console.log('✅ [LOADER] Showing', this.recommendations.length, 'recommendations');
+          // ✅ SAFETY CHECK: Filter out any destination with 0 interest match
+          const validRecommendations = result.recommendations.filter(rec => {
+            const interestMatch = this.calculateInterestMatchScore(rec.destination);
+            if (interestMatch === 0) {
+              console.warn(`🚫 SAFETY: Filtering ${rec.destination.state} - Interest Match = 0`);
+              return false;
+            }
+            return true;
+          });
+
+          if (validRecommendations.length > 0) {
+            this.recommendations = validRecommendations.slice(0, 6); // Top 6
+            this.uiState.hasResults = true;
+            console.log('✅ [LOADER] Showing', this.recommendations.length, 'recommendations');
+          } else {
+            // All recommendations filtered out
+            console.log('⚠️ [LOADER] All recommendations filtered (interest match = 0)');
+            this.useFallbackRecommendations();
+            this.uiState.hasResults = true;
+          }
         } else {
           // Engine returned empty results, use fallback
           console.log('⚠️ [LOADER] Using fallback recommendations');

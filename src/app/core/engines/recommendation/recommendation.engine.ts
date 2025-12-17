@@ -186,16 +186,25 @@ export class RecommendationEngine extends BaseEngine<RecommendationInput, Recomm
           warnings.push(...criticalActions);
         }
 
-        // ✅ IMPROVED: Better recommendation type labels based on score tiers
-        // Interest match is already a hard filter (applied in DestinationScoringEngine)
+        // ✅ FIXED: Recommendation labels based on score percentage
+        // Percentages are clearer and more honest
         let recommendationType: EnhancedRecommendation['recommendationType'];
-        if (overallScore >= 70) {
+        const scorePercent = Math.round((overallScore / 100) * 100);
+        
+        if (scorePercent >= 70) {
           recommendationType = 'highly-recommended';
-        } else if (overallScore >= 50) {
+        } else if (scorePercent >= 55) {
           recommendationType = 'recommended';
-        } else {
-          // ✅ Changed: "consider" instead of "not-recommended" for 30-49%
+        } else if (scorePercent >= 40) {
           recommendationType = 'consider';
+        } else {
+          // ✅ LOW QUALITY: Filter out later
+          recommendationType = 'consider';
+        }
+
+        // ✅ Add soft warning for low scores
+        if (scorePercent < 50) {
+          warnings.unshift('⚠️ This destination partially matches your preferences');
         }
 
         return {
@@ -206,7 +215,13 @@ export class RecommendationEngine extends BaseEngine<RecommendationInput, Recomm
           warnings
         };
       })
-      // ✅ NEW: Filter out low-quality recommendations (less than 30% score)
-      .filter(rec => rec.overallRecommendationScore >= 30);
+      // ✅ CRITICAL: Filter out any destination with score < 40%
+      .filter(rec => {
+        const keep = rec.overallRecommendationScore >= 40;
+        if (!keep) {
+          console.log(`🚫 Filtering out ${rec.destination.state}: Score ${rec.overallRecommendationScore}% < 40%`);
+        }
+        return keep;
+      });
   }
 }

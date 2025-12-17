@@ -350,6 +350,21 @@ $text-muted: #6b7280;
   }
 }
 
+/* ========== LOW SCORE WARNING ========== */
+.low-score-warning {
+  background: $warning-bg;
+  border: 1px solid $warning-text;
+  color: $warning-text;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .cta-button {
   display: block;
   width: 100%;

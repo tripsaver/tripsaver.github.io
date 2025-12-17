@@ -129,6 +129,11 @@
           </div>
         </div>
 
+        <!-- ✅ Soft Warning for Low Scores -->
+        <div *ngIf="rec.overallRecommendationScore < 50" class="low-score-warning">
+          ⚠️ This destination partially matches your preferences
+        </div>
+
         <!-- CTA Button -->
         <button (click)="openBookingModal(rec)" class="cta-button">
           View booking options →

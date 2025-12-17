@@ -56,16 +56,22 @@ export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput
 
     const scored: ScoredDestination[] = [];
     
+    // 🔒 HARD FILTER: Only process destinations matching user interests
+    const userCategories = input.userPreferences.categories || [];
+    console.log(`🎯 User interests: ${userCategories.join(', ')}`);
+    
     for (const destination of destinations) {
       // ✅ HARD FILTER: Skip destinations that don't match user interests
-      if (input.userPreferences.categories && input.userPreferences.categories.length > 0) {
+      if (userCategories.length > 0) {
         const hasInterestMatch = destination.categories.some(cat => 
-          input.userPreferences.categories.includes(cat)
+          userCategories.includes(cat)
         );
         
         if (!hasInterestMatch) {
-          console.log(`⏭️ Filtering out ${destination.state} - no interest match`);
-          continue; // Skip this destination entirely
+          console.log(`⏭️ FILTERED OUT: ${destination.state} (has: ${destination.categories.join(', ')})`);
+          continue; // Skip this destination entirely - NEVER show it
+        } else {
+          console.log(`✅ PASSED FILTER: ${destination.state} (matches: ${destination.categories.filter(c => userCategories.includes(c)).join(', ')})`);
         }
       }
 
@@ -83,6 +89,7 @@ export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput
     scored.sort((a, b) => b.score - a.score);
 
     this.log(`Scored ${scored.length} destinations (after interest filtering)`);
+    console.log(`📋 Final destinations after filtering:`, scored.map(s => `${s.destination.state} (${s.score}%)`));
 
     return {
       engineName: this.config.name,
