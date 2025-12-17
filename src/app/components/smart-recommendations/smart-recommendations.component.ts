@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, inject } from '@angular/core';
+import { Component, OnInit, Input, inject, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BookingModalComponent } from '../booking-modal/booking-modal.component';
@@ -21,6 +21,8 @@ import { DESTINATIONS_DATA } from '../../core/engines/destination/destinations.d
 })
 export class SmartRecommendationsComponent implements OnInit {
   private recommendationEngine = inject(RecommendationEngine);
+  private ngZone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
   
   // ✅ Accept preferences from parent (home component)
   @Input() userPreferences: any = null;
@@ -193,6 +195,7 @@ export class SmartRecommendationsComponent implements OnInit {
     this.uiState.error = null;
     this.recommendations = [];
     this.expandedScores.clear();
+    this.cdr.markForCheck();
 
     try {
       const input: RecommendationInput = {
@@ -209,25 +212,36 @@ export class SmartRecommendationsComponent implements OnInit {
       
       console.log('✅ [LOADER] Engine result:', result.recommendations.length, 'recommendations');
       
-      if (result.success && result.recommendations.length > 0) {
-        this.recommendations = result.recommendations.slice(0, 6); // Top 6
-        this.uiState.hasResults = true;
-        console.log('✅ [LOADER] Showing', this.recommendations.length, 'recommendations');
-      } else {
-        // Engine returned empty results, use fallback
-        console.log('⚠️ [LOADER] Using fallback recommendations');
-        this.useFallbackRecommendations();
-        this.uiState.hasResults = true;
-      }
+      // Run UI updates in Angular zone to ensure change detection
+      this.ngZone.run(() => {
+        if (result.success && result.recommendations.length > 0) {
+          this.recommendations = result.recommendations.slice(0, 6); // Top 6
+          this.uiState.hasResults = true;
+          console.log('✅ [LOADER] Showing', this.recommendations.length, 'recommendations');
+        } else {
+          // Engine returned empty results, use fallback
+          console.log('⚠️ [LOADER] Using fallback recommendations');
+          this.useFallbackRecommendations();
+          this.uiState.hasResults = true;
+        }
+        this.cdr.markForCheck();
+      });
     } catch (err: any) {
       console.error('❌ [LOADER] Recommendation error:', err);
-      // Don't show error - just use fallback silently
-      this.useFallbackRecommendations();
-      this.uiState.hasResults = true;
+      // Run error handling in Angular zone
+      this.ngZone.run(() => {
+        // Don't show error - just use fallback silently
+        this.useFallbackRecommendations();
+        this.uiState.hasResults = true;
+        this.cdr.markForCheck();
+      });
     } finally {
       // ✅ Stop loading immediately (no artificial delays)
-      this.uiState.loading = false;
-      console.log('✅ [LOADER STOP] Complete!');
+      this.ngZone.run(() => {
+        this.uiState.loading = false;
+        this.cdr.markForCheck();
+        console.log('✅ [LOADER STOP] Complete!');
+      });
     }
   }
 
