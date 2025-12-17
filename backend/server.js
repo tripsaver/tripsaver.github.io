@@ -159,7 +159,7 @@ app.use((req, res) => {
 /* ===============================
    START SERVER
    =============================== */
-connectToMongo().hint(() => {
+connectToMongo().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 TripSaver Backend running on port ${PORT}`);
   });
