@@ -7,8 +7,6 @@ import { ContactComponent } from './pages/contact/contact.component';
 import { AboutComponent } from './pages/about/about.component';
 import { HowItWorksComponent } from './pages/how-it-works/how-it-works.component';
 import { MethodologyComponent } from './pages/methodology/methodology.component';
-import { EngineTestComponent } from './pages/engine-test/engine-test.component';
-import { MongoDbTestComponent } from './pages/mongodb-test/mongodb-test.component';
 import { ResultsComponent } from './pages/results/results.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { AffiliateDisclosureComponent } from './pages/affiliate-disclosure/affiliate-disclosure.component';

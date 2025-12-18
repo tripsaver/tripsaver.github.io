@@ -159,7 +159,7 @@ export class TripStepperComponent implements OnInit {
         }
       };
 
-      const result = await this.recommendationEngine.process(input).toPromise();
+      const result = await this.recommendationEngine.process(input);
 
       if (result && result.recommendations) {
         this.recommendations = result.recommendations;
