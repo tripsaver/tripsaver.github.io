@@ -21,10 +21,12 @@ export interface UserPreferences {
 export interface ScoredDestination {
   destinationId: string;
   destination: Destination;
-  score: number;
+  score: number; // Internal /110 score (hidden from UI)
+  displayScore: number; // Display /100 score (shown to users)
   reasons: string[];
   badges: string[];
   interestMatchScore?: number; // ✅ NEW: Explicit interest score
+  interestMatchMessage?: string; // ✅ Match type: primary, secondary, weak
 }
 
 export interface DestinationScoringInput {
@@ -106,14 +108,16 @@ export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput
         }
       }
 
-      const { score, reasons, badges, interestMatchScore } = this.scoreDestination(destination, input.userPreferences);
+      const { score, displayScore, reasons, badges, interestMatchScore, interestMatchMessage } = this.scoreDestination(destination, input.userPreferences);
       scored.push({
         destinationId: (destination as any)._id || '',
         destination,
         score,
+        displayScore,
         reasons,
         badges,
-        interestMatchScore // ✅ Pass the actual interest score
+        interestMatchScore,
+        interestMatchMessage
       });
     }
 
@@ -121,7 +125,7 @@ export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput
     scored.sort((a, b) => b.score - a.score);
 
     this.log(`Scored ${scored.length} destinations (after interest filtering)`);
-    console.log(`📋 Final destinations after filtering:`, scored.map(s => `${s.destination.state} (${s.score}%)`));
+    console.log(`📋 Final destinations after filtering:`, scored.map(s => `${s.destination.state} (${s.displayScore}/100)`));
 
     return {
       engineName: this.config.name,
@@ -140,9 +144,10 @@ export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput
   private scoreDestination(
     dest: Destination, 
     prefs: UserPreferences
-  ): { score: number; reasons: string[]; badges: string[]; interestMatchScore: number } {
-    let score = 0;
-    let interestMatchScore = 0; // ✅ Track explicitly
+  ): { score: number; displayScore: number; reasons: string[]; badges: string[]; interestMatchScore: number; interestMatchMessage: string } {
+    let score = 0; // Internal /110 scale
+    let interestMatchScore = 0; // Track explicitly
+    let interestMatchMessage = 'secondary'; // Default to secondary match
     const reasons: string[] = [];
     const badges: string[] = [];
     
@@ -192,18 +197,29 @@ export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput
       
       console.log(`   📊 Interest matching: ${JSON.stringify(matchingCategories)}`);
       
-      if (matchingCategories.length > 0) {
-        interestMatchScore = Math.min(25, matchingCategories.length * 12);
-        score += interestMatchScore;
-        reasons.push(`✓ ${matchingCategories.length} matching interest${matchingCategories.length > 1 ? 's' : ''}`);
-        console.log(`   ✅ Interest match found! Score: ${interestMatchScore}/25`);
-        
+      if (matchingCategories.length >= 1) {
+        // Primary match: destination has 2+ of user's selected interests
         if (matchingCategories.length >= 2) {
+          interestMatchScore = 25;
+          interestMatchMessage = 'primary';
+          reasons.push(`✅ Matches your ${matchingCategories.length} selected interests`);
           badges.push('Perfect Match');
+        } 
+        // Secondary match: destination has 1 of user's interests
+        else {
+          interestMatchScore = 15; // Partial credit
+          interestMatchMessage = 'secondary';
+          reasons.push(`⚠️ Partial match — has ${matchingCategories[0]} experiences`);
         }
-      } else {
-        console.log(`   ❌ NO INTEREST MATCH FOUND - This should have been filtered!`);
-        interestMatchScore = 0;
+        score += interestMatchScore;
+        console.log(`   ✅ Interest match: ${matchingCategories.length} category/ies. Score: ${interestMatchScore}/25 (${interestMatchMessage})`);
+      } 
+      // Weak match: destination doesn't match but passed hard filter? (shouldn't happen)
+      else {
+        interestMatchScore = 5; // Minimum credit
+        interestMatchMessage = 'weak';
+        score += interestMatchScore;
+        console.log(`   ℹ️ Limited interest match. Score: ${interestMatchScore}/25 (weak)`);
       }
     } else {
       console.log(`   ⚠️ No user categories provided`);
@@ -227,12 +243,15 @@ export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput
       badges.push('Popular Choice');
     }
     
-    // Ensure score is within bounds
-    score = Math.max(0, Math.min(100, score));
+    // Ensure internal score doesn't go below 0 (no upper cap on /110 scale)
+    score = Math.max(0, score);
     
-    console.log(`   🎯 Final Score: ${score}/100 (Interest: ${interestMatchScore}/25)\n`);
+    // Convert /110 internal score to /100 display score
+    const displayScore = Math.round((score / 110) * 100);
     
-    return { score, reasons, badges, interestMatchScore };
+    console.log(`   🎯 Internal Score: ${score}/110 → Display Score: ${displayScore}/100 (Interest: ${interestMatchScore}/25)\n`);
+    
+    return { score, displayScore, reasons, badges, interestMatchScore, interestMatchMessage };
   }
 }
 

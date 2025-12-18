@@ -125,7 +125,7 @@
           </div>
           <div class="breakdown-total">
             <strong>Total Score:</strong>
-            <strong>{{ getScoreBreakdown(rec).total }} / {{ getScoreBreakdown(rec).totalMax }}</strong>
+            <strong>{{ getScoreBreakdown(rec).displayTotal }} / {{ getScoreBreakdown(rec).displayMax }}</strong>
           </div>
         </div>
 
@@ -139,13 +139,11 @@
           🚫 {{ getBookingDisabledMessage(rec) }}
         </div>
 
-        <!-- CTA Button - Disabled if Interest Match = 0 -->
+        <!-- CTA Button - Always enabled with contextual messaging based on interest match -->
         <button 
           (click)="openBookingModal(rec)" 
-          [disabled]="isBookingDisabled(rec)"
-          class="cta-button"
-          [class.disabled]="isBookingDisabled(rec)">
-          {{ isBookingDisabled(rec) ? '❌ Doesn\'t Match Your Interests' : 'View booking options →' }}
+          class="cta-button">
+          {{ getBookingButtonText(rec) }}
         </button>
       </div>
     </div>

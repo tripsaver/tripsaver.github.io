@@ -165,18 +165,34 @@ export class SmartRecommendationsComponent implements OnInit {
       climate: { score: climateScore, max: 15 },
       popularity: { score: popularityScore, max: 5 },
       total: timingScore + budgetScore + interestScore + climateScore + popularityScore,
-      totalMax: 110
+      totalMax: 110,
+      // ✅ Display score (normalized to /100)
+      displayTotal: Math.round(((timingScore + budgetScore + interestScore + climateScore + popularityScore) / 110) * 100),
+      displayMax: 100
     };
   }
 
-  // ✅ NEW: Check if booking should be disabled (Interest Match = 0)
+  // ✅ UPDATED: Never disable booking - all destinations shown have relevance
   isBookingDisabled(rec: EnhancedRecommendation): boolean {
-    const actualInterestMatch = (rec as any).interestMatchScore || 0;
-    if (actualInterestMatch === 0) {
-      console.warn(`🚫 BOOKING DISABLED: ${rec.destination.state} - Interest Match = 0`);
-      return true;
-    }
+    // With new scoring: all destinations get at least 5pts for interest
+    // so booking is ALWAYS enabled
     return false;
+  }
+
+  // ✅ NEW: Get contextual button text based on interest match type
+  getBookingButtonText(rec: EnhancedRecommendation): string {
+    const matchMessage = (rec as any).interestMatchMessage || 'secondary';
+    
+    switch (matchMessage) {
+      case 'primary':
+        return '🎯 View booking options →';
+      case 'secondary':
+        return '⚠️ View booking options →';
+      case 'weak':
+        return 'ℹ️ View booking options →';
+      default:
+        return 'View booking options →';
+    }
   }
 
   // ✅ NEW: Check if recommendation should not be displayed at all
@@ -355,15 +371,19 @@ export class SmartRecommendationsComponent implements OnInit {
         }
       }
       
+      const internalScore = score;
+      const displayScore = Math.round((internalScore / 110) * 100);
+      
       return {
         destinationId: id,
         destination: dest,
-        score,
+        score: internalScore,
+        displayScore,
         reasons,
         badges,
-        overallRecommendationScore: Math.min(100, score),
-        recommendationType: score >= 80 ? 'highly-recommended' : 
-                           score >= 65 ? 'recommended' : 'consider',
+        overallRecommendationScore: Math.min(100, displayScore),
+        recommendationType: displayScore >= 80 ? 'highly-recommended' : 
+                           displayScore >= 65 ? 'recommended' : 'consider',
         warnings: []
       } as EnhancedRecommendation;
     });
