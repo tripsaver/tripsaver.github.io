@@ -61,57 +61,9 @@ export interface Destination {
 }
 
 // ⚠️ EMPTY - All data now in MongoDB
+export const DESTINATIONS_DATA: Record<string, Destination> = {};// ⚠️ EMPTY - All data now in MongoDB
 export const DESTINATIONS_DATA: Record<string, Destination> = {};
-  'gokarna': {
-    id: 'gokarna',
-    name: 'Gokarna',
-    state: 'Karnataka',
-    country: 'India',
-    type: 'beach',
-    categories: ['Beach', 'Spiritual'],
-    bestMonths: [10, 11, 12, 1, 2],
-    avoidMonths: [6, 7, 8],
-    climate: 'tropical',
-    budget: 'budget',
-    scores: { beach: 95, adventure: 65, relaxation: 90, nightlife: 40, family: 70 },
-    agoda: 'gokarna-in'
-  },
-  'varkala': {
-    id: 'varkala',
-    name: 'Varkala',
-    state: 'Kerala',
-    country: 'India',
-    type: 'beach',
-    categories: ['Beach', 'Spiritual'],
-    bestMonths: [10, 11, 12, 1, 2],
-    avoidMonths: [6, 7, 8],
-    climate: 'tropical',
-    budget: 'budget',
-    scores: { beach: 92, relaxation: 88, spiritual: 75, adventure: 50, nightlife: 35 },
-    agoda: 'varkala-in'
-  },
-  'udupi': {
-    id: 'udupi',
-    name: 'Udupi',
-    state: 'Karnataka',
-    country: 'India',
-    type: 'beach',
-    categories: ['Beach', 'Spiritual', 'Heritage'],
-    bestMonths: [10, 11, 12, 1, 2],
-    avoidMonths: [6, 7, 8],
-    climate: 'tropical',
-    budget: 'budget',
-    scores: { beach: 88, spiritual: 85, heritage: 75, relaxation: 80, family: 75 },
-    agoda: 'udupi-in'
-  },
-  'palolem-goa': {
-    id: 'palolem-goa',
-    name: 'Palolem',
-    state: 'Goa',
-    country: 'India',
-    type: 'beach',
-    categories: ['Beach', 'Party'],
-    bestMonths: [11, 12, 1, 2, 3],
+
     avoidMonths: [6, 7, 8, 9],
     climate: 'tropical',
     budget: 'moderate',
