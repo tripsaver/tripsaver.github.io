@@ -1,17 +1,21 @@
 /**
- * DESTINATIONS DATA (v2)
- * =======================
+ * DEPRECATED: Destinations Data (Static)
+ * ======================================
  * 
- * City-level destinations with experience-based scoring
+ * This file is NO LONGER USED.
  * 
- * Structure:
- * - name: Actual destination city/town
- * - state: Parent state (metadata)
- * - type: Primary destination type (beach, hill, city, heritage, island, wildlife)
- * - categories: Experience tags
- * - scores: Experience-specific scores (0-100) for matching
+ * All destination data is now stored in MongoDB Atlas.
+ * 
+ * Frontend fetches destinations via API:
+ * GET /api/destinations
+ * 
+ * For development, use the MongoDB seed endpoint:
+ * GET /api/seed-destinations
+ * 
+ * See: MONGODB_MIGRATION_GUIDE.md for setup instructions
  */
 
+// Type definitions maintained for backward compatibility
 export type DestinationType = 'beach' | 'hill' | 'city' | 'heritage' | 'island' | 'wildlife' | 'spiritual';
 
 export type DestinationCategory = 
@@ -56,10 +60,8 @@ export interface Destination {
   agoda: string;
 }
 
-export const DESTINATIONS_DATA: Record<string, Destination> = {
-  /* =====================
-     BEACH DESTINATIONS
-  ===================== */
+// ⚠️ EMPTY - All data now in MongoDB
+export const DESTINATIONS_DATA: Record<string, Destination> = {};
   'gokarna': {
     id: 'gokarna',
     name: 'Gokarna',
