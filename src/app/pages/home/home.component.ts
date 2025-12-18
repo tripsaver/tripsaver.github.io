@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Title, Meta } from '@angular/platform-browser';
 
-import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { SmartRecommendationsComponent } from '../../components/smart-recommendations/smart-recommendations.component';
 import { TrustConfigService } from '../../core/services/trust-config.service';
 
@@ -31,7 +30,6 @@ interface UserRequirements {
     RouterLink,
     RouterLinkActive,
     FormsModule,
-    FooterComponent,
     SmartRecommendationsComponent
   ],
   templateUrl: './home.component.html',
