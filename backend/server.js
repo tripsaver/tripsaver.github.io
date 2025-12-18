@@ -92,15 +92,21 @@ app.get('/api/health', (req, res) => {
 // Get all destinations
 app.get('/api/destinations', async (req, res) => {
   try {
-    const destinations = await db
+    const result = await db
       .collection('destinations')
-      .find({})
-      .toArray();
+      .findOne({});
 
+    if (!result) {
+      return res.json([]);
+    }
+
+    // Extract destinations array from wrapper document
+    const destinations = result.destinations || [];
+    
     res.json(destinations);
   } catch (err) {
-    console.error('❌ /api/destinations:', err.message);
-    res.status(500).json({ error: err.message });
+    console.error('Error fetching destinations:', err);
+    res.status(500).json({ error: 'Failed to fetch destinations' });
   }
 });
 
