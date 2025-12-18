@@ -69,6 +69,9 @@ export class SmartRecommendationsComponent implements OnInit {
   isBookingModalOpen = false;
   selectedDestination: any = null;
 
+  // 🎠 Carousel state
+  currentCardIndex = 0;
+
   ngOnInit(): void {
     // Fetch trust config from MongoDB (non-blocking)
     this.trustConfigService.getConfig().subscribe(config => {
@@ -490,6 +493,20 @@ export class SmartRecommendationsComponent implements OnInit {
   closeBookingModal(): void {
     this.isBookingModalOpen = false;
     this.selectedDestination = null;
+  }
+
+  // 🎠 Navigate to next card
+  nextCard(): void {
+    if (this.currentCardIndex < this.recommendations.length - 1) {
+      this.currentCardIndex++;
+    }
+  }
+
+  // 🎠 Navigate to previous card
+  previousCard(): void {
+    if (this.currentCardIndex > 0) {
+      this.currentCardIndex--;
+    }
   }
 
   // 📱 Toggle mobile menu
