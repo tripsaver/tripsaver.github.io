@@ -10,6 +10,9 @@ import { MethodologyComponent } from './pages/methodology/methodology.component'
 import { EngineTestComponent } from './pages/engine-test/engine-test.component';
 import { MongoDbTestComponent } from './pages/mongodb-test/mongodb-test.component';
 import { ResultsComponent } from './pages/results/results.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { AffiliateDisclosureComponent } from './pages/affiliate-disclosure/affiliate-disclosure.component';
+import { TermsComponent } from './pages/terms/terms.component';
 
 export const routes: Routes = [
 	{ path: '', component: HomeComponent },
@@ -21,6 +24,9 @@ export const routes: Routes = [
 	{ path: 'about', component: AboutComponent },
 	{ path: 'how-it-works', component: HowItWorksComponent },
 	{ path: 'methodology', component: MethodologyComponent },
+	{ path: 'privacy-policy', component: PrivacyPolicyComponent },
+	{ path: 'terms', component: TermsComponent },
+	{ path: 'affiliate-disclosure', component: AffiliateDisclosureComponent },
 	{ path: 'engine-test', component: EngineTestComponent },
 	{ path: 'mongodb-test', component: MongoDbTestComponent },
 	{ path: '**', redirectTo: '' }

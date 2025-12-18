@@ -58,12 +58,66 @@
   h1 {
     font-size: 2.5rem;
     font-weight: 800;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
   
   p {
     font-size: 1.1rem;
     opacity: 0.9;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Verification Strip Styling */
+.verification-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 0.75rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-wrap: wrap;
+  
+  .verification-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: white;
+    
+    .verification-icon {
+      font-size: 1.25rem;
+    }
+    
+    .verification-text {
+      white-space: nowrap;
+    }
+  }
+  
+  .verification-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.3);
+    
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    
+    .verification-item {
+      justify-content: center;
+      font-size: 0.9rem;
+    }
   }
 }
 
@@ -190,6 +244,34 @@
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  }
+}
+
+/* Scarcity Signals */
+.scarcity-signals {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 5;
+
+  .scarcity-badge {
+    background: #ecfdf5;
+    color: #047857;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #6ee7b7;
+    backdrop-filter: blur(10px);
+
+    &.trending {
+      background: #fef3c7;
+      color: #92400e;
+      border-color: #fbbf24;
+    }
   }
 }
 
@@ -361,10 +443,27 @@
     margin-bottom: 0.5rem;
   }
   
-  p {
+  > p {
     font-size: 1.1rem;
     opacity: 0.9;
     margin-bottom: 2rem;
+  }
+  
+  .newsletter-disclaimer {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    line-height: 1.5;
+    
+    .disclaimer-link {
+      color: #fbbf24;
+      text-decoration: underline;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: #fcd34d;
+      }
+    }
   }
 }
 

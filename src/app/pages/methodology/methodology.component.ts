@@ -14,18 +14,22 @@ export class MethodologyComponent implements OnInit {
   private titleService = inject(Title);
   private metaService = inject(Meta);
 
+  // Last updated timestamp for transparency
+  lastUpdated = new Date('2025-12-18T00:00:00Z');
+  lastUpdatedFormatted: string = '';
+
   engines = [
     {
       name: 'Destination Scoring Engine',
       version: '2.0.0',
       description: 'Intelligently scores destinations based on your preferences, timing, budget, and interests.',
       factors: [
-        { name: 'Perfect Timing', weight: 40, description: 'Best months to visit vs. months to avoid' },
-        { name: 'Budget Match', weight: 30, description: 'How well the destination fits your budget' },
-        { name: 'Interest Match', weight: 25, description: 'Categories like beach, adventure, heritage' },
-        { name: 'Climate Preference', weight: 15, description: 'Weather patterns you prefer' }
+        { name: 'Perfect Timing', weight: 36, description: 'Best months to visit vs. months to avoid' },
+        { name: 'Budget Match', weight: 27, description: 'How well the destination fits your budget' },
+        { name: 'Interest Match', weight: 23, description: 'Categories like beach, adventure, heritage' },
+        { name: 'Climate Preference', weight: 14, description: 'Weather patterns you prefer' }
       ],
-      totalPoints: 110,
+      totalPoints: 100,
       badges: ['Perfect Season', 'Budget Match', 'Perfect Match', 'Great Weather', 'Popular Choice']
     },
     {
@@ -80,6 +84,16 @@ export class MethodologyComponent implements OnInit {
     this.metaService.updateTag({
       name: 'description',
       content: 'Transparent, data-driven travel recommendations. Learn how our engines score destinations and evaluate trip readiness.'
+    });
+
+    // Format last updated timestamp
+    this.lastUpdatedFormatted = this.lastUpdated.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'UTC'
     });
   }
 }

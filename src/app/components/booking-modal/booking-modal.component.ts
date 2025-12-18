@@ -314,8 +314,19 @@ export class BookingModalComponent {
   }
 
   trackClick(platformName: string): void {
-    console.log(`User chose ${platformName} for ${this.destinationName}`);
-    // Add analytics tracking here
+    // 📊 LOG BOOKING PLATFORM CLICK - For analytics (console for now)
+    const bookingLog = {
+      timestamp: new Date().toISOString(),
+      event: 'booking_platform_click',
+      platform: platformName,
+      destination: this.destinationName,
+      agodaCode: this.agodaCode || 'N/A'
+    };
+    
+    console.log('🎯 BOOKING CLICK:', bookingLog);
+    // TODO: Send to analytics service
+    // this.analyticsService.track('booking_platform_click', bookingLog);
+    
     this.close();
   }
 }

@@ -1,19 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
-
-interface TeamMember {
-  name: string;
-  role: string;
-  image: string;
-}
-
-interface Stat {
-  icon: string;
-  value: string;
-  label: string;
-}
 
 @Component({
   selector: 'app-about',
@@ -23,31 +11,21 @@ interface Stat {
   styleUrl: './about.component.scss'
 })
 export class AboutComponent implements OnInit {
-  constructor(
-    private titleService: Title,
-    private metaService: Meta
-  ) {}
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
 
   ngOnInit() {
-    this.titleService.setTitle('About TripSaver - Your Trusted Agoda Hotel Deals Platform');
+    this.titleService.setTitle('About TripSaver - Data-Driven Travel Recommendations');
     this.metaService.updateTag({ 
       name: 'description', 
-      content: 'TripSaver partners with Agoda to bring you the best hotel deals worldwide. Trusted by 50K+ travelers. Save money on every booking with exclusive Agoda offers.' 
+      content: 'Learn about TripSaver - transparent, data-driven travel recommendations powered by intelligent scoring engines. No sponsored rankings, just smart travel decisions.'
+    });
+    this.metaService.updateTag({ 
+      name: 'keywords', 
+      content: 'about TripSaver, travel recommendations, data-driven travel, transparent travel platform, smart destinations'
     });
   }
-
-  stats: Stat[] = [
-    { icon: 'people', value: '50K+', label: 'Happy Travelers' },
-    { icon: 'savings', value: '₹2Cr+', label: 'Money Saved' },
-    { icon: 'hotel', value: '10K+', label: 'Agoda Hotels' },
-    { icon: 'star', value: '4.5+', label: 'Average Rating' }
-  ];
-
-  features = [
-    {
-      icon: 'hotel',
-      title: 'Best Agoda Deals',
-      description: 'Discover exclusive Agoda hotel deals and discounts curated just for you.'
+}
     },
     {
       icon: 'verified',

@@ -18,20 +18,68 @@
 <!-- HERO SECTION -->
 <section class="hero-section">
   <div class="container">
-    <h1 class="page-title">How TripSaver Helps You Choose the Right Hotel Platform</h1>
+    <h1 class="page-title">How TripSaver Makes Smart Travel Recommendations</h1>
     <p class="page-subtitle">
-      TripSaver helps travelers find the most suitable hotel booking platform based on their travel needs — 
-      <strong>without comparing prices or availability.</strong>
+      TripSaver uses data-driven algorithms to deliver intelligent destination and hotel recommendations 
+      tailored to your travel preferences.
     </p>
+  </div>
+</section>
+
+<!-- ENGINE FLOW VISUALIZATION -->
+<section class="engine-flow-section">
+  <div class="container">
+    <h2 class="section-title">Our Recommendation Process</h2>
+    <div class="flow-diagram">
+      <div class="flow-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Preferences Collected</h3>
+          <p>You tell us your travel dates, budget, interests, and travel style</p>
+          <div class="step-icon">🎯</div>
+        </div>
+      </div>
+      
+      <div class="flow-arrow">→</div>
+      
+      <div class="flow-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Smart Scoring Engine</h3>
+          <p>Our algorithm scores destinations on timing, budget fit, and personal interests</p>
+          <div class="step-icon">⚙️</div>
+        </div>
+      </div>
+      
+      <div class="flow-arrow">→</div>
+      
+      <div class="flow-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Personalized Recommendations</h3>
+          <p>Get smart, data-backed hotel and destination suggestions</p>
+          <div class="step-icon">💡</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Methodology CTA -->
+    <div class="methodology-cta">
+      <a href="/methodology" class="cta-link">
+        <span class="material-icons">visibility</span>
+        See our transparent scoring methodology
+      </a>
+      <p class="cta-note">All algorithms documented for complete transparency</p>
+    </div>
   </div>
 </section>
 
 <!-- WHAT WE DO -->
 <section class="what-we-do-section">
   <div class="container">
-    <h2 class="section-title">What We Do</h2>
+    <h2 class="section-title">What We Analyze</h2>
     <p class="section-intro">
-      We analyze general travel preferences such as:
+      We evaluate your travel preferences across multiple dimensions:
     </p>
     
     <div class="features-grid">
@@ -45,7 +93,7 @@
     </div>
 
     <p class="section-footer">
-      Based on these inputs, we recommend booking platforms that are commonly suited for these needs.
+      Based on these inputs, our engines score destinations and recommend platforms suited for your needs.
     </p>
   </div>
 </section>
@@ -53,21 +101,29 @@
 <!-- HOW RECOMMENDATIONS ARE MADE -->
 <section class="recommendations-section">
   <div class="container">
-    <h2 class="section-title">How Recommendations Are Made</h2>
+    <h2 class="section-title">How Our Engines Work</h2>
     <p class="section-intro">
-      Our recommendations are based on:
+      Our recommendations are powered by three intelligent engines:
     </p>
 
     <div class="factors-list">
-      <div class="factor-item" *ngFor="let factor of recommendationFactors">
+      <div class="factor-item">
+        <span class="material-icons">star</span>
+        <span><strong>Destination Scoring Engine:</strong> Evaluates destinations across timing, budget, interests, and climate fit</span>
+      </div>
+      <div class="factor-item">
         <span class="material-icons">check_circle</span>
-        <span>{{ factor }}</span>
+        <span><strong>Trip Readiness Engine:</strong> Determines if you're ready to travel now or should wait</span>
+      </div>
+      <div class="factor-item">
+        <span class="material-icons">thumbs_up</span>
+        <span><strong>Recommendation Engine:</strong> Converts scores into actionable suggestions with confidence levels</span>
       </div>
     </div>
 
     <div class="important-notice">
       <span class="material-icons">info</span>
-      <p><strong>We do not compare live prices or guarantee the cheapest rates.</strong></p>
+      <p><strong>Data-Driven, Not Biased:</strong> All recommendations are based on your preferences and data, not affiliate commissions.</p>
     </div>
   </div>
 </section>

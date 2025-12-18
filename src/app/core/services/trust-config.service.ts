@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface TrustConfig {
@@ -58,9 +58,9 @@ export class TrustConfigService {
    */
   private fetchFromBackend() {
     return this.http.get<any[]>(`${environment.apiBaseUrl}/api/trust-messages`).pipe(
-      tap(messages => {
-        const heroMsg = messages.find(m => m.context === 'homepage_hero');
-        const affiliateMsg = messages.find(m => m.context === 'affiliate_disclosure');
+      map((messages: any[]) => {
+        const heroMsg = messages.find((m: any) => m.context === 'homepage_hero');
+        const affiliateMsg = messages.find((m: any) => m.context === 'affiliate_disclosure');
         
         const config: TrustConfig = {
           heroSubtitle: heroMsg?.content || this.DEFAULT_CONFIG.heroSubtitle,
@@ -69,6 +69,9 @@ export class TrustConfigService {
         };
 
         this.saveToCache(config);
+        return config;
+      }),
+      tap((config: TrustConfig) => {
         this.config$.next(config);
       })
     );

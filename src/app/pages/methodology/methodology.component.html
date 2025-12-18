@@ -1,208 +1,245 @@
-<div class="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12">
-  <div class="container mx-auto px-4">
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-        Our Methodology
-      </h1>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-        Transparent, data-driven travel recommendations powered by intelligent engines
+<div class="methodology-page">
+  <!-- 1️⃣ HERO SECTION -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-icon">🔒</div>
+        <h1>Our Methodology</h1>
+        <p>Transparent, data-driven travel recommendations powered by intelligent engines</p>
+        <a routerLink="/" class="btn-primary">Try It Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2️⃣ TRUST & TRANSPARENCY SECTION -->
+  <section class="trust-section">
+    <div class="container">
+      <div class="trust-card">
+        <h2>🔒 Built on Trust & Transparency</h2>
+        <p class="trust-description">
+          Unlike platforms that prioritize commissions, our recommendations are based purely on 
+          objective data and your preferences.
+        </p>
+        <ul class="trust-list">
+          <li><span class="checkmark">✔</span> No hidden biases</li>
+          <li><span class="checkmark">✔</span> No promotional ranking</li>
+          <li><span class="checkmark">✔</span> Explainable algorithms</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3️⃣ INTELLIGENT ENGINES SECTION -->
+  <section class="engines-section">
+    <div class="container">
+      <h2 class="section-title">⚙️ Our Intelligent Engines</h2>
+
+      <!-- Engine Card 1: Destination Scoring Engine -->
+      <div class="engine-card">
+        <div class="card-header">
+          <div>
+            <h3>🧭 Destination Scoring Engine</h3>
+            <p class="version">Version {{ engines[0].version }} <span class="status-dot">●</span> Active</p>
+          </div>
+        </div>
+        
+        <p class="card-description">{{ engines[0].description }}</p>
+        
+        <div class="factors-section">
+          <h4>Scoring Factors</h4>
+          <div class="factors-list">
+            <div *ngFor="let factor of engines[0].factors" class="factor-item">
+              <span class="factor-arrow">▸</span>
+              <span class="factor-name">{{ factor.name }}</span>
+              <span class="factor-weight">{{ factor.weight }} pts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="total-section">
+          <strong>Total Points: {{ engines[0].totalPoints }}</strong>
+        </div>
+
+        <div class="badges-section">
+          <h4>Badges</h4>
+          <div class="badges-grid">
+            <span *ngFor="let badge of engines[0].badges" class="badge">{{ badge }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Engine Card 2: Trip Readiness Engine -->
+      <div class="engine-card">
+        <div class="card-header">
+          <div>
+            <h3>🧳 Trip Readiness Engine</h3>
+            <p class="version">Version {{ engines[1].version }} <span class="status-dot">●</span> Active</p>
+          </div>
+        </div>
+        
+        <p class="card-description">{{ engines[1].description }}</p>
+        
+        <div class="factors-section">
+          <h4>Scoring Factors</h4>
+          <div class="factors-list">
+            <div *ngFor="let factor of engines[1].factors" class="factor-item">
+              <span class="factor-arrow">▸</span>
+              <span class="factor-name">{{ factor.name }}</span>
+              <span class="factor-weight">{{ factor.weight }} pts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="total-section">
+          <strong>Total Points: {{ engines[1].totalPoints }}</strong>
+        </div>
+
+        <div class="statuses-section">
+          <h4>Status Levels</h4>
+          <div class="status-badges">
+            <span *ngFor="let status of engines[1].statuses" class="status">{{ status }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Engine Card 3: Recommendation Engine -->
+      <div class="engine-card">
+        <div class="card-header">
+          <div>
+            <h3>🧠 Recommendation Engine (Master)</h3>
+            <p class="version">Version {{ engines[2].version }} <span class="status-dot">●</span> Active</p>
+          </div>
+        </div>
+        
+        <p class="card-description">{{ engines[2].description }}</p>
+        
+        <div class="factors-section">
+          <h4>Scoring Breakdown</h4>
+          <div class="factors-list">
+            <div *ngFor="let factor of engines[2].factors" class="factor-item">
+              <span class="factor-arrow">▸</span>
+              <span class="factor-name">{{ factor.name }}</span>
+              <span class="factor-weight">{{ factor.weight }} pts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="total-section">
+          <strong>Total Points: {{ engines[2].totalPoints }}</strong>
+        </div>
+
+        <div class="types-section">
+          <h4>Recommendation Types</h4>
+          <div class="type-badges">
+            <span *ngFor="let type of engines[2].types" class="type-badge">{{ type }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4️⃣ TRANSPARENCY GUARANTEES SECTION -->
+  <section class="transparency-section">
+    <div class="container">
+      <h2 class="section-subtitle">🔍 Transparency</h2>
+      <div class="guarantee-grid">
+        <div *ngFor="let item of methodology.transparency" class="guarantee-item">
+          <div class="guarantee-icon">✔</div>
+          <p>{{ item }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5️⃣ DATA SOURCES SECTION -->
+  <section class="data-sources-section">
+    <div class="container">
+      <div class="data-card">
+        <h2>📊 Data Sources</h2>
+        <ul class="data-list">
+          <li *ngFor="let source of methodology.dataSources">
+            <span class="bullet">•</span> {{ source }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6️⃣ OUR APPROACH SECTION -->
+  <section class="approach-section">
+    <div class="container">
+      <h2 class="section-subtitle">Our Approach (Process Flow)</h2>
+      <div class="flow-container">
+        <div *ngFor="let item of methodology.approach; let last = last" class="flow-item">
+          <div class="flow-arrow">→</div>
+          <div class="flow-text">{{ item }}</div>
+          <div *ngIf="!last" class="flow-separator"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7️⃣ EXAMPLE SCORING SECTION -->
+  <section class="example-section">
+    <div class="container">
+      <h2 class="section-subtitle">Example: How a Destination Gets Scored</h2>
+      <div class="example-card">
+        <h3>📍 Example: Puducherry</h3>
+        
+        <div class="scoring-row">
+          <span class="scoring-label">Perfect Timing (best season)</span>
+          <span class="scoring-value">+36 pts</span>
+        </div>
+        
+        <div class="scoring-row">
+          <span class="scoring-label">Budget Match (exact match)</span>
+          <span class="scoring-value">+27 pts</span>
+        </div>
+        
+        <div class="scoring-row">
+          <span class="scoring-label">Interest Match (2 categories)</span>
+          <span class="scoring-value">+23 pts</span>
+        </div>
+        
+        <div class="scoring-row">
+          <span class="scoring-label">Climate Preference</span>
+          <span class="scoring-value">+14 pts</span>
+        </div>
+
+        <div class="scoring-divider"></div>
+
+        <div class="final-score">
+          <span class="score-label">Final Score:</span>
+          <span class="score-value">100 / 100</span>
+        </div>
+
+        <div class="recommendation-badge">
+          🏆 <strong>Highly Recommended</strong>
+          <p>This destination is an excellent match for your preferences.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8️⃣ FINAL CTA SECTION -->
+  <section class="final-cta-section">
+    <div class="container">
+      <h2>Ready to Experience Smart Travel Planning?</h2>
+      <p>Let our engines find your perfect destination</p>
+      <a routerLink="/" class="btn-primary">Try It Now</a>
+    </div>
+  </section>
+
+  <!-- TRANSPARENCY FOOTER -->
+  <section class="transparency-footer">
+    <div class="container">
+      <p class="footer-text">
+        📋 <strong>Last updated:</strong> {{ lastUpdatedFormatted }}
+      </p>
+      <p class="footer-disclaimer">
+        This methodology is publicly documented for complete transparency. 
+        All scoring algorithms are deterministic and explainable.
       </p>
     </div>
-
-    <!-- Trust Message -->
-    <div class="bg-blue-600 text-white rounded-lg p-8 mb-12 text-center">
-      <h2 class="text-2xl font-bold mb-4">🔒 Built on Trust & Transparency</h2>
-      <p class="text-lg max-w-2xl mx-auto">
-        Unlike platforms that prioritize commissions, our recommendations are based purely on 
-        objective data and your personal preferences. No hidden biases, just smart algorithms.
-      </p>
-    </div>
-
-    <!-- Engines Section -->
-    <div class="mb-12">
-      <h2 class="text-3xl font-bold text-center mb-8">Our Intelligent Engines</h2>
-      
-      <div class="space-y-8">
-        <div *ngFor="let engine of engines" class="bg-white rounded-lg shadow-lg p-6 md:p-8">
-          <div class="flex items-start justify-between mb-4">
-            <div>
-              <h3 class="text-2xl font-bold text-gray-900">{{ engine.name }}</h3>
-              <p class="text-sm text-gray-500">Version {{ engine.version }}</p>
-            </div>
-            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
-              Active
-            </span>
-          </div>
-          
-          <p class="text-gray-600 mb-6">{{ engine.description }}</p>
-          
-          <!-- Factors -->
-          <div class="mb-6">
-            <h4 class="font-semibold text-gray-900 mb-3">Scoring Factors:</h4>
-            <div class="space-y-3">
-              <div *ngFor="let factor of engine.factors" 
-                   class="flex items-start border-l-4 border-blue-500 pl-4 py-2">
-                <div class="flex-1">
-                  <div class="flex items-center justify-between mb-1">
-                    <span class="font-medium text-gray-900">{{ factor.name }}</span>
-                    <span class="text-blue-600 font-semibold">{{ factor.weight }} pts</span>
-                  </div>
-                  <p class="text-sm text-gray-600">{{ factor.description }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Additional Info -->
-          <div class="border-t pt-4">
-            <div class="flex flex-wrap gap-4 text-sm">
-              <div>
-                <span class="font-semibold">Total Points:</span>
-                <span class="ml-2 text-blue-600">{{ engine.totalPoints }}</span>
-              </div>
-              
-              <div *ngIf="engine.badges" class="flex-1">
-                <span class="font-semibold">Badges:</span>
-                <div class="flex flex-wrap gap-2 mt-2">
-                  <span *ngFor="let badge of engine.badges" 
-                        class="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">
-                    {{ badge }}
-                  </span>
-                </div>
-              </div>
-              
-              <div *ngIf="engine.statuses" class="flex-1">
-                <span class="font-semibold">Status Levels:</span>
-                <div class="flex flex-wrap gap-2 mt-2">
-                  <span *ngFor="let status of engine.statuses" 
-                        class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs">
-                    {{ status }}
-                  </span>
-                </div>
-              </div>
-              
-              <div *ngIf="engine.types" class="flex-1">
-                <span class="font-semibold">Recommendation Types:</span>
-                <div class="flex flex-wrap gap-2 mt-2">
-                  <span *ngFor="let type of engine.types" 
-                        class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">
-                    {{ type }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Methodology Principles -->
-    <div class="grid md:grid-cols-3 gap-8 mb-12">
-      <!-- Transparency -->
-      <div class="bg-white rounded-lg shadow-lg p-6">
-        <div class="text-4xl mb-4">🔍</div>
-        <h3 class="text-xl font-bold mb-3">Transparency</h3>
-        <ul class="space-y-2">
-          <li *ngFor="let item of methodology.transparency" 
-              class="text-sm text-gray-600 flex items-start">
-            <span class="text-green-500 mr-2">✓</span>
-            <span>{{ item }}</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Data Sources -->
-      <div class="bg-white rounded-lg shadow-lg p-6">
-        <div class="text-4xl mb-4">📊</div>
-        <h3 class="text-xl font-bold mb-3">Data Sources</h3>
-        <ul class="space-y-2">
-          <li *ngFor="let item of methodology.dataSources" 
-              class="text-sm text-gray-600 flex items-start">
-            <span class="text-blue-500 mr-2">•</span>
-            <span>{{ item }}</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Approach -->
-      <div class="bg-white rounded-lg shadow-lg p-6">
-        <div class="text-4xl mb-4">⚙️</div>
-        <h3 class="text-xl font-bold mb-3">Our Approach</h3>
-        <ul class="space-y-2">
-          <li *ngFor="let item of methodology.approach" 
-              class="text-sm text-gray-600 flex items-start">
-            <span class="text-purple-500 mr-2">→</span>
-            <span>{{ item }}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Example Scoring -->
-    <div class="bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg p-8 mb-12">
-      <h2 class="text-2xl font-bold mb-4">Example: How a Destination Gets Scored</h2>
-      <div class="bg-white rounded-lg p-6">
-        <div class="mb-4">
-          <div class="flex justify-between items-center mb-2">
-            <span class="font-medium">Perfect Timing (visiting in best season)</span>
-            <span class="text-green-600 font-bold">+40 pts</span>
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-2">
-            <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
-          </div>
-        </div>
-        
-        <div class="mb-4">
-          <div class="flex justify-between items-center mb-2">
-            <span class="font-medium">Budget Match (exact match)</span>
-            <span class="text-green-600 font-bold">+30 pts</span>
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-2">
-            <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
-          </div>
-        </div>
-        
-        <div class="mb-4">
-          <div class="flex justify-between items-center mb-2">
-            <span class="font-medium">Interest Match (2 categories)</span>
-            <span class="text-green-600 font-bold">+24 pts</span>
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-2">
-            <div class="bg-green-500 h-2 rounded-full" style="width: 96%"></div>
-          </div>
-        </div>
-        
-        <div class="mb-4">
-          <div class="flex justify-between items-center mb-2">
-            <span class="font-medium">Climate Preference (match)</span>
-            <span class="text-green-600 font-bold">+15 pts</span>
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-2">
-            <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
-          </div>
-        </div>
-        
-        <div class="border-t pt-4 mt-4">
-          <div class="flex justify-between items-center">
-            <span class="text-lg font-bold">Final Score</span>
-            <span class="text-2xl font-bold text-blue-600">109 / 110</span>
-          </div>
-          <p class="text-sm text-gray-600 mt-2">
-            🏆 <strong>Highly Recommended</strong> - This destination is an excellent match for your preferences!
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- CTA -->
-    <div class="text-center">
-      <h2 class="text-2xl font-bold mb-4">Ready to Experience Smart Travel Planning?</h2>
-      <p class="text-gray-600 mb-6">Let our engines find your perfect destination</p>
-      <a routerLink="/" 
-         class="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-        Try It Now
-      </a>
-    </div>
-  </div>
+  </section>
 </div>

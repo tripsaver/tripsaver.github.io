@@ -1,0 +1,210 @@
+.legal-page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: #f9fafb;
+}
+
+.legal-header {
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  border-radius: 1rem;
+  text-align: center;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  .last-updated {
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
+}
+
+.legal-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  line-height: 1.8;
+  color: #374151;
+
+  .intro-notice {
+    margin-bottom: 2rem;
+  }
+
+  .disclosure-banner {
+    padding: 2rem;
+    background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
+    border-left: 4px solid #dc2626;
+    border-radius: 0.5rem;
+
+    h2 {
+      color: #92400e;
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+    }
+
+    p {
+      color: #78350f;
+      margin: 0;
+    }
+  }
+
+  section {
+    margin-bottom: 2.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+      color: #1f2937;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 0.5rem;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      color: #374151;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 1rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      strong {
+        color: #1f2937;
+      }
+    }
+
+    ul {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+
+      li {
+        margin-bottom: 0.5rem;
+
+        a {
+          color: #dc2626;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+
+  .partner-list {
+    display: grid;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+
+    .partner {
+      padding: 1.5rem;
+      background: #f9fafb;
+      border-left: 4px solid #dc2626;
+      border-radius: 0.5rem;
+
+      h3 {
+        margin-top: 0;
+        color: #1f2937;
+      }
+
+      p {
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      strong {
+        color: #dc2626;
+      }
+    }
+  }
+
+  .bottom-banner {
+    padding: 2rem;
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    border-left: 4px solid #16a34a;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin-top: 2rem;
+
+    p {
+      margin: 0;
+      color: #166534;
+      font-weight: 600;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .legal-header {
+    padding: 2rem 1rem;
+
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    .last-updated {
+      font-size: 0.9rem;
+    }
+  }
+
+  .legal-content {
+    padding: 1.5rem;
+
+    .disclosure-banner {
+      padding: 1.5rem;
+
+      h2 {
+        font-size: 1.1rem;
+      }
+    }
+
+    section {
+      h2 {
+        font-size: 1.25rem;
+      }
+
+      h3 {
+        font-size: 1rem;
+      }
+
+      ul {
+        margin-left: 1rem;
+      }
+    }
+
+    .partner-list {
+      .partner {
+        padding: 1rem;
+      }
+    }
+
+    .bottom-banner {
+      padding: 1.5rem;
+
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

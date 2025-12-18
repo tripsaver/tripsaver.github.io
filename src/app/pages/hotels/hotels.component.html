@@ -2,6 +2,29 @@
   <div class="page-header">
     <h1>Find the Best Hotels</h1>
     <p>Compare prices across top booking platforms and save on your stay</p>
+    
+    <!-- Trust Strip Section -->
+    <div class="trust-strip">
+      <div class="trust-item">
+        <span class="trust-icon">🤖</span>
+        <span class="trust-text">AI-Recommended</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <span class="trust-icon">📊</span>
+        <span class="trust-text">Price-Compared</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <span class="trust-icon">💸</span>
+        <span class="trust-text">No Markups</span>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item">
+        <span class="trust-icon">🤝</span>
+        <span class="trust-text">Affiliate-Transparent</span>
+      </div>
+    </div>
   </div>
 
   <!-- SEO Content Section -->
@@ -34,11 +57,19 @@
         <div class="dest-content">
           <h2>{{ dest.name }}</h2>
           <p class="dest-description">{{ dest.description }}</p>
+          <p class="dest-context">{{ dest.context }}</p>
           
           <div class="dest-price">
             <span class="label">Avg. Price:</span>
             <span class="price">{{ dest.avgPrice }}</span>
-            <span class="period">per night</span>
+            <span class="period">/night*</span>
+          </div>
+          <p class="price-disclaimer">Based on recent prices across top platforms</p>
+          
+          <!-- Why Agoda Trust Context -->
+          <div class="platform-reason">
+            <div class="reason-point">✅ Best for wide inventory &amp; discounts</div>
+            <div class="reason-point">🔒 Trusted partner – transparent pricing</div>
           </div>
           
           <div class="booking-buttons">
@@ -50,10 +81,16 @@
               rel="nofollow sponsored noopener">
               <span class="btn-icon">⭐</span>
               <span class="btn-text">
-                <strong>Book Hotels on Agoda</strong>
-                <small>Best prices & exclusive deals</small>
+                <strong>Compare Prices →</strong>
+                <small>Best price usually on Agoda</small>
               </span>
               <span class="material-icons arrow">arrow_forward</span>
+            </a>
+            
+            <!-- Secondary link: Why this platform -->
+            <a href="/affiliate-disclosure" class="reason-link">
+              <span class="material-icons">info</span>
+              Why we recommend this platform
             </a>
           </div>
         </div>
@@ -78,23 +115,24 @@
   </section> -->
 
   <div class="tips-section">
-    <h2>💡 Booking Tips</h2>
+    <h2>💡 TripSaver Insights</h2>
     <div class="tips-grid">
       <div class="tip-card">
         <span class="tip-icon">📅</span>
-        <h3>Book in Advance</h3>
+        <h3>TripSaver Insight: Book Early</h3>
         <p>Save up to 30% by booking 2-3 months ahead for popular destinations</p>
       </div>
       <div class="tip-card">
         <span class="tip-icon">🔍</span>
-        <h3>Compare Prices</h3>
+        <h3>TripSaver Insight: Platform Price Gaps</h3>
         <p>Check all three platforms - prices can vary by 15-20% for the same hotel</p>
       </div>
       <div class="tip-card">
         <span class="tip-icon">⏰</span>
-        <h3>Best Time to Book</h3>
+        <h3>TripSaver Insight: Smart Timing</h3>
         <p>Tuesday afternoons often have the best deals and lowest prices</p>
       </div>
     </div>
+    <p class="tips-attribution">Powered by TripSaver data analysis</p>
   </div>
 </section>

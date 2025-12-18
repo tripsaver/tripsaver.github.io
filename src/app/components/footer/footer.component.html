@@ -1,0 +1,72 @@
+<footer class="footer">
+  <div class="footer-content">
+    <!-- Section 1: Brand & Trust -->
+    <div class="footer-section brand-section">
+      <h3 class="footer-brand">TripSaver</h3>
+      <p class="footer-tagline">Smart, transparent travel recommendations</p>
+      <p class="footer-subtagline">Powered by data, not commissions.</p>
+      
+      <ul class="trust-points">
+        <li *ngFor="let point of trustPoints" class="trust-point">
+          <span class="trust-icon">{{ point.icon }}</span>
+          <span class="trust-text">{{ point.text }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Section 2: Quick Links -->
+    <div class="footer-section">
+      <h4 class="footer-heading">Explore</h4>
+      <ul class="footer-links">
+        <li *ngFor="let link of quickLinks">
+          <a [routerLink]="link.path" class="footer-link">{{ link.label }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Section 3: Transparency & Legal -->
+    <div class="footer-section">
+      <h4 class="footer-heading">Transparency</h4>
+      <ul class="footer-links">
+        <li><a [routerLink]="'/how-it-works'" class="footer-link">How Recommendations Work</a></li>
+        <li><a [routerLink]="'/how-it-works'" class="footer-link">Our Methodology</a></li>
+        <li><a [routerLink]="'/about'" class="footer-link">Data Sources</a></li>
+      </ul>
+      
+      <h4 class="footer-heading legal-heading">Legal</h4>
+      <ul class="footer-links">
+        <li><a [routerLink]="'/privacy-policy'" class="footer-link">Privacy Policy</a></li>
+        <li><a [routerLink]="'/terms'" class="footer-link">Terms of Use</a></li>
+        <li><a [routerLink]="'/affiliate-disclosure'" class="footer-link">Affiliate Disclosure</a></li>
+      </ul>
+    </div>
+
+    <!-- Section 4: Contact & Feedback -->
+    <div class="footer-section contact-section">
+      <h4 class="footer-heading">Get in Touch</h4>
+      <a [href]="'mailto:' + contactEmail" class="contact-link">
+        <span class="contact-icon">📧</span>
+        <span>{{ contactEmail }}</span>
+      </a>
+      <p class="feedback-note">💬 Feedback & suggestions welcome</p>
+    </div>
+  </div>
+
+  <!-- Affiliate Disclosure Banner -->
+  <div class="affiliate-disclosure-banner">
+    <div class="disclosure-content">
+      <span class="disclosure-icon">📌</span>
+      <p class="disclosure-text">
+        <strong>Affiliate Disclosure:</strong> TripSaver may earn a commission when you book through links on our site — at no extra cost to you. 
+        These commissions do not influence our recommendations or rankings.
+      </p>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <p class="footer-copyright">
+      © {{ currentYear }} TripSaver • Built with transparency ❤️ in India
+    </p>
+  </div>
+</footer>

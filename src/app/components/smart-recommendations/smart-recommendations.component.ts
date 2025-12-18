@@ -498,6 +498,24 @@ export class SmartRecommendationsComponent implements OnInit {
   }
 
   openBookingModal(rec: EnhancedRecommendation): void {
+    // 📊 LOG RECOMMENDATION CLICK - For analytics (console for now)
+    const clickLog = {
+      timestamp: new Date().toISOString(),
+      event: 'recommendation_click',
+      destination: rec.destination.state,
+      score: rec.overallRecommendationScore,
+      recommendationType: rec.recommendationType,
+      userPreferences: {
+        month: this.preferences.month,
+        budget: this.preferences.budget,
+        categories: this.preferences.categories
+      }
+    };
+    
+    console.log('📌 RECOMMENDATION CLICK:', clickLog);
+    // TODO: Send to analytics service (Amplitude, Mixpanel, GA4, etc.)
+    // this.analyticsService.track('recommendation_click', clickLog);
+    
     this.selectedDestination = rec.destination;
     this.isBookingModalOpen = true;
   }

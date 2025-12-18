@@ -118,6 +118,126 @@ section {
   }
 }
 
+// Engine Flow Section
+.engine-flow-section {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  padding: 4rem 1rem;
+
+  .section-title {
+    color: #1e40af;
+    margin-bottom: 2rem;
+  }
+
+  .flow-diagram {
+    display: grid;
+    grid-template-columns: auto 40px auto 40px auto;
+    gap: 2rem;
+    align-items: center;
+    margin: 3rem 0;
+    justify-content: center;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+
+      .flow-arrow {
+        display: none;
+      }
+    }
+  }
+
+  .flow-step {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid #bfdbfe;
+    text-align: center;
+    position: relative;
+
+    .step-number {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2563eb;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .step-content {
+      margin-top: 1rem;
+
+      h3 {
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      p {
+        color: #6b7280;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+      }
+
+      .step-icon {
+        font-size: 2rem;
+      }
+    }
+  }
+
+  .flow-arrow {
+    font-size: 2rem;
+    color: #2563eb;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .methodology-cta {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    border: 2px dashed #2563eb;
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+
+      .material-icons {
+        font-size: 24px;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+      }
+    }
+
+    .cta-note {
+      margin-top: 1rem;
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+  }
+}
+
 // What We Do Section
 .what-we-do-section {
   background: #f8fafc;
