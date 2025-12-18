@@ -10,6 +10,17 @@
       <div class="form-section">
         <h2>Send us a Message</h2>
         <p>Have feedback or found an issue with a recommendation? We'd love to hear from you.</p>
+        
+        <!-- Success Message -->
+        <div class="alert alert-success" *ngIf="submitSuccess">
+          ✅ Thank you! Your message has been sent successfully. We'll get back to you soon.
+        </div>
+
+        <!-- Error Message -->
+        <div class="alert alert-error" *ngIf="submitError">
+          ❌ {{ submitError }}
+        </div>
+
         <form (ngSubmit)="submitForm()" #contactForm="ngForm">
           <div class="form-group">
             <label for="name">
@@ -22,7 +33,8 @@
               name="name"
               [(ngModel)]="formData.name"
               placeholder="Enter your name"
-              required>
+              required
+              [disabled]="isSubmitting">
           </div>
 
           <div class="form-group">
@@ -36,7 +48,8 @@
               name="email"
               [(ngModel)]="formData.email"
               placeholder="your@email.com"
-              required>
+              required
+              [disabled]="isSubmitting">
           </div>
 
           <div class="form-group">
@@ -50,7 +63,8 @@
               name="subject"
               [(ngModel)]="formData.subject"
               placeholder="What is this about?"
-              required>
+              required
+              [disabled]="isSubmitting">
           </div>
 
           <div class="form-group">
@@ -64,15 +78,17 @@
               [(ngModel)]="formData.message"
               rows="6"
               placeholder="Tell us more..."
-              required></textarea>
+              required
+              [disabled]="isSubmitting"></textarea>
           </div>
 
           <button 
             type="submit" 
             class="submit-btn"
-            [disabled]="!contactForm.form.valid">
-            <span class="material-icons">send</span>
-            Send Message
+            [disabled]="!contactForm.form.valid || isSubmitting">
+            <span class="material-icons" *ngIf="!isSubmitting">send</span>
+            <span class="loading-spinner" *ngIf="isSubmitting"></span>
+            {{ isSubmitting ? 'Sending...' : 'Send Message' }}
           </button>
         </form>
       </div>

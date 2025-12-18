@@ -265,6 +265,49 @@ app.post('/api/seed', async (req, res) => {
   }
 });
 
+// Submit Contact Form
+app.post('/api/contact/submit', async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+
+    // Validation
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    // Create submission document
+    const submission = {
+      name,
+      email,
+      subject,
+      message,
+      submittedAt: new Date(),
+      status: 'new',
+      ipAddress: req.ip
+    };
+
+    // Insert into MongoDB
+    const result = await db
+      .collection('contact-submissions')
+      .insertOne(submission);
+
+    res.status(201).json({
+      success: true,
+      message: 'Contact form submitted successfully',
+      submissionId: result.insertedId
+    });
+
+    console.log(`✅ Contact submission from ${email}: ${subject}`);
+  } catch (err) {
+    console.error('❌ /api/contact/submit:', err.message);
+    res.status(500).json({ error: 'Failed to submit contact form' });
+  }
+});
+
 // 404
 app.use((req, res) => {
   res.status(404).json({
