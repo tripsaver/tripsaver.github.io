@@ -88,21 +88,14 @@
     </div>
   </div>
 
-  <!-- RESULTS SECTION (Outside .container for full-width) -->
+  <!-- RESULTS SECTION -->
   <div class="results" *ngIf="!uiState.loading && recommendations.length > 0">
-    <!-- Results Title (only show when in results-only mode) -->
-    <div *ngIf="!showForm" class="results-header">
-      <h2>✨ Smart Recommendations</h2>
-      <p class="results-subtitle">Based on your preferences, here are our top recommendations</p>
-    </div>
-    
-    <!-- Results Title (show differently when form is visible) -->
-    <div *ngIf="showForm" class="results-header">
+    <!-- Results Title -->
+    <div class="results-header">
       <h3>✨ Recommended for You</h3>
-      <p class="results-subtitle">Based on your preferences, here are our top recommendations</p>
     </div>
 
-    <!-- Result Summary - Shows filter criteria -->
+    <!-- Result Summary -->
     <app-result-summary
       [month]="preferences.month"
       [budget]="preferences.budget"
@@ -110,22 +103,13 @@
       [resultCount]="recommendations.length">
     </app-result-summary>
 
-    <!-- ✅ GRID LAYOUT (Multiple Cards) -->
-    <div class="recommendations-grid">
+    <!-- Simple 3x2 Card Layout -->
+    <div class="cards-container">
       <app-destination-card-compact
-        *ngFor="let rec of (showAllResults ? recommendations : (recommendations | slice:0:6))"
+        *ngFor="let rec of (recommendations | slice:0:6)"
         [recommendation]="rec"
         (bookingClicked)="openBookingModal($event)">
       </app-destination-card-compact>
-    </div>
-
-    <!-- Show More Button -->
-    <div class="show-more-container" *ngIf="recommendations.length > 6">
-      <button
-        class="show-more-btn"
-        (click)="showAllResults = !showAllResults">
-        {{ showAllResults ? 'Show Less' : 'Show More Destinations' }}
-      </button>
     </div>
   </div>
 
