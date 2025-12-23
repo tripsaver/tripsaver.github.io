@@ -16,11 +16,11 @@
           "baseUrl": "https://www.agoda.com/",
           "active": true
         },
-        {
-          "name": "MakeMyTrip",
-          "baseUrl": "https://www.makemytrip.com/hotels/",
-          "active": true
-        }
+        // {
+        //   "name": "MakeMyTrip",
+        //   "baseUrl": "https://www.makemytrip.com/hotels/",
+        //   "active": false
+        // }
       ]
     },
     {
@@ -34,11 +34,11 @@
           "baseUrl": "https://www.cleartrip.com/",
           "active": true
         },
-        {
-          "name": "MakeMyTrip",
-          "baseUrl": "https://www.makemytrip.com/flights/",
-          "active": true
-        },
+        // {
+        //   "name": "MakeMyTrip",
+        //   "baseUrl": "https://www.makemytrip.com/flights/",
+        //   "active": false
+        // },
         {
           "name": "TravelPayouts",
           "baseUrl": "https://www.travelpayouts.com/",
