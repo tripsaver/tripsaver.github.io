@@ -98,24 +98,24 @@ export class RecommendationEngine {
       if (preferences.mobileDeal) score += 2;
     }
     
-    // MAKEMYTRIP SCORING
-    if (partnerId === 'makemytrip') {
-      if (budgetRange === 'budget') score += 3;
-      if (preferences.indianChains) score += 3;
-      if (travelType === 'family') score += 2;
-      if (travelType === 'business') score += 2;
-      if (preferences.couponsCashback) score += 3;
-      
-      // Domestic destination boost
-      const domesticDestinations = [
-        'goa', 'mumbai', 'delhi', 'bangalore', 'jaipur', 
-        'chennai', 'kolkata', 'hyderabad', 'pune', 'udaipur', 
-        'kerala', 'manali', 'shimla', 'agra'
-      ];
-      if (domesticDestinations.some(d => destination.toLowerCase().includes(d))) {
-        score += 2;
-      }
-    }
+    // // MAKEMYTRIP SCORING (DISABLED)
+    // if (partnerId === 'makemytrip') {
+    //   if (budgetRange === 'budget') score += 3;
+    //   if (preferences.indianChains) score += 3;
+    //   if (travelType === 'family') score += 2;
+    //   if (travelType === 'business') score += 2;
+    //   if (preferences.couponsCashback) score += 3;
+    //   
+    //   // Domestic destination boost
+    //   const domesticDestinations = [
+    //     'goa', 'mumbai', 'delhi', 'bangalore', 'jaipur', 
+    //     'chennai', 'kolkata', 'hyderabad', 'pune', 'udaipur', 
+    //     'kerala', 'manali', 'shimla', 'agra'
+    //   ];
+    //   if (domesticDestinations.some(d => destination.toLowerCase().includes(d))) {
+    //     score += 2;
+    //   }
+    // }
     
     // GOIBIBO SCORING (when active)
     if (partnerId === 'goibibo') {
@@ -194,27 +194,27 @@ export class RecommendationEngine {
       }
     }
     
-    // MAKEMYTRIP REASONS
-    if (partnerId === 'makemytrip') {
-      if (preferences.indianChains) {
-        reasons.push('Best suited for Indian hotel chains');
-      }
-      if (budgetRange === 'budget') {
-        reasons.push('Strong selection of budget-friendly options');
-      }
-      if (preferences.couponsCashback) {
-        reasons.push('Exclusive coupons & cashback offers');
-      }
-      if (travelType === 'family' || travelType === 'business') {
-        reasons.push('Popular among families & business travelers');
-      }
-      
-      // Defaults
-      if (reasons.length === 0) {
-        reasons.push('Great for domestic travel in India');
-        reasons.push('Local payment options available');
-      }
-    }
+    // // MAKEMYTRIP REASONS (DISABLED)
+    // if (partnerId === 'makemytrip') {
+    //   if (preferences.indianChains) {
+    //     reasons.push('Best suited for Indian hotel chains');
+    //   }
+    //   if (budgetRange === 'budget') {
+    //     reasons.push('Strong selection of budget-friendly options');
+    //   }
+    //   if (preferences.couponsCashback) {
+    //     reasons.push('Exclusive coupons & cashback offers');
+    //   }
+    //   if (travelType === 'family' || travelType === 'business') {
+    //     reasons.push('Popular among families & business travelers');
+    //   }
+    //   
+    //   // Defaults
+    //   if (reasons.length === 0) {
+    //     reasons.push('Great for domestic travel in India');
+    //     reasons.push('Local payment options available');
+    //   }
+    // }
     
     // GOIBIBO REASONS
     if (partnerId === 'goibibo') {
