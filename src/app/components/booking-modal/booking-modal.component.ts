@@ -283,14 +283,18 @@ export class BookingModalComponent {
         });
         badge = 'Best Price Today';
         description = 'Strong seasonal deals & largest inventory in Asia';
-      } else if (partner.id === 'makemytrip') {
+      } 
+      /* MAKEMYTRIP DISABLED
+      else if (partner.id === 'makemytrip') {
         deepLink = partner.urls.hotels({ 
           destination: this.destinationName 
         });
         badge = 'Domestic Expert';
         description = 'Best rates for India travel & exclusive offers';
         icon = '🇮🇳';
-      } else if (partner.id === 'bookingcom') {
+      }
+      */
+      else if (partner.id === 'bookingcom') {
         deepLink = partner.urls.hotels({ 
           destination: this.destinationName 
         });
