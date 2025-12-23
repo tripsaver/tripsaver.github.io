@@ -271,7 +271,10 @@ export class BookingModalComponent {
   get platforms(): BookingPlatform[] {
     const activePartners = getActivePartners();
     
-    return activePartners.map(partner => {
+    // SHOW ONLY AGODA - Filter to display only Agoda
+    const agodaOnly = activePartners.filter(partner => partner.id === 'agoda');
+    
+    return agodaOnly.map(partner => {
       let deepLink = '';
       let badge = '';
       let icon = '🏨';
@@ -283,24 +286,6 @@ export class BookingModalComponent {
         });
         badge = 'Best Price Today';
         description = 'Strong seasonal deals & largest inventory in Asia';
-      } 
-      /* MAKEMYTRIP DISABLED
-      else if (partner.id === 'makemytrip') {
-        deepLink = partner.urls.hotels({ 
-          destination: this.destinationName 
-        });
-        badge = 'Domestic Expert';
-        description = 'Best rates for India travel & exclusive offers';
-        icon = '🇮🇳';
-      }
-      */
-      else if (partner.id === 'bookingcom') {
-        deepLink = partner.urls.hotels({ 
-          destination: this.destinationName 
-        });
-        badge = 'Free Cancellation';
-        description = 'Flexible cancellation options & verified reviews';
-        icon = '🌐';
       }
       
       return {
