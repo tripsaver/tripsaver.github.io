@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
 import { tap, catchError, filter } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export interface AffiliatePartner {
   id: string;
@@ -29,12 +30,13 @@ export interface AffiliateConfigData {
 export class AffiliateConfigService {
   private http = inject(HttpClient);
   
-  private apiUrl = 'http://localhost:3000/api/affiliate-config';
+  private apiUrl = `${environment.apiBaseUrl}/api/affiliate-config`;
   
   private configSubject = new BehaviorSubject<AffiliateConfigData | null>(null);
   public config$ = this.configSubject.asObservable();
 
   constructor() {
+    console.log(`✅ AffiliateConfigService initialized with API URL: ${this.apiUrl}`);
     this.loadConfig();
   }
 

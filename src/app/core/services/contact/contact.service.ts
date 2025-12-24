@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface ContactFormData {
   name: string;
@@ -20,17 +21,10 @@ export interface ContactSubmissionResponse {
   providedIn: 'root'
 })
 export class ContactService {
-  private apiUrl = 'http://localhost:3000/api/contact/submit';
-  
-  // Use production API if available
-  private productionApiUrl = 'https://tripsaver-github-io.onrender.com/api/contact/submit';
+  private apiUrl = `${environment.apiBaseUrl}/api/contact/submit`;
 
   constructor(private http: HttpClient) {
-    // Auto-detect environment
-    const isProduction = window.location.hostname !== 'localhost';
-    if (isProduction) {
-      this.apiUrl = this.productionApiUrl;
-    }
+    console.log(`✅ ContactService initialized with API URL: ${this.apiUrl}`);
   }
 
   submitContactForm(formData: ContactFormData): Observable<ContactSubmissionResponse> {

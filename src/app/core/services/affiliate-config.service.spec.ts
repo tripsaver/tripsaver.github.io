@@ -5,7 +5,7 @@ import { AffiliateConfigService, AffiliateConfigData, AffiliatePartner } from '.
 describe('AffiliateConfigService', () => {
   let service: AffiliateConfigService;
   let httpMock: HttpTestingController;
-  const apiUrl = 'http://localhost:3000/api/affiliate-config';
+  const apiUrl = 'https://tripsaver-github-io.onrender.com/api/affiliate-config';
 
   const mockConfig: AffiliateConfigData = {
     _id: 'active',
