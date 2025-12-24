@@ -497,33 +497,62 @@ app.get('/api/affiliate-config/init', async (req, res) => {
   try {
     const defaultConfig = {
       _id: 'active',
-      activePartner: 'amazon',
-      affiliateIds: {
-        amazon: 'tripsaver21-21',
-        agoda: process.env.AGODA_AFFILIATE_ID || '1955073',
-        booking: process.env.BOOKING_AFFILIATE_ID || 'YOUR_BOOKING_ID',
-        abhibus: 'kQK6mx'
-      },
+      activePartner: 'agoda',
       partners: {
-        amazon: {
-          name: 'Amazon',
-          logo: '🛒',
-          type: 'shopping'
-        },
         agoda: {
+          id: 'agoda',
           name: 'Agoda',
           logo: '🏨',
+          baseUrl: 'https://www.agoda.com',
+          affiliateId: process.env.AGODA_AFFILIATE_ID || '1955073',
+          commission: 12,
+          active: true,
+          description: 'Best hotel deals in Asia',
           type: 'hotel'
         },
-        booking: {
-          name: 'Booking.com',
-          logo: '🏩',
-          type: 'hotel'
+        amazon: {
+          id: 'amazon',
+          name: 'Amazon',
+          logo: '🛍️',
+          baseUrl: 'https://www.amazon.in',
+          affiliateId: process.env.AMAZON_AFFILIATE_ID || 'tripsaver21-21',
+          commission: 5,
+          active: true,
+          description: 'Travel essentials and gear',
+          type: 'shopping'
         },
         abhibus: {
+          id: 'abhibus',
           name: 'AbhiBus',
           logo: '🚌',
+          baseUrl: 'https://inr.deals/kQK6mx',
+          affiliateId: 'kQK6mx',
+          commission: 8,
+          active: true,
+          description: 'Bus tickets across India',
           type: 'bus'
+        },
+        booking: {
+          id: 'booking',
+          name: 'Booking.com',
+          logo: '🏩',
+          baseUrl: 'https://www.booking.com',
+          affiliateId: process.env.BOOKING_AFFILIATE_ID || 'YOUR_BOOKING_ID',
+          commission: 10,
+          active: false,
+          description: 'Global hotel network',
+          type: 'hotel'
+        },
+        expedia: {
+          id: 'expedia',
+          name: 'Expedia',
+          logo: '✈️',
+          baseUrl: 'https://www.expedia.co.in',
+          affiliateId: process.env.EXPEDIA_AFFILIATE_ID || 'YOUR_EXPEDIA_ID',
+          commission: 8,
+          active: false,
+          description: 'Flights, hotels, and packages',
+          type: 'both'
         }
       },
       lastUpdated: new Date(),
@@ -566,36 +595,65 @@ app.get('/api/affiliate-config', async (req, res) => {
     if (!config) {
       console.log('ℹ️  Config not found, auto-initializing...');
       
-      // Direct initialization
+      // Direct initialization with complete partner data
       config = {
         _id: 'active',
-        activePartner: 'amazon',
-        affiliateIds: {
-          amazon: 'tripsaver21-21',
-          agoda: process.env.AGODA_AFFILIATE_ID || '1955073',
-          booking: process.env.BOOKING_AFFILIATE_ID || 'YOUR_BOOKING_ID',
-          abhibus: 'kQK6mx'
-        },
+        activePartner: 'agoda',
         partners: {
-          amazon: {
-            name: 'Amazon',
-            logo: '🛒',
-            type: 'shopping'
-          },
           agoda: {
+            id: 'agoda',
             name: 'Agoda',
             logo: '🏨',
+            baseUrl: 'https://www.agoda.com',
+            affiliateId: process.env.AGODA_AFFILIATE_ID || '1955073',
+            commission: 12,
+            active: true,
+            description: 'Best hotel deals in Asia',
             type: 'hotel'
           },
-          booking: {
-            name: 'Booking.com',
-            logo: '🏩',
-            type: 'hotel'
+          amazon: {
+            id: 'amazon',
+            name: 'Amazon',
+            logo: '🛍️',
+            baseUrl: 'https://www.amazon.in',
+            affiliateId: process.env.AMAZON_AFFILIATE_ID || 'tripsaver21-21',
+            commission: 5,
+            active: true,
+            description: 'Travel essentials and gear',
+            type: 'shopping'
           },
           abhibus: {
+            id: 'abhibus',
             name: 'AbhiBus',
             logo: '🚌',
+            baseUrl: 'https://inr.deals/kQK6mx',
+            affiliateId: 'kQK6mx',
+            commission: 8,
+            active: true,
+            description: 'Bus tickets across India',
             type: 'bus'
+          },
+          booking: {
+            id: 'booking',
+            name: 'Booking.com',
+            logo: '🏩',
+            baseUrl: 'https://www.booking.com',
+            affiliateId: process.env.BOOKING_AFFILIATE_ID || 'YOUR_BOOKING_ID',
+            commission: 10,
+            active: false,
+            description: 'Global hotel network',
+            type: 'hotel'
+          },
+          expedia: {
+            id: 'expedia',
+            name: 'Expedia',
+            logo: '✈️',
+            baseUrl: 'https://www.expedia.co.in',
+            affiliateId: process.env.EXPEDIA_AFFILIATE_ID || 'YOUR_EXPEDIA_ID',
+            commission: 8,
+            active: false,
+            description: 'Flights, hotels, and packages',
+            type: 'both'
           }
         },
         lastUpdated: new Date(),
@@ -606,12 +664,7 @@ app.get('/api/affiliate-config', async (req, res) => {
       console.log('✅ Auto-initialized affiliate config');
     }
 
-    res.json({
-      activePartner: config.activePartner,
-      affiliateIds: config.affiliateIds,
-      partners: config.partners,
-      lastUpdated: config.lastUpdated
-    });
+    res.json(config);
   } catch (err) {
     console.error('❌ Error fetching affiliate config:', err);
     res.status(500).json({ error: 'Failed to fetch affiliate config', details: err.message });
@@ -702,18 +755,63 @@ async function initializeAffiliateConfig() {
       
       const defaultConfig = {
         _id: 'active',
-        activePartner: 'amazon',
-        affiliateIds: {
-          amazon: 'tripsaver21-21',
-          agoda: process.env.AGODA_AFFILIATE_ID || '1955073',
-          booking: process.env.BOOKING_AFFILIATE_ID || 'YOUR_BOOKING_ID',
-          abhibus: 'kQK6mx'
-        },
+        activePartner: 'agoda',
         partners: {
-          amazon: { name: 'Amazon', logo: '🛒', type: 'shopping' },
-          agoda: { name: 'Agoda', logo: '🏨', type: 'hotel' },
-          booking: { name: 'Booking.com', logo: '🏩', type: 'hotel' },
-          abhibus: { name: 'AbhiBus', logo: '🚌', type: 'bus' }
+          agoda: {
+            id: 'agoda',
+            name: 'Agoda',
+            logo: '🏨',
+            baseUrl: 'https://www.agoda.com',
+            affiliateId: process.env.AGODA_AFFILIATE_ID || '1955073',
+            commission: 12,
+            active: true,
+            description: 'Best hotel deals in Asia',
+            type: 'hotel'
+          },
+          amazon: {
+            id: 'amazon',
+            name: 'Amazon',
+            logo: '🛍️',
+            baseUrl: 'https://www.amazon.in',
+            affiliateId: process.env.AMAZON_AFFILIATE_ID || 'tripsaver21-21',
+            commission: 5,
+            active: true,
+            description: 'Travel essentials and gear',
+            type: 'shopping'
+          },
+          abhibus: {
+            id: 'abhibus',
+            name: 'AbhiBus',
+            logo: '🚌',
+            baseUrl: 'https://inr.deals/kQK6mx',
+            affiliateId: 'kQK6mx',
+            commission: 8,
+            active: true,
+            description: 'Bus tickets across India',
+            type: 'bus'
+          },
+          booking: {
+            id: 'booking',
+            name: 'Booking.com',
+            logo: '🏩',
+            baseUrl: 'https://www.booking.com',
+            affiliateId: process.env.BOOKING_AFFILIATE_ID || 'YOUR_BOOKING_ID',
+            commission: 10,
+            active: false,
+            description: 'Global hotel network',
+            type: 'hotel'
+          },
+          expedia: {
+            id: 'expedia',
+            name: 'Expedia',
+            logo: '✈️',
+            baseUrl: 'https://www.expedia.co.in',
+            affiliateId: process.env.EXPEDIA_AFFILIATE_ID || 'YOUR_EXPEDIA_ID',
+            commission: 8,
+            active: false,
+            description: 'Flights, hotels, and packages',
+            type: 'both'
+          }
         },
         lastUpdated: new Date(),
         updatedBy: 'startup'

@@ -127,9 +127,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.affiliateConfigService.config$
       .pipe(takeUntil(this.destroy$))
       .subscribe(config => {
-        if (config?.affiliateIds?.agoda) {
-          this.agodaAffiliateId = config.affiliateIds.agoda;
-          console.log('✅ Agoda CID loaded from config:', this.agodaAffiliateId);
+        if (config?.partners?.['agoda']?.affiliateId) {
+          this.agodaAffiliateId = config.partners['agoda'].affiliateId;
+          console.log('✅ Agoda CID loaded from MongoDB config:', this.agodaAffiliateId);
         }
       });
 

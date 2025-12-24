@@ -3,11 +3,24 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
 import { tap, catchError, filter } from 'rxjs/operators';
 
+export interface AffiliatePartner {
+  id: string;
+  name: string;
+  logo: string;
+  baseUrl: string;
+  affiliateId: string;
+  commission?: number;
+  active: boolean;
+  description?: string;
+  type: 'hotel' | 'shopping' | 'bus' | 'both';
+}
+
 export interface AffiliateConfigData {
+  _id?: string;
   activePartner: string;
-  affiliateIds: { [key: string]: string };
-  partners: any;
-  lastUpdated: string;
+  partners: { [key: string]: AffiliatePartner };
+  lastUpdated?: string;
+  updatedBy?: string;
 }
 
 @Injectable({
