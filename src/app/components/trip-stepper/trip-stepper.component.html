@@ -243,11 +243,13 @@
             </span>
           </div>
 
-          <!-- CTA -->
+          <!-- CTA - Merged with panel -->
           <button 
             class="btn-explore" 
+            [class.expanded]="expandedDestinationId === rec.destination.id"
             (click)="toggleExplorePanel(rec.destination.id)">
-            Explore {{ rec.destination.name }} →
+            <span class="explore-text">Explore {{ rec.destination.name }}</span>
+            <span class="explore-chevron">{{expandedDestinationId === rec.destination.id ? '▼' : '▶'}}</span>
           </button>
 
           <!-- ✅ Contextual Explore Panel (Inline) -->
@@ -256,20 +258,11 @@
             *ngIf="expandedDestinationId === rec.destination.id"
             [@slideDown]>
             <div class="explore-header">
-              <h4>🧳 Essentials for {{ rec.destination.name }}</h4>
+              <h4>🧳 Essentials</h4>
               
-              <!-- Shopping Partner Selector (Agoda + Amazon) -->
-              <div class="partner-selector">
-                <label>Shop from:</label>
-                <div class="partner-buttons">
-                  <button 
-                    *ngFor="let partner of availableShoppingPartners"
-                    [class.active]="selectedShoppingPartner === partner.id"
-                    (click)="switchShoppingPartner(partner.id)"
-                    class="partner-btn">
-                    {{ partner.logo }} {{ partner.name }}
-                  </button>
-                </div>
+              <!-- Shopping Partner Badge (Compact) -->
+              <div class="partner-badge">
+                {{ getSelectedPartnerName() }}
               </div>
             </div>
 
@@ -281,10 +274,11 @@
                 target="_blank"
                 rel="nofollow sponsored noopener"
                 class="category-item"
-                [title]="'Shop on ' + getSelectedPartnerName()"
+                [title]="'Shop ' + item.name + ' on ' + getSelectedPartnerName()"
                 (click)="trackAffiliateClick(item.name)">
                 <span class="category-icon">{{ item.icon }}</span>
                 <span class="category-name">{{ item.name }}</span>
+                <span class="category-arrow">→</span>
               </a>
             </div>
 
@@ -295,13 +289,6 @@
                 (click)="openBookingModal(rec)">
                 🏨 Book Hotels
               </button>
-              <a 
-                href="https://www.redbus.in"
-                target="_blank"
-                rel="noopener"
-                class="secondary-btn">
-                🚌 Book Bus
-              </a>
             </div>
 
             <!-- Disclosure -->
