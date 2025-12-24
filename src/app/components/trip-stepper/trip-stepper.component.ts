@@ -9,7 +9,6 @@ import { getDestinationCategories, type ProductCategory } from '../../core/confi
 import { AffiliateLinkBuilderService } from '../../core/services/affiliate-link-builder.service';
 import { AffiliateConfigService } from '../../core/services/affiliate-config.service';
 import type { AffiliatePartnerType } from '../../core/config/affiliate-partners.config';
-import { getShoppingPartners, type AffiliatePartnerConfig } from '../../core/config/affiliate-config';
 
 // Declare gtag globally
 declare const gtag: Function;
@@ -314,7 +313,7 @@ export class TripStepperComponent implements OnInit {
   }> {
     // Get partner-agnostic categories
     const categories = getDestinationCategories(destinationType);
-    const partner = this.availableShoppingPartners.find(p => p.id === this.selectedShoppingPartner);
+    const partner = this.availableShoppingPartners.find((p: any) => p.id === this.selectedShoppingPartner);
     
     // Build affiliate links dynamically based on selected partner
     return categories.map((category: ProductCategory) => ({
@@ -330,7 +329,7 @@ export class TripStepperComponent implements OnInit {
    * Supports both Agoda and Amazon with different link formats
    */
   buildShoppingLink(searchQuery: string): string {
-    const partner = this.availableShoppingPartners.find(p => p.id === this.selectedShoppingPartner);
+    const partner = this.availableShoppingPartners.find((p: any) => p.id === this.selectedShoppingPartner);
     
     if (!partner) {
       return '';
@@ -377,7 +376,7 @@ export class TripStepperComponent implements OnInit {
   trackAffiliateClick(itemName: string): void {
     // Track with GA4
     if (typeof gtag !== 'undefined') {
-      const partner = this.availableShoppingPartners.find(p => p.id === this.selectedShoppingPartner);
+      const partner = this.availableShoppingPartners.find((p: any) => p.id === this.selectedShoppingPartner);
       (window as any).gtag('event', 'shopping_affiliate_click', {
         event_category: partner?.name.toUpperCase() || 'SHOPPING',
         event_label: itemName,

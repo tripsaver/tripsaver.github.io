@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AFFILIATE_CONFIG, getHotelPartners } from '../../config/affiliate-config';
 
 export interface PriceEntry { provider: string; price: number; currency?: string; url?: string }
 
 @Injectable({ providedIn: 'root' })
 export class AffiliateService {
   // Get all active hotel partners from config
-  private hotelPartners = getHotelPartners();
+  private hotelPartners: any[] = [];
 
   /**
    * Get hotel prices from all active affiliate partners
@@ -16,7 +15,7 @@ export class AffiliateService {
   getPrices(hotelId: string): Promise<PriceEntry[]> {
     // In production, replace with real API calls to partner APIs
     // For now, return mock data with affiliate links
-    const prices: PriceEntry[] = this.hotelPartners.map((partner, index) => ({
+    const prices: PriceEntry[] = this.hotelPartners.map((partner: any, index: number) => ({
       provider: partner.name,
       price: 3200 + (index * 100), // Mock prices
       currency: 'INR',

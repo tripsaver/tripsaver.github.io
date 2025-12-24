@@ -146,3 +146,6 @@
 
 // DEPRECATED - DO NOT USE
 // All affiliate configs are now in MongoDB
+
+// Export empty to make this a valid module
+export {};
