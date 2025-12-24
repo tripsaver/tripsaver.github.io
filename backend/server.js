@@ -565,14 +565,6 @@ app.get('/api/affiliate-config', async (req, res) => {
     // Auto-initialize if not found
     if (!config) {
       console.log('ℹ️  Config not found, auto-initializing...');
-      const initResponse = await new Promise((resolve, reject) => {
-        const req = { params: {} };
-        const res = {
-          json: resolve,
-          status: () => res
-        };
-        require('./server.js'); // This won't work, use direct initialization instead
-      });
       
       // Direct initialization
       config = {
@@ -622,7 +614,7 @@ app.get('/api/affiliate-config', async (req, res) => {
     });
   } catch (err) {
     console.error('❌ Error fetching affiliate config:', err);
-    res.status(500).json({ error: 'Failed to fetch affiliate config' });
+    res.status(500).json({ error: 'Failed to fetch affiliate config', details: err.message });
   }
 });
 
