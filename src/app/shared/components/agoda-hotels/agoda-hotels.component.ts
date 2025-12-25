@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AgodaDataService, AgodaHotel } from '../../../core/services/agoda-data/agoda-data.service';
+import { AffiliateConfigService, AffiliateConfigData } from '../../../core/services/affiliate-config.service';
 import { Subject, timeout } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -18,17 +19,32 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
   error: string | null = null;
   showSection = false; // Only show if data source is configured
   private destroy$ = new Subject<void>();
+  private affiliateConfig: AffiliateConfigData | null = null;
+  private affiliateConfigService = inject(AffiliateConfigService);
 
   constructor(private agodaService: AgodaDataService) {}
 
   ngOnInit(): void {
-    // Always show section with immediate sample data
-    this.showSection = true;
-    this.loading = false;
-    this.featuredHotels = this.getSampleHotels();
-    
-    // Skip CSV loading for now (can be enabled later when CSV is properly configured)
-    console.info('✅ Displaying sample hotel data');
+    // Load affiliate config from MongoDB first
+    this.affiliateConfigService.loadConfig()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (config: AffiliateConfigData) => {
+          this.affiliateConfig = config;
+          console.log('✅ Agoda hotels component loaded affiliate config');
+          // Display sample hotels with MongoDB affiliate data
+          this.showSection = true;
+          this.loading = false;
+          this.featuredHotels = this.getSampleHotels();
+        },
+        error: (err) => {
+          console.error('Failed to load affiliate config for agoda hotels:', err);
+          // Still show hotels but with fallback affiliate ID
+          this.showSection = true;
+          this.loading = false;
+          this.featuredHotels = this.getSampleHotels();
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -94,6 +110,14 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
       { city: 'Tokyo', country: 'Japan', hotel: 'Park Hyatt Tokyo' }
     ];
 
+    // Get Agoda affiliate ID from MongoDB config
+    let agodaAffiliateId = '1955073'; // Fallback to known ID if config not loaded
+    if (this.affiliateConfig && this.affiliateConfig.partners && this.affiliateConfig.partners.agoda) {
+      agodaAffiliateId = this.affiliateConfig.partners.agoda.affiliateId;
+    } else {
+      console.warn('⚠️ Agoda affiliate config not loaded, using default');
+    }
+
     return sampleCities.map((item, index) => ({
       hotelId: `sample-${index + 1}`,
       hotelName: item.hotel,
@@ -108,7 +132,7 @@ export class AgodaHotelsComponent implements OnInit, OnDestroy {
       description: `Experience luxury at ${item.hotel} in ${item.city}`,
       amenities: ['Free WiFi', 'Pool', 'Spa', 'Restaurant'],
       coordinates: { latitude: 0, longitude: 0 },
-      affiliateUrl: `https://www.agoda.com/search?city=${item.city}&cid=1955073`
+      affiliateUrl: `https://www.agoda.com/search?city=${item.city}&cid=${agodaAffiliateId}`
     }));
   }
 }

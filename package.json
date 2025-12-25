@@ -8,9 +8,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:hotel-affiliate": "node dist/hotel-affiliate/server/server.mjs"
+    "test:ci": "ng test --watch=false --code-coverage",
+    "serve:ssr:hotel-affiliate": "node dist/hotel-affiliate/server/server.mjs",
+    "deploy": "npm run build:prod && npm run test:ci && echo '✅ Build and tests passed. Ready for deployment.'"
   },
   "prettier": {
     "printWidth": 100,

@@ -29,6 +29,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run tests
+        run: npm run test:ci
+        continue-on-error: false
+
       - name: Build site
         run: npm run build
         # Builds Angular app to dist/hotel-affiliate/browser

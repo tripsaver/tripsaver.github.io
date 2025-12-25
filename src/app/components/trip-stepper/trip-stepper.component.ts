@@ -110,13 +110,13 @@ export class TripStepperComponent implements OnInit {
   private loadAffiliateConfig(): void {
     this.affiliateConfigService.loadConfig().subscribe(
       (config) => {
-        console.log('✅ Affiliate config loaded in component:', config);
+        console.log('✅ Affiliate config loaded from MongoDB:', config);
         // Extract shopping partners from config
         if (config && config.partners) {
           this.availableShoppingPartners = Object.values(config.partners).filter((p: any) => 
             p.type === 'shopping' || p.type === 'both'
           );
-          console.log('✅ Shopping partners loaded:', this.availableShoppingPartners);
+          console.log('✅ Shopping partners loaded from MongoDB:', this.availableShoppingPartners);
           
           // Ensure selectedShoppingPartner is set to a valid partner
           if (this.availableShoppingPartners.length > 0) {
@@ -127,27 +127,21 @@ export class TripStepperComponent implements OnInit {
               this.selectedShoppingPartner = this.availableShoppingPartners[0].id;
             }
             console.log('✅ Selected shopping partner set to:', this.selectedShoppingPartner);
+          } else {
+            console.error('❌ No shopping partners available in MongoDB config');
+            this.availableShoppingPartners = [];
           }
+        } else {
+          console.error('❌ Invalid config structure from MongoDB');
+          this.availableShoppingPartners = [];
         }
         this.cdr.markForCheck();
       },
       (error) => {
-        console.warn('⚠️ Using default affiliate config:', error);
-        // Set fallback default partners
-        this.availableShoppingPartners = [
-          {
-            id: 'amazon',
-            name: 'Amazon',
-            logo: '🛍️',
-            baseUrl: 'https://www.amazon.in',
-            affiliateId: 'tripsaver21-21',
-            commission: 5,
-            active: true,
-            description: 'Travel essentials and gear',
-            type: 'shopping'
-          }
-        ];
-        this.selectedShoppingPartner = 'amazon';
+        console.error('❌ Critical error loading affiliate config from MongoDB:', error);
+        console.error('Please ensure MongoDB is running and affiliate config is properly initialized');
+        // Do NOT use hardcoded fallback - force MongoDB data usage
+        this.availableShoppingPartners = [];
         this.cdr.markForCheck();
       }
     );
@@ -359,33 +353,33 @@ export class TripStepperComponent implements OnInit {
 
   /**
    * Build shopping link for current selected partner
-   * Supports both Agoda and Amazon with different link formats
+   * Always uses MongoDB partner data - never falls back to hardcoded IDs
    */
   buildShoppingLink(searchQuery: string): string {
-    // If no partners loaded yet, use fallback Amazon link
+    // If no partners loaded yet, return empty - do not fallback to hardcoded IDs
     if (!this.availableShoppingPartners || this.availableShoppingPartners.length === 0) {
-      console.warn('⚠️ Shopping partners not loaded, using fallback Amazon link');
-      return `https://www.amazon.in/s?k=${encodeURIComponent(searchQuery)}&tag=tripsaver21-21`;
+      console.error('❌ Shopping partners not loaded from MongoDB');
+      return ''; // Return empty instead of fallback
     }
 
     const partner = this.availableShoppingPartners.find((p: any) => p.id === this.selectedShoppingPartner);
     
     if (!partner) {
-      console.warn(`⚠️ Partner ${this.selectedShoppingPartner} not found, using fallback Amazon link`);
-      return `https://www.amazon.in/s?k=${encodeURIComponent(searchQuery)}&tag=tripsaver21-21`;
+      console.error(`❌ Partner ${this.selectedShoppingPartner} not found in MongoDB config`);
+      return ''; // Return empty instead of fallback
     }
 
     let url = '';
 
-    // Build partner-specific links
+    // Build partner-specific links using MongoDB data
     if (partner.id === 'amazon') {
-      // Amazon: search products with affiliate tag
+      // Amazon: search products with affiliate tag from MongoDB
       url = `${partner.baseUrl}/s?k=${encodeURIComponent(searchQuery)}&tag=${partner.affiliateId}`;
     } else if (partner.id === 'agoda') {
-      // Agoda: hotel/travel search with affiliate ID
+      // Agoda: hotel/travel search with affiliate ID from MongoDB
       url = `${partner.baseUrl}/search?ss=${encodeURIComponent(searchQuery)}&affid=${partner.affiliateId}`;
     } else {
-      // Generic fallback
+      // Generic fallback using MongoDB partner data
       url = `${partner.baseUrl}?search=${encodeURIComponent(searchQuery)}&tag=${partner.affiliateId}`;
     }
 
@@ -439,6 +433,14 @@ export class TripStepperComponent implements OnInit {
 
   // ✅ Track Bus Booking Click
   trackBusBookingClick(): void {
+    // Get bus partner from MongoDB config
+    const busPartner = this.availableShoppingPartners.find((p: any) => p.id === 'abhibus');
+    
+    if (!busPartner) {
+      console.error('❌ AbhiBus partner not found in MongoDB config');
+      return;
+    }
+
     if (typeof gtag !== 'undefined') {
       (window as any).gtag('event', 'abhibus_click', {
         event_category: 'Affiliate',
@@ -446,9 +448,9 @@ export class TripStepperComponent implements OnInit {
         source: 'quick_action_button'
       });
     }
-    console.log('🚌 Bus Booking Click: AbhiBus affiliate (Quick Action)');
-    // Navigate to AbhiBus
-    window.open('https://inr.deals/kQK6mx', '_blank', 'noopener');
+    console.log('🚌 Bus Booking Click: AbhiBus affiliate from MongoDB config');
+    // Navigate to AbhiBus using MongoDB partner data
+    window.open(busPartner.baseUrl, '_blank', 'noopener');
   }
 
   // ✅ Restart

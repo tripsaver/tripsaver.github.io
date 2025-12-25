@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, map, of, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { AgodaDataService, AgodaHotel } from '../agoda-data/agoda-data.service';
 import { AnalyticsService } from '../analytics/analytics.service';
+import { AffiliateConfigService, AffiliateConfigData } from '../affiliate-config.service';
 
 export interface SearchResult {
   hotelId: string;
@@ -19,6 +20,8 @@ export interface SearchResult {
 export class SearchService {
   private allHotels: AgodaHotel[] = [];
   private hotelsLoaded = false;
+  private affiliateConfig: AffiliateConfigData | null = null;
+  private affiliateConfigService = inject(AffiliateConfigService);
 
   constructor(
     private agodaService: AgodaDataService,
@@ -26,6 +29,8 @@ export class SearchService {
   ) {
     // Pre-load all hotels for instant search
     this.loadAllHotels();
+    // Load affiliate config from MongoDB
+    this.loadAffiliateConfig();
   }
 
   private loadAllHotels(): void {
@@ -39,6 +44,20 @@ export class SearchService {
       error: (err: any) => {
         console.error('Failed to load hotels for search:', err);
         this.hotelsLoaded = false;
+      }
+    });
+  }
+
+  private loadAffiliateConfig(): void {
+    // Load affiliate config from MongoDB
+    this.affiliateConfigService.loadConfig().subscribe({
+      next: (config: AffiliateConfigData) => {
+        this.affiliateConfig = config;
+        console.log('✅ Affiliate config loaded for search service');
+      },
+      error: (err: any) => {
+        console.error('Failed to load affiliate config for search service:', err);
+        this.affiliateConfig = null;
       }
     });
   }
@@ -109,17 +128,24 @@ export class SearchService {
   }
 
   private buildAgodaUrl(hotelId: string, city: string): string {
-    // Build Agoda URL with affiliate ID and UTM tracking
-    const affiliateId = 'cid=1955073';
+    // Build Agoda URL with affiliate ID from MongoDB
     const baseUrl = 'https://www.agoda.com';
+    
+    // Get Agoda affiliate ID from MongoDB config
+    let agodaAffiliateId = '1955073'; // Fallback to known ID if config not loaded
+    if (this.affiliateConfig && this.affiliateConfig.partners && this.affiliateConfig.partners.agoda) {
+      agodaAffiliateId = this.affiliateConfig.partners.agoda.affiliateId;
+    } else {
+      console.warn('⚠️ Agoda affiliate config not loaded, using default');
+    }
     
     let url: string;
     // Use hotel ID if available, otherwise search by city
     if (hotelId) {
-      url = `${baseUrl}/hotel/${hotelId}.html?${affiliateId}`;
+      url = `${baseUrl}/hotel/${hotelId}.html?cid=${agodaAffiliateId}`;
     } else {
       const citySlug = city.toLowerCase().replace(/\s+/g, '-');
-      url = `${baseUrl}/search?city=${encodeURIComponent(citySlug)}&${affiliateId}`;
+      url = `${baseUrl}/search?city=${encodeURIComponent(citySlug)}&cid=${agodaAffiliateId}`;
     }
     
     // Add UTM parameters for tracking
