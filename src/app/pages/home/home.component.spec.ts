@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { of } from 'rxjs';
 import { HomeComponent } from './home.component';
@@ -51,7 +51,7 @@ describe('HomeComponent', () => {
     updatedBy: 'test'
   };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     const configServiceSpy = jasmine.createSpyObj('AffiliateConfigService', [
       'loadConfig',
       'getCurrentConfig',
@@ -63,13 +63,13 @@ describe('HomeComponent', () => {
     configServiceSpy.getAffiliateId.and.returnValue('1955073');
     configServiceSpy.getActivePartner.and.returnValue('agoda');
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [CommonModule, HomeComponent],
       providers: [{ provide: AffiliateConfigService, useValue: configServiceSpy }]
     }).compileComponents();
 
     affiliateConfigService = TestBed.inject(AffiliateConfigService) as jasmine.SpyObj<AffiliateConfigService>;
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);

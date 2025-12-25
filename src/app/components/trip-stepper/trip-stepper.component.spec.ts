@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
@@ -54,7 +54,7 @@ describe('TripStepperComponent', () => {
     }
   };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     const configServiceSpy = jasmine.createSpyObj('AffiliateConfigService', [
       'initConfig',
       'loadConfig',
@@ -63,7 +63,7 @@ describe('TripStepperComponent', () => {
     configServiceSpy.initConfig.and.returnValue(of({ status: 'initialized' }));
     configServiceSpy.loadConfig.and.returnValue(of(mockConfig));
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [TripStepperComponent],
       imports: [CommonModule, FormsModule],
       providers: [
@@ -76,7 +76,7 @@ describe('TripStepperComponent', () => {
     }).compileComponents();
 
     affiliateConfigService = TestBed.inject(AffiliateConfigService) as jasmine.SpyObj<AffiliateConfigService>;
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TripStepperComponent);
