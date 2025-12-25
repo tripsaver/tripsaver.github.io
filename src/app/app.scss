@@ -1,41 +1,63 @@
 /* App-level component styles - Kept minimal */
 /* Most styles are now in individual component files */
 
-/* Header - Simple navigation bar */
-header {
+/* Header - Navigation with Logo */
+.app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0.75rem 2rem;
   background: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 100;
+  gap: 2rem;
 }
 
-.logo {
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.logo-image {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.logo-text {
   font-size: 1.5rem;
   font-weight: 800;
   background: linear-gradient(135deg, #2563eb 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
-header nav {
+.header-nav {
   display: flex;
   gap: 2rem;
-}
-
-header nav a {
-  color: #6b7280;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  
-  &:hover {
-    color: #2563eb;
-  }
+  margin-left: auto;
 }
 
 @media (max-width: 768px) {
