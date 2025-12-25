@@ -1,3 +1,4 @@
+import 'jasmine';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AffiliateService } from './affiliate.service';
