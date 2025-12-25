@@ -96,7 +96,13 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "pollingInterval": 4000,
+            "watch": true,
+            "browsers": ["Chrome"],
+            "karmaConfig": "karma.conf.js"
+          }
         }
       }
     }
