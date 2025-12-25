@@ -94,29 +94,23 @@ describe('TripStepperComponent', () => {
       expect(component.selectedShoppingPartner).toBe('amazon');
     });
 
-    it('should load affiliate config on init', waitForAsync(() => {
+    it('should load affiliate config on init', () => {
       fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(affiliateConfigService.initConfig).toHaveBeenCalled();
-        expect(affiliateConfigService.loadConfig).toHaveBeenCalled();
-      });
-    }));
+      expect(affiliateConfigService.initConfig).toHaveBeenCalled();
+      expect(affiliateConfigService.loadConfig).toHaveBeenCalled();
+    });
 
-    it('should load shopping partners from config', waitForAsync(() => {
+    it('should load shopping partners from config', () => {
       fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(component.availableShoppingPartners.length).toBeGreaterThan(0);
-        expect(component.availableShoppingPartners.some((p: any) => p.type === 'shopping')).toBe(true);
-      });
-    }));
+      expect(component.availableShoppingPartners.length).toBeGreaterThan(0);
+      expect(component.availableShoppingPartners.some((p: any) => p.type === 'shopping')).toBe(true);
+    });
 
-    it('should handle config load errors gracefully', waitForAsync(() => {
+    it('should handle config load errors gracefully', () => {
       affiliateConfigService.loadConfig.and.returnValue(throwError(() => new Error('Load failed')));
       fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(component).toBeTruthy();
-      });
-    }));
+      expect(component).toBeTruthy();
+    });
   });
 
   describe('Step Navigation', () => {
@@ -150,10 +144,9 @@ describe('TripStepperComponent', () => {
   });
 
   describe('Shopping Partner Selection', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture.detectChanges();
-      fixture.whenStable();
-    }));
+    });
 
     it('should have amazon as default shopping partner', () => {
       expect(component.selectedShoppingPartner).toBe('amazon');
@@ -164,14 +157,12 @@ describe('TripStepperComponent', () => {
       expect(component.selectedShoppingPartner).toBe('agoda');
     });
 
-    it('should filter shopping partners correctly', waitForAsync(() => {
-      fixture.whenStable().then(() => {
-        const shoppingPartners = component.availableShoppingPartners.filter(
-          (p: any) => p.type === 'shopping' || p.type === 'both'
-        );
-        expect(shoppingPartners.length).toBeGreaterThan(0);
-      });
-    }));
+    it('should filter shopping partners correctly', () => {
+      const shoppingPartners = component.availableShoppingPartners.filter(
+        (p: any) => p.type === 'shopping' || p.type === 'both'
+      );
+      expect(shoppingPartners.length).toBeGreaterThan(0);
+    });
   });
 
   describe('Preferences Management', () => {
@@ -208,10 +199,9 @@ describe('TripStepperComponent', () => {
   });
 
   describe('Building Shopping Links', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture.detectChanges();
-      fixture.whenStable();
-    }));
+    });
 
     it('should build shopping link with search query', () => {
       const link = component.buildShoppingLink('luggage');
@@ -288,10 +278,9 @@ describe('TripStepperComponent', () => {
   });
 
   describe('Partner Details', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture.detectChanges();
-      fixture.whenStable();
-    }));
+    });
 
     it('should provide access to shopping partner details', () => {
       const partner = component.availableShoppingPartners[0];
