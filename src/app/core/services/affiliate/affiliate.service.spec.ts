@@ -48,17 +48,23 @@ describe('AffiliateService', () => {
   };
 
   beforeEach(() => {
+    const configServiceMock = {
+      getCurrentConfig: () => mockConfig,
+      loadConfig: () => of(mockConfig),
+      getAffiliateId: (partner: string) => mockConfig.partners[partner as keyof typeof mockConfig.partners]?.affiliateId || '',
+      getActivePartner: () => mockConfig.activePartner,
+      initConfig: () => of({ status: 'initialized' })
+    };
+
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AffiliateService, AffiliateConfigService]
+      providers: [
+        AffiliateService,
+        { provide: AffiliateConfigService, useValue: configServiceMock }
+      ]
     });
     service = TestBed.inject(AffiliateService);
     configService = TestBed.inject(AffiliateConfigService);
-
-    // Mock the config service to return our mock config
-    const spy = jasmine.createSpyObj('AffiliateConfigService', ['getCurrentConfig']);
-    (configService as any).getCurrentConfig = spy.getCurrentConfig;
-    spy.getCurrentConfig.and.returnValue(mockConfig);
   });
 
   describe('buildAffiliateLink', () => {

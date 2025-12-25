@@ -52,20 +52,17 @@ describe('HomeComponent', () => {
   };
 
   beforeEach(async () => {
-    const configServiceSpy = jasmine.createSpyObj('AffiliateConfigService', [
-      'loadConfig',
-      'getCurrentConfig',
-      'getAffiliateId',
-      'getActivePartner'
-    ]);
-    configServiceSpy.loadConfig.and.returnValue(of(mockConfig));
-    configServiceSpy.getCurrentConfig.and.returnValue(mockConfig);
-    configServiceSpy.getAffiliateId.and.returnValue('1955073');
-    configServiceSpy.getActivePartner.and.returnValue('agoda');
+    const configServiceMock = {
+      loadConfig: () => of(mockConfig),
+      getCurrentConfig: () => mockConfig,
+      getAffiliateId: (partner: string) => mockConfig.partners[partner as keyof typeof mockConfig.partners]?.affiliateId || '',
+      getActivePartner: () => mockConfig.activePartner,
+      initConfig: () => of({ status: 'initialized' })
+    };
 
     await TestBed.configureTestingModule({
       imports: [CommonModule, HomeComponent],
-      providers: [{ provide: AffiliateConfigService, useValue: configServiceSpy }]
+      providers: [{ provide: AffiliateConfigService, useValue: configServiceMock }]
     }).compileComponents();
 
     affiliateConfigService = TestBed.inject(AffiliateConfigService);

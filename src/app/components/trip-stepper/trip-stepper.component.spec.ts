@@ -55,23 +55,23 @@ describe('TripStepperComponent', () => {
   };
 
   beforeEach(async () => {
-    const configServiceSpy = jasmine.createSpyObj('AffiliateConfigService', [
-      'initConfig',
-      'loadConfig',
-      'getCurrentConfig'
-    ]);
-    configServiceSpy.initConfig.and.returnValue(of({ status: 'initialized' }));
-    configServiceSpy.loadConfig.and.returnValue(of(mockConfig));
+    const configServiceMock = {
+      initConfig: () => of({ status: 'initialized' }),
+      loadConfig: () => of(mockConfig),
+      getCurrentConfig: () => mockConfig,
+      getAffiliateId: (partner: string) => mockConfig.partners[partner as keyof typeof mockConfig.partners]?.affiliateId || '',
+      getActivePartner: () => mockConfig.activePartner
+    };
 
     await TestBed.configureTestingModule({
       declarations: [TripStepperComponent],
       imports: [CommonModule, FormsModule],
       providers: [
-        { provide: AffiliateConfigService, useValue: configServiceSpy },
-        jasmine.createSpyObj('AffiliateLinkBuilderService', ['buildLink']),
-        jasmine.createSpyObj('RecommendationEngine', ['getRecommendations']),
-        jasmine.createSpyObj('DestinationScoringEngine', ['scoreDestination']),
-        jasmine.createSpyObj('TripReadinessEngine', ['checkReadiness'])
+        { provide: AffiliateConfigService, useValue: configServiceMock },
+        { provide: AffiliateLinkBuilderService, useValue: {} },
+        { provide: RecommendationEngine, useValue: {} },
+        { provide: DestinationScoringEngine, useValue: {} },
+        { provide: TripReadinessEngine, useValue: {} }
       ]
     }).compileComponents();
 
