@@ -1,30 +1,22 @@
-<!-- HEADER -->
-<header class="main-header">
-  <div class="header-container">
-    <div class="logo">TripSaver</div>
+<!-- TRIP PLANNER SECTION (Explorer Users - First Path) -->
+<section class="finder-section">
+  <div class="finder-container">
+    <div class="finder-intro">
+      <h2>🧭 Smart Trip Planner</h2>
+      <p class="finder-subtext">Want personalized recommendations? Answer 4 quick questions and get destinations ranked just for you.</p>
+    </div>
 
-    <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="isMenuOpen">
-      <span></span><span></span><span></span>
-    </button>
-
-    <nav [class.mobile-open]="isMenuOpen">
-      <a routerLink="/" routerLinkActive="active" (click)="closeMenu()">Home</a>
-      <a routerLink="/hotels" routerLinkActive="active" (click)="closeMenu()">Hotels</a>
-      <a routerLink="/deals" routerLinkActive="active" (click)="closeMenu()">Deals</a>
-      <a routerLink="/how-it-works" routerLinkActive="active" (click)="closeMenu()">How It Works</a>
-      <a routerLink="/methodology" routerLinkActive="active" (click)="closeMenu()">Methodology</a>
-      <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a>
-      <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a>
-    </nav>
+    <!-- Trip Stepper Component -->
+    <app-trip-stepper></app-trip-stepper>
   </div>
-</header>
+</section>
 
 <!-- HERO SECTION (Intent Users) -->
 <section class="hero-section">
   <div class="hero-content">
     <h1 class="hero-title">Book Hotels, Bus & Travel Essentials</h1>
     <p class="hero-subtitle">{{ heroSubtitle }}</p>
-    
+
     <!-- Key Benefits -->
     <div class="hero-benefits">
       <div class="benefit">
@@ -44,19 +36,6 @@
 
   <!-- Background gradient -->
   <div class="hero-bg"></div>
-</section>
-
-<!-- TRIP PLANNER SECTION (Explorer Users - First Path) -->
-<section class="finder-section">
-  <div class="finder-container">
-    <div class="finder-intro">
-      <h2>🧭 Smart Trip Planner</h2>
-      <p class="finder-subtext">Want personalized recommendations? Answer 4 quick questions and get destinations ranked just for you.</p>
-    </div>
-
-    <!-- Trip Stepper Component -->
-    <app-trip-stepper></app-trip-stepper>
-  </div>
 </section>
 
 <!-- DIVIDER: Explorer vs Intent Users -->
