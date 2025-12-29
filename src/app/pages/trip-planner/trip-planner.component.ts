@@ -24,7 +24,7 @@ import { ItineraryDayCardComponent } from './itinerary-day-card.component';
             <p class="subtitle">From inspiration to itinerary</p>
 
             <!-- PHASE 1: Preference Discovery -->
-            <div class="discovery-phase" *ngIf="!selectedDestination || !currentPlan">
+            <div class="discovery-phase" *ngIf="(!selectedDestination || !currentPlan) && !sourceFromSmartRecommendations">
               <h3>Let's find your perfect destination</h3>
               
               <!-- Pace Selector -->
@@ -92,9 +92,8 @@ import { ItineraryDayCardComponent } from './itinerary-day-card.component';
               <div class="suggestions-panel" *ngIf="showDiscoverySuggestions">
                 <h4>Destinations for you:</h4>
                 <div class="suggestions-grid">
-                  <button
+                  <div
                     *ngFor="let dest of suggestedDestinations"
-                    (click)="selectSuggestedDestination(dest.value)"
                     class="suggestion-card"
                     [style.opacity]="dest.matchScore"
                   >
@@ -102,7 +101,13 @@ import { ItineraryDayCardComponent } from './itinerary-day-card.component';
                     <div class="suggestion-name">{{ dest.name }}</div>
                     <div class="suggestion-desc">{{ dest.description }}</div>
                     <div class="match-score">{{ Math.round(dest.matchScore * 100) }}% match</div>
-                  </button>
+                    <button 
+                      (click)="planThisTrip(dest.value)"
+                      class="plan-btn"
+                    >
+                      Plan this trip →
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -645,6 +650,25 @@ import { ItineraryDayCardComponent } from './itinerary-day-card.component';
       margin-top: 4px;
     }
 
+    .plan-btn {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .plan-btn:hover {
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      transform: translateY(-1px);
+    }
+
     .divider {
       text-align: center;
       margin: 20px 0;
@@ -1156,6 +1180,7 @@ export class TripPlannerComponent implements OnInit, OnDestroy {
   };
   suggestedDestinations: Array<{ name: string; value: string; emoji: string; description: string; matchScore: number }> = [];
   showDiscoverySuggestions = false;
+  sourceFromSmartRecommendations = false; // Track if coming from smart recommendation card
 
   // Recommendation widget state (Phase 1: Smart Recommendations)
   recommendationMode: 'none' | 'hotels' | 'activities' | 'transport' | 'essentials' = 'none';
@@ -1196,6 +1221,11 @@ export class TripPlannerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Check for query parameters
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      // Check if coming from smart recommendation card
+      if (params['source'] === 'smart') {
+        this.sourceFromSmartRecommendations = true;
+      }
+
       if (params['destination']) {
         this.selectedDestination = params['destination'];
         this.onDestinationChange();
@@ -1294,6 +1324,16 @@ export class TripPlannerComponent implements OnInit, OnDestroy {
     this.selectedDestination = destinationValue;
     this.showDiscoverySuggestions = false;
     this.onDestinationChange();
+  }
+
+  planThisTrip(destinationValue: string): void {
+    // Navigate to planner with destination prefilled and source=smart
+    this.router.navigate(['/planner'], {
+      queryParams: {
+        destination: destinationValue,
+        source: 'smart'
+      }
+    });
   }
 
   onDestinationChange(): void {
