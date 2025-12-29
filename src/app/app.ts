@@ -1,16 +1,15 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SeoService } from './core/services/seo/seo.service';
 import { FooterComponent } from './components/footer/footer.component';
-import { InstantBookingBarComponent } from './components/instant-booking-bar/instant-booking-bar.component';
 // Note: keep component imports local to pages that render them to avoid unused warnings
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, FooterComponent, InstantBookingBarComponent],
+  imports: [CommonModule, RouterOutlet, FooterComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })

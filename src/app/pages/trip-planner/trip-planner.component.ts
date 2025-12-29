@@ -544,7 +544,10 @@ export class TripPlannerComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.destinations = itineraryService.getDestinations();
+    // Load destinations asynchronously
+    this.itineraryService.getDestinations().then(dests => {
+      this.destinations = dests;
+    });
   }
 
   ngOnInit(): void {
@@ -580,7 +583,9 @@ export class TripPlannerComponent implements OnInit, OnDestroy {
   }
 
   onDestinationChange(): void {
-    this.availableDurations = this.itineraryService.getDurations(this.selectedDestination);
+    this.itineraryService.getDurations(this.selectedDestination).then(durations => {
+      this.availableDurations = durations;
+    });
     this.selectedDays = null;
     this.currentPlan = null;
     this.updateQueryParams();
@@ -602,17 +607,17 @@ export class TripPlannerComponent implements OnInit, OnDestroy {
     }
 
     this.loading = true;
-    // Simulate API call
-    setTimeout(() => {
-      const plan = this.itineraryService.generatePlan(
-        this.selectedDestination,
-        this.selectedDays!,
-        this.selectedPreferences
-      );
+    // Subscribe to observable from service
+    this.itineraryService.generatePlan(
+      this.selectedDestination,
+      this.selectedDays!,
+      this.selectedPreferences,
+      this.filters
+    ).pipe(takeUntil(this.destroy$)).subscribe(plan => {
       this.currentPlan = plan;
       this.loading = false;
       this.updateQueryParams();
-    }, 500);
+    });
   }
 
   resetPlan(): void {
