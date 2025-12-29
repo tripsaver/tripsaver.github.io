@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, inject, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, inject, NgZone, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BookingModalComponent } from '../booking-modal/booking-modal.component';
@@ -21,7 +21,7 @@ import { TrustConfigService } from '../../core/services/trust-config.service';
   templateUrl: './smart-recommendations.component.html',
   styleUrls: ['./smart-recommendations.component.scss']
 })
-export class SmartRecommendationsComponent implements OnInit {
+export class SmartRecommendationsComponent implements OnInit, AfterViewInit {
   private recommendationEngine = inject(RecommendationEngine);
   private ngZone = inject(NgZone);
   private cdr = inject(ChangeDetectorRef);
@@ -104,6 +104,13 @@ export class SmartRecommendationsComponent implements OnInit {
     // Otherwise user will see empty state and click button manually
   }
 
+  ngAfterViewInit(): void {
+    if (this.recommendations && this.recommendations.length > 0) {
+      console.log(`✅ [RENDERER] ${this.recommendations.length} destination cards rendered to DOM`);
+      console.log(`✅ [RENDERER] User can now click cards to expand`);
+    }
+  }
+
   // ✅ Button label based on state (3 states)
   getButtonLabel(): string {
     if (this.uiState.loading) {
@@ -126,8 +133,12 @@ export class SmartRecommendationsComponent implements OnInit {
     const index = this.preferences.categories.indexOf(category);
     if (index > -1) {
       this.preferences.categories.splice(index, 1);
+      console.log(`🎯 [SmartRecommendations] Interest removed: ${category}`);
     } else {
       this.preferences.categories.push(category);
+      console.log(`🎯 [SmartRecommendations] Interest added: ${category}`);
+    }
+    console.log(`🎯 [SmartRecommendations] Current interests:`, this.preferences.categories);
     }
     // Don't auto-trigger - wait for explicit button click
   }
@@ -321,8 +332,10 @@ export class SmartRecommendationsComponent implements OnInit {
 
   async getRecommendations(): Promise<void> {
     // ✅ Only change UI state, NEVER touch preferences
-    console.log('🚀 [LOADER START] Getting recommendations...');
-    console.log(`📋 Current preferences:`, this.preferences);
+    console.log('🚀 [LOADER] "Get Recommendations" button clicked!');
+    console.log(`🚀 [LOADER] Month: ${this.preferences.month}, Budget: ${this.preferences.budget}`);
+    console.log(`🚀 [LOADER] Interests: ${this.preferences.categories.join(', ') || 'NONE'}`);
+    console.log('🚀 [LOADER] Getting recommendations...');
     this.uiState.loading = true;
     this.uiState.error = null;
     this.recommendations = [];
