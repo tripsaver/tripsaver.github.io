@@ -1,7 +1,11 @@
 <!-- HEADER -->
 <header class="main-header">
   <div class="header-container">
-    <div class="logo">TripSaver</div>
+    <!-- <div class="logo">TripSaver</div> -->
+     <div class="header-brand">
+    <img src="assets/logo.png" alt="TripSaver Logo" class="logo-image" [routerLink]="'/'">
+    <span class="logo-text" [routerLink]="'/'">TripSaver</span>
+  </div>
 
     <button class="hamburger-btn" (click)="toggleMenu()" [class.active]="isMenuOpen">
       <span></span><span></span><span></span>
@@ -18,6 +22,19 @@
     </nav>
   </div>
 </header>
+
+<!-- TRIP PLANNER SECTION (Explorer Users - First Path) -->
+<section class="finder-section">
+  <div class="finder-container">
+    <div class="finder-intro">
+      <h2>🧭 Smart Trip Planner</h2>
+      <p class="finder-subtext">Want personalized recommendations? Answer 4 quick questions and get destinations ranked just for you.</p>
+    </div>
+
+    <!-- Trip Stepper Component -->
+    <app-trip-stepper></app-trip-stepper>
+  </div>
+</section>
 
 <!-- HERO SECTION (Intent Users) -->
 <section class="hero-section">
@@ -46,18 +63,7 @@
   <div class="hero-bg"></div>
 </section>
 
-<!-- TRIP PLANNER SECTION (Explorer Users - First Path) -->
-<section class="finder-section">
-  <div class="finder-container">
-    <div class="finder-intro">
-      <h2>🧭 Smart Trip Planner</h2>
-      <p class="finder-subtext">Want personalized recommendations? Answer 4 quick questions and get destinations ranked just for you.</p>
-    </div>
 
-    <!-- Trip Stepper Component -->
-    <app-trip-stepper></app-trip-stepper>
-  </div>
-</section>
 
 <!-- DIVIDER: Explorer vs Intent Users -->
 <section class="dual-entry-divider">
