@@ -139,7 +139,6 @@ export class SmartRecommendationsComponent implements OnInit, AfterViewInit {
       console.log(`🎯 [SmartRecommendations] Interest added: ${category}`);
     }
     console.log(`🎯 [SmartRecommendations] Current interests:`, this.preferences.categories);
-    }
     // Don't auto-trigger - wait for explicit button click
   }
 
@@ -155,7 +154,7 @@ export class SmartRecommendationsComponent implements OnInit, AfterViewInit {
     return this.expandedScores.has(index);
   }
 
-  getScoreBreakdown(rec: EnhancedRecommendation) {
+  getScoreBreakdown(rec: EnhancedRecommendation): any {
     const dest = rec.destination;
     const prefs = this.preferences;
     
