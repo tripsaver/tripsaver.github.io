@@ -211,7 +211,145 @@ import { ItineraryDayCardComponent } from './itinerary-day-card.component';
               <app-itinerary-day-card
                 *ngFor="let day of currentPlan.itinerary"
                 [day]="day"
+                (ctaClick)="onRecommendationCtaClick($event, day.day)"
               ></app-itinerary-day-card>
+            </div>
+
+            <!-- Smart Recommendations Widget (Phase 1) -->
+            <div class="recommendations-panel-section">
+              <!-- Recommendation Selector -->
+              <div class="recommendation-filter">
+                <span class="filter-label">Show recommendations for:</span>
+                <div class="filter-buttons">
+                  <button
+                    *ngFor="let option of [
+                      {mode: 'hotels', label: 'Hotels', emoji: '🏨'},
+                      {mode: 'activities', label: 'Activities', emoji: '🎫'},
+                      {mode: 'transport', label: 'Transport', emoji: '🚕'},
+                      {mode: 'essentials', label: 'Essentials', emoji: '🧳'}
+                    ]"
+                    [class.active]="recommendationMode === option.mode"
+                    (click)="onRecommendationModeChange(option.mode)"
+                    class="filter-btn"
+                  >
+                    <span class="emoji">{{ option.emoji }}</span>
+                    <span class="label">{{ option.label }}</span>
+                  </button>
+                  <button
+                    *ngIf="recommendationMode !== 'none'"
+                    (click)="onRecommendationModeChange('none')"
+                    class="filter-btn clear-btn"
+                  >
+                    <span class="emoji">✕</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Recommendation Panel (Dynamic) -->
+              <div *ngIf="recommendationMode !== 'none'" class="recommendations-panel">
+                <div class="panel-header">
+                  <h3>
+                    <span class="emoji">
+                      {{ recommendationMode === 'hotels' ? '🏨' : recommendationMode === 'activities' ? '🎫' : recommendationMode === 'transport' ? '🚕' : '🧳' }}
+                    </span>
+                    {{ 
+                      recommendationMode === 'hotels' ? 'Recommended Hotels' :
+                      recommendationMode === 'activities' ? 'Top Activities' :
+                      recommendationMode === 'transport' ? 'Transport Options' :
+                      'Travel Essentials'
+                    }}
+                  </h3>
+                  <p class="context-hint">
+                    {{ 
+                      recommendationMode === 'hotels' ? 'Best hotels near ' + selectedDestination + ' for your stay' :
+                      recommendationMode === 'activities' ? 'Top activities to explore on your ' + selectedDestination + ' trip' :
+                      recommendationMode === 'transport' ? 'Transport options to reach and explore ' + selectedDestination :
+                      'Must-have travel essentials for your trip'
+                    }}
+                  </p>
+                </div>
+
+                <!-- Recommendation Cards Grid -->
+                <div class="recommendations-grid">
+                  <ng-container *ngIf="recommendationMode === 'hotels'">
+                    <div *ngFor="let rec of getHotelRecommendations()" class="recommendation-card">
+                      <div class="card-header">
+                        <span class="rec-emoji">🏨</span>
+                        <div class="rec-title-section">
+                          <h4>{{ rec.title }}</h4>
+                          <span class="context-badge">{{ rec.context }}</span>
+                        </div>
+                      </div>
+                      <p class="rec-description">{{ rec.description }}</p>
+                      <div class="rec-meta">
+                        <span *ngIf="rec.rating" class="rating">⭐ {{ rec.rating }}/5</span>
+                        <span *ngIf="rec.price" class="price">💰 {{ rec.price }}</span>
+                      </div>
+                      <button (click)="window.open('https://www.agoda.com', '_blank')" class="rec-cta">
+                        View on Agoda →
+                      </button>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="recommendationMode === 'activities'">
+                    <div *ngFor="let rec of getActivityRecommendations()" class="recommendation-card">
+                      <div class="card-header">
+                        <span class="rec-emoji">🎫</span>
+                        <div class="rec-title-section">
+                          <h4>{{ rec.title }}</h4>
+                          <span class="context-badge">{{ rec.context }}</span>
+                        </div>
+                      </div>
+                      <p class="rec-description">{{ rec.description }}</p>
+                      <div class="rec-meta">
+                        <span *ngIf="rec.rating" class="rating">⭐ {{ rec.rating }}/5</span>
+                        <span *ngIf="rec.price" class="price">💰 {{ rec.price }}</span>
+                      </div>
+                      <button (click)="window.open('https://www.getyourguide.com', '_blank')" class="rec-cta">
+                        Book Activity →
+                      </button>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="recommendationMode === 'transport'">
+                    <div *ngFor="let rec of getTransportRecommendations()" class="recommendation-card">
+                      <div class="card-header">
+                        <span class="rec-emoji">🚕</span>
+                        <div class="rec-title-section">
+                          <h4>{{ rec.title }}</h4>
+                          <span class="context-badge">{{ rec.context }}</span>
+                        </div>
+                      </div>
+                      <p class="rec-description">{{ rec.description }}</p>
+                      <div class="rec-meta">
+                        <span *ngIf="rec.price" class="price">💰 {{ rec.price }}</span>
+                      </div>
+                      <button (click)="window.open('https://www.abhibus.com', '_blank')" class="rec-cta">
+                        Book Transport →
+                      </button>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngIf="recommendationMode === 'essentials'">
+                    <div *ngFor="let rec of getEssentialRecommendations()" class="recommendation-card">
+                      <div class="card-header">
+                        <span class="rec-emoji">🧳</span>
+                        <div class="rec-title-section">
+                          <h4>{{ rec.title }}</h4>
+                          <span class="context-badge">{{ rec.context }}</span>
+                        </div>
+                      </div>
+                      <p class="rec-description">{{ rec.description }}</p>
+                      <div class="rec-meta">
+                        <span *ngIf="rec.price" class="price">💰 {{ rec.price }}</span>
+                      </div>
+                      <button (click)="window.open('https://www.amazon.in', '_blank')" class="rec-cta">
+                        Buy on Amazon →
+                      </button>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
             </div>
 
             <!-- Action Buttons -->
@@ -517,6 +655,235 @@ import { ItineraryDayCardComponent } from './itinerary-day-card.component';
     .share-btn:hover {
       background: #e0e0e0;
     }
+
+    /* Recommendations Widget */
+    .recommendations-panel-section {
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .recommendation-filter {
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .filter-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+      background: #f8f8ff;
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .filter-btn .emoji {
+      font-size: 18px;
+    }
+
+    .filter-btn.clear-btn {
+      padding: 10px 12px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      color: #999;
+    }
+
+    .filter-btn.clear-btn:hover {
+      border-color: #ddd;
+      background: #f5f5f5;
+    }
+
+    /* Recommendation Panel */
+    .recommendations-panel {
+      background: linear-gradient(135deg, #fafafa 0%, #f5f7ff 100%);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid #e8ecf1;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .panel-header {
+      margin-bottom: 24px;
+    }
+
+    .panel-header h3 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-header .emoji {
+      font-size: 24px;
+    }
+
+    .context-hint {
+      margin: 0;
+      font-size: 13px;
+      color: #999;
+      line-height: 1.5;
+    }
+
+    /* Recommendation Grid */
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .recommendations-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+    }
+
+    /* Recommendation Card */
+    .recommendation-card {
+      background: white;
+      border-radius: 10px;
+      padding: 16px;
+      border: 1px solid #e8ecf1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .recommendation-card:hover {
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.15);
+      border-color: #667eea;
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .rec-emoji {
+      font-size: 24px;
+      min-width: 30px;
+    }
+
+    .rec-title-section {
+      flex: 1;
+    }
+
+    .rec-title-section h4 {
+      margin: 0 0 6px 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+      line-height: 1.3;
+    }
+
+    .context-badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 4px 8px;
+      background: #e8ecf1;
+      color: #667eea;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .rec-description {
+      margin: 0;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .rec-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      flex-wrap: wrap;
+    }
+
+    .rating {
+      color: #f39c12;
+      font-weight: 500;
+    }
+
+    .price {
+      color: #27ae60;
+      font-weight: 500;
+    }
+
+    .rec-cta {
+      padding: 10px 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .rec-cta:hover {
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .rec-cta:active {
+      transform: translateY(0);
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   `]
 })
 export class TripPlannerComponent implements OnInit, OnDestroy {
@@ -531,6 +898,13 @@ export class TripPlannerComponent implements OnInit, OnDestroy {
     accommodation: '',
     travelType: ''
   };
+
+  // Recommendation widget state (Phase 1: Smart Recommendations)
+  recommendationMode: 'none' | 'hotels' | 'activities' | 'transport' | 'essentials' = 'none';
+  activeRecommendationDay: number | null = null;
+
+  // Make window accessible in template
+  window = window;
 
   destinations: any[] = [];
   availableDurations: number[] = [];
@@ -623,7 +997,37 @@ export class TripPlannerComponent implements OnInit, OnDestroy {
   resetPlan(): void {
     this.currentPlan = null;
     this.selectedDays = null;
+    this.recommendationMode = 'none'; // Clear recommendations when resetting
     this.updateQueryParams();
+  }
+
+  // Smart Recommendations Widget Methods
+  onRecommendationModeChange(mode: 'none' | 'hotels' | 'activities' | 'transport' | 'essentials'): void {
+    this.recommendationMode = mode;
+    // Scroll to recommendations panel if enabled
+    if (mode !== 'none') {
+      setTimeout(() => {
+        const panel = document.querySelector('.recommendations-panel-section');
+        if (panel) {
+          panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 100);
+    }
+  }
+
+  onRecommendationCtaClick(ctaType: 'hotel' | 'activity' | 'transport' | 'essential', dayNumber?: number): void {
+    // Store active recommendation day for context
+    if (dayNumber) {
+      this.activeRecommendationDay = dayNumber;
+    }
+    // Switch to appropriate recommendation mode
+    const modeMap: Record<string, any> = {
+      'hotel': 'hotels',
+      'activity': 'activities',
+      'transport': 'transport',
+      'essential': 'essentials'
+    };
+    this.onRecommendationModeChange(modeMap[ctaType]);
   }
 
   sharePlan(): void {
@@ -657,6 +1061,105 @@ export class TripPlannerComponent implements OnInit, OnDestroy {
       queryParams: Object.keys(queryParams).length ? queryParams : null,
       queryParamsHandling: 'merge'
     });
+  }
+
+  // Recommendation Data Methods (Phase 1 - Static Data)
+  getHotelRecommendations(): any[] {
+    return [
+      {
+        title: 'Taj View Hotel',
+        description: 'Luxury 5-star hotel with rooftop views',
+        context: 'Near Taj Mahal',
+        rating: 4.8,
+        price: '₹8,999/night'
+      },
+      {
+        title: 'Budget Stays',
+        description: 'Affordable 3-star hotel, great value',
+        context: 'City Center',
+        rating: 4.2,
+        price: '₹2,499/night'
+      },
+      {
+        title: 'Heritage Palace',
+        description: 'Boutique heritage property with charm',
+        context: 'Old City',
+        rating: 4.6,
+        price: '₹5,999/night'
+      }
+    ];
+  }
+
+  getActivityRecommendations(): any[] {
+    return [
+      {
+        title: 'Taj Mahal Guided Tour',
+        description: 'Expert guide, skip-the-line access, 4-hour tour',
+        context: 'Best for Day 1',
+        rating: 4.9,
+        price: '₹1,299/person'
+      },
+      {
+        title: 'Agra Fort Exploration',
+        description: 'Self-guided or audio tour through historic fort',
+        context: 'Day 2 Morning',
+        rating: 4.5,
+        price: '₹799/person'
+      },
+      {
+        title: 'Sunrise Photography Tour',
+        description: 'Capture stunning sunrise photos at Taj Mahal',
+        context: 'Ideal for Day 1',
+        rating: 4.7,
+        price: '₹2,499/person'
+      }
+    ];
+  }
+
+  getTransportRecommendations(): any[] {
+    return [
+      {
+        title: 'Delhi to Destination AC Bus',
+        description: '4-hour comfortable journey with WiFi',
+        context: 'For Day 1 Arrival',
+        price: '₹599/person'
+      },
+      {
+        title: 'Taxi Service (Full Day)',
+        description: 'Dedicated driver, avoid hassle of local transport',
+        context: 'Best for Day 2-3',
+        price: '₹2,999/day'
+      },
+      {
+        title: 'Train Booking (Shatabdi)',
+        description: 'Fast rail service, meals included',
+        context: 'Return Journey',
+        price: '₹899/person'
+      }
+    ];
+  }
+
+  getEssentialRecommendations(): any[] {
+    return [
+      {
+        title: 'Travel First Aid Kit',
+        description: 'Essential medicines and first aid supplies',
+        context: 'Highly Recommended',
+        price: '₹499'
+      },
+      {
+        title: 'Travel Insurance',
+        description: 'Full coverage for 3-5 day trips',
+        context: 'For Peace of Mind',
+        price: '₹299/person'
+      },
+      {
+        title: 'Portable Phone Charger',
+        description: '20000mAh, fast charging, compact',
+        context: 'Must-Have',
+        price: '₹899'
+      }
+    ];
   }
 
   ngOnDestroy(): void {

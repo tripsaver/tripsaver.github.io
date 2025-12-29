@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItineraryDay } from '../../core/models/itinerary.model';
 
@@ -47,6 +47,7 @@ import { ItineraryDay } from '../../core/models/itinerary.model';
               [href]="cta.link || '#'"
               target="_blank"
               rel="noopener"
+              (click)="onCtaClick(cta.type)"
               class="cta-button"
               [class.cta-hotel]="cta.type === 'hotel'"
               [class.cta-activity]="cta.type === 'activity'"
@@ -280,9 +281,15 @@ import { ItineraryDay } from '../../core/models/itinerary.model';
 })
 export class ItineraryDayCardComponent {
   @Input() day!: ItineraryDay;
+  @Output() ctaClick = new EventEmitter<'hotel' | 'activity' | 'essential' | 'transport' | 'food'>();
+
   isExpanded = false;
 
   toggleExpanded(): void {
     this.isExpanded = !this.isExpanded;
+  }
+
+  onCtaClick(ctaType: 'hotel' | 'activity' | 'essential' | 'transport' | 'food'): void {
+    this.ctaClick.emit(ctaType);
   }
 }
