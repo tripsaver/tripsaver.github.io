@@ -674,15 +674,6 @@ $text-muted: #6b7280;
   }
 }
 
-    border-radius: 4px;
-
-    &:hover {
-      background: white;
-      color: $text-main;
-    }
-  }
-}
-
 /* ========== ITINERARY DAYS IN DRAWER ========== */
 .drawer-content {
   overflow-y: auto;
