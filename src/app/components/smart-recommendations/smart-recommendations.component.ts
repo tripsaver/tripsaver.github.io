@@ -30,11 +30,11 @@ export class SmartRecommendationsComponent implements OnInit, AfterViewInit {
   private trustConfigService = inject(TrustConfigService);
   private itineraryService = inject(ItineraryService);
   
-  // Itinerary state
-  itineraryPanelOpen = false;
+  // Itinerary state (inline expansion)
+  expandedDestinationId: string | null = null;
   activeItinerary: ItineraryPlan | null = null;
-  activeDestinationId: string | null = null;
   itineraryLoading = false;
+  selectedDays: number | null = null;
   
   // Trust config
   trustBadge = 'Powered by trusted travel partners';
@@ -368,31 +368,16 @@ export class SmartRecommendationsComponent implements OnInit, AfterViewInit {
       // Run UI updates in Angular zone to ensure change detection
       this.ngZone.run(() => {
         if (result.success && result.recommendations.length > 0) {
-          // ✅ SAFETY CHECK: Filter out any destination with 0 interest match
-          const validRecommendations = result.recommendations.filter(rec => {
-            const interestMatch = this.calculateInterestMatchScore(rec.destination);
-            if (interestMatch === 0) {
-              console.warn(`🚫 SAFETY: Filtering ${rec.destination.state} - Interest Match = 0`);
-              return false;
-            }
-            return true;
-          });
-
-          if (validRecommendations.length > 0) {
-            this.recommendations = validRecommendations.slice(0, 6); // Top 6
-            this.uiState.hasResults = true;
-            console.log('✅ [LOADER] Showing', this.recommendations.length, 'recommendations');
-            console.log('✅ [LOADER] Recommendation cards should now be visible on page');
-            console.log('✅ [LOADER] Cards ready for user interaction (click to expand)');
-          } else {
-            // All recommendations filtered out
-            console.log('⚠️ [LOADER] All recommendations filtered (interest match = 0)');
-            this.recommendations = [];
-            this.uiState.hasResults = true;
-          }
+          // ✅ ALWAYS SHOW TOP DESTINATIONS - Never filter out, always show matches
+          // Even low-match destinations (55/100+) are valuable as fallbacks
+          this.recommendations = result.recommendations.slice(0, 6); // Top 6
+          this.uiState.hasResults = true;
+          console.log('✅ [LOADER] Showing', this.recommendations.length, 'recommendations');
+          console.log('✅ [LOADER] Recommendation cards should now be visible on page');
+          console.log('✅ [LOADER] Cards ready for user interaction (click to expand)');
         } else {
-          // Engine returned empty results
-          console.log('⚠️ [LOADER] No recommendations found');
+          // Engine returned empty results - fallback to showing all available destinations
+          console.log('⚠️ [LOADER] No recommendations found - showing all available destinations');
           this.recommendations = [];
           this.uiState.hasResults = true;
         }
@@ -554,29 +539,32 @@ export class SmartRecommendationsComponent implements OnInit, AfterViewInit {
     this.mobileMenuOpen = false;
   }
 
-  // 📋 Open itinerary panel for destination
+  // 📋 Open itinerary inline (expand card and show itinerary below)
   openItinerary(rec: EnhancedRecommendation): void {
     const destId = (rec.destination as any)._id || rec.destinationId;
     const destName = rec.destination.state;
-    const defaultDays = 3; // Default to 3 days
     
-    // If already open for this destination, just close
-    if (this.activeDestinationId === destId && this.itineraryPanelOpen) {
-      this.itineraryPanelOpen = false;
+    // If already open for this destination, close it
+    if (this.expandedDestinationId === destId) {
+      this.expandedDestinationId = null;
+      this.activeItinerary = null;
+      this.selectedDays = null;
       return;
     }
 
-    // Load itinerary for this destination
+    // Close any previously expanded destination
+    this.expandedDestinationId = destId;
+    this.selectedDays = 3; // Default to 3 days
     this.itineraryLoading = true;
-    this.activeDestinationId = destId;
+    this.activeItinerary = null;
     
-    this.itineraryService.generatePlan(destName, defaultDays, {
+    // Load itinerary for this destination
+    this.itineraryService.generatePlan(destName, this.selectedDays, {
       travelType: this.preferences.categories as any,
       pace: 'moderate'
     }).subscribe({
       next: (itinerary: any) => {
         this.activeItinerary = itinerary;
-        this.itineraryPanelOpen = true;
         this.itineraryLoading = false;
         this.cdr.markForCheck();
       },
@@ -588,25 +576,55 @@ export class SmartRecommendationsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // 📋 Close itinerary panel
-  closeItinerary(): void {
-    this.itineraryPanelOpen = false;
-    this.activeItinerary = null;
-    this.activeDestinationId = null;
+  // 📋 Check if destination is expanded
+  isDestinationExpanded(rec: EnhancedRecommendation): boolean {
+    const destId = (rec.destination as any)._id || rec.destinationId;
+    return this.expandedDestinationId === destId;
   }
 
-  // 📋 Get button label based on panel state
+  // 📋 Close expanded destination
+  closeItinerary(): void {
+    this.expandedDestinationId = null;
+    this.activeItinerary = null;
+    this.selectedDays = null;
+  }
+
+  // 📋 Check if any destination is active
+  isActiveDestination(rec: EnhancedRecommendation): boolean {
+    const destId = (rec.destination as any)._id || rec.destinationId;
+    return this.expandedDestinationId === destId;
+  }
+
+  // 📋 Get button label based on expansion state
   getPlanTripButtonLabel(rec: EnhancedRecommendation): string {
     const destId = (rec.destination as any)._id || rec.destinationId;
-    if (this.activeDestinationId === destId && this.itineraryPanelOpen) {
+    if (this.expandedDestinationId === destId) {
       return 'Hide Itinerary';
     }
     return 'Plan Trip';
   }
 
-  // 📋 Check if card is active (has open itinerary)
-  isActiveDestination(rec: EnhancedRecommendation): boolean {
-    const destId = (rec.destination as any)._id || rec.destinationId;
-    return this.activeDestinationId === destId && this.itineraryPanelOpen;
+  // 🏨 Open hotel booking (from itinerary CTA)
+  openHotelBooking(): void {
+    if (this.selectedDestination) {
+      this.openBookingModal(this.selectedDestination);
+    }
+  }
+
+  // 🚌 Open bus booking (from itinerary CTA)
+  openBusBooking(): void {
+    // TODO: Implement bus booking redirect to affiliate
+    console.log('Opening bus booking for:', this.activeDestination);
+  }
+
+  // 🧳 Open essentials shopping (from itinerary CTA)
+  openEssentialsShopping(): void {
+    // TODO: Implement essentials shopping redirect to affiliate
+    console.log('Opening essentials shopping');
+  }
+
+  // Get current active destination for display
+  get activeDestination(): string {
+    return this.activeItinerary?.destination || '';
   }
 }

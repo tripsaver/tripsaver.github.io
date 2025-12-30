@@ -103,34 +103,20 @@
       [resultCount]="recommendations.length">
     </app-result-summary>
 
-    <!-- RECOMMENDATIONS + ITINERARY PANEL LAYOUT -->
-    <div class="recommendations-layout">
-      <!-- RECOMMENDATIONS CARDS (Left side or full width) -->
-      <div class="cards-section" [class.with-panel]="itineraryPanelOpen">
-        <div class="cards-container">
-          <app-destination-card-compact
-            *ngFor="let rec of (recommendations | slice:0:6)"
-            [recommendation]="rec"
-            [class.active]="isActiveDestination(rec)"
-            (bookingClicked)="openBookingModal($event)"
-            (planTripClicked)="openItinerary($event)">
-          </app-destination-card-compact>
-        </div>
-      </div>
+    <!-- RECOMMENDATIONS CARDS (Always full width) -->
+    <div class="cards-container">
+      <!-- Each card with inline itinerary expansion -->
+      <div *ngFor="let rec of (recommendations | slice:0:6)" class="card-with-itinerary">
+        <!-- Destination Card -->
+        <app-destination-card-compact
+          [recommendation]="rec"
+          [class.active]="isActiveDestination(rec)"
+          (bookingClicked)="openBookingModal($event)"
+          (planTripClicked)="openItinerary($event)">
+        </app-destination-card-compact>
 
-      <!-- ITINERARY SIDE PANEL (Desktop) / BOTTOM SHEET (Mobile) -->
-      <div class="itinerary-panel" 
-        [class.open]="itineraryPanelOpen"
-        [class.loading]="itineraryLoading">
-        
-        <!-- Panel Header -->
-        <div class="panel-header" *ngIf="itineraryPanelOpen">
-          <h3>📋 Your Itinerary</h3>
-          <button class="close-btn" (click)="closeItinerary()">✕</button>
-        </div>
-
-        <!-- Panel Content -->
-        <div class="panel-content" *ngIf="itineraryPanelOpen">
+        <!-- Inline Itinerary Expansion -->
+        <div *ngIf="isDestinationExpanded(rec)" class="itinerary-expansion">
           <!-- Loading State -->
           <div *ngIf="itineraryLoading" class="itinerary-loading">
             <div class="spinner"></div>
@@ -139,26 +125,30 @@
 
           <!-- Itinerary Content -->
           <div *ngIf="!itineraryLoading && activeItinerary" class="itinerary-content">
+            <div class="itinerary-header">
+              <h4>📋 {{activeItinerary.destination}} - {{selectedDays}}-Day Itinerary</h4>
+              <button class="close-btn" (click)="closeItinerary()">✕</button>
+            </div>
+
             <div class="itinerary-days">
               <div *ngFor="let day of activeItinerary.itinerary" class="day-item">
                 <div class="day-header">
-                  <span class="day-number">Day {{ day.day }}</span>
-                  <span class="day-title">{{ day.title }}</span>
+                  <span class="day-number">Day {{day.day}}</span>
+                  <span class="day-title">{{day.title}}</span>
                 </div>
-                <p class="day-description">{{ day.description }}</p>
-                <div *ngIf="day.activities && day.activities.length > 0" class="activities">
-                  <div *ngFor="let activity of day.activities" class="activity">
-                    <span class="activity-name">{{ activity }}</span>
-                  </div>
+                <div class="day-content">
+                  <p class="period"><strong>Morning:</strong> {{day.morning}}</p>
+                  <p class="period"><strong>Afternoon:</strong> {{day.afternoon}}</p>
+                  <p class="period"><strong>Evening:</strong> {{day.evening}}</p>
                 </div>
               </div>
             </div>
 
             <!-- CTA Buttons -->
-            <div class="panel-actions">
-              <button class="action-btn hotels">🏨 Book Hotels</button>
-              <button class="action-btn bus">🚌 Book Bus</button>
-              <button class="action-btn essentials">🧳 Buy Essentials</button>
+            <div class="itinerary-ctas">
+              <button class="cta-btn hotels" (click)="openHotelBooking()">🏨 Book Hotels</button>
+              <button class="cta-btn bus" (click)="openBusBooking()">🚌 Book Bus</button>
+              <button class="cta-btn essentials" (click)="openEssentialsShopping()">🧳 Buy Essentials</button>
             </div>
           </div>
         </div>
@@ -172,32 +162,18 @@
     <p>Finding perfect destinations for you...</p>
   </div>
 
-  <!-- NO RESULTS STATE (with smart fallback guidance) (Outside .container) -->
-  <div *ngIf="hasNoResults()" class="no-results-state">
-    <div class="no-results-content">
-      <h3>😊 Let's refine your search</h3>
-      <p class="no-results-message">{{ getNoResultsMessage() }}</p>
-      
-      <div class="suggestions">
-        <p class="suggestions-title">💡 Try these adjustments:</p>
-        <ul>
-          <li *ngFor="let suggestion of getSuggestionsForNoResults()">{{ suggestion }}</li>
-        </ul>
-      </div>
-
-      <button (click)="getRecommendations()" class="retry-button">
-        🔍 Search Again
-      </button>
-    </div>
-  </div>
-
   <!-- ERROR STATE (Outside .container) -->
   <div *ngIf="uiState.error" class="error-message">
     ⚠️ {{ uiState.error }}
   </div>
 
   <!-- EMPTY STATE (Outside .container) -->
-  <div *ngIf="!uiState.loading && recommendations.length === 0 && !uiState.error && !hasNoResults()" class="empty-state">
+  <div *ngIf="!uiState.loading && recommendations.length === 0 && !uiState.error && uiState.hasResults" class="helper-state">
+    <p>No destinations found. Try adjusting your preferences and search again.</p>
+  </div>
+
+  <!-- INITIAL EMPTY STATE (Before any search) (Outside .container) -->
+  <div *ngIf="!uiState.loading && recommendations.length === 0 && !uiState.error && !uiState.hasResults" class="empty-state">
     <p>Select your preferences above and click "Get Recommendations" to discover personalized destinations</p>
   </div>
 </section>
