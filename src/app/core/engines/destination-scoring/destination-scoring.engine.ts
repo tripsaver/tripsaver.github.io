@@ -98,12 +98,15 @@ export class DestinationScoringEngine extends BaseEngine<DestinationScoringInput
     
     // � SOFT MATCHING: Score ALL destinations, let scoring determine relevance
     const userCategories = (input.userPreferences.categories || []).map(cat => cat.toLowerCase());
+    const hasInterests = (input.userPreferences.categories && input.userPreferences.categories.length > 0);
     
     for (const destination of destinations) {
       const { score, displayScore, reasons, badges, interestMatchScore, interestMatchMessage } = this.scoreDestination(destination, input.userPreferences);
       
-      // ✅ SOFT FILTER: Only show destinations scoring >= 50/100 or having strong experience match
-      if (displayScore >= 50 || interestMatchMessage === 'primary') {
+      // ✅ SOFT FILTER: 
+      // - If user provided interests: only show destinations >= 50 or 'primary' match
+      // - If no interests provided: show all destinations (will be sorted by score)
+      if (!hasInterests || displayScore >= 50 || interestMatchMessage === 'primary') {
         scored.push({
           destinationId: destination.id,
           destination,

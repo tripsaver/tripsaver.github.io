@@ -630,6 +630,7 @@ export class SmartRecommendationsComponent implements OnInit, AfterViewInit {
   // 📋 Handle day selection change - reload itinerary with new duration
   onDaySelected(days: number): void {
     console.log(`\n📅 [DAY CHANGE] ================================`);
+    console.log(`📅 [Day Selection] Button clicked for ${days} days`);
     console.log(`📅 [Day Selection] User selected: ${days} days`);
     
     if (!this.drawerDestination) {
