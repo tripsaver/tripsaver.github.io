@@ -386,7 +386,7 @@ export class SmartRecommendationsComponent implements OnInit, AfterViewInit {
             const key = rec.destination.name.toLowerCase();
             if (!uniqueDestinations.has(key)) {
               uniqueDestinations.set(key, rec);
-              console.log(`   ✅ Keeping: ${rec.destination.name} (score: ${(rec.matchScore * 100).toFixed(1)}%)`);
+              console.log(`   ✅ Keeping: ${rec.destination.name} (score: ${rec.overallRecommendationScore}%)`);
             } else {
               removedDuplicates.push(rec.destination.name);
               console.log(`   ❌ Removing duplicate: ${rec.destination.name}`);
