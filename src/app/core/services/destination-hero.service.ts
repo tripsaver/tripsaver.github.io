@@ -28,7 +28,6 @@ export class DestinationHeroService {
     
     // Cities (more specific)
     'Bangalore': 'https://images.unsplash.com/photo-1570155436410-ce5e5c9bd600?w=800&h=400&fit=crop', // Modern city
-    'Goa': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=400&fit=crop', // Beach
     'Manali': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop', // Mountains
     'Jaipur': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=400&fit=crop', // Pink City
     'Agra': 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=400&fit=crop', // Heritage/Taj
@@ -36,7 +35,6 @@ export class DestinationHeroService {
     'Udaipur': 'https://images.unsplash.com/photo-1578616172058-cb4663fc4c0f?w=800&h=400&fit=crop', // Palace/Lake
     'Kochi': 'https://images.unsplash.com/photo-1537225228614-b4e87ad64771?w=800&h=400&fit=crop', // Backwaters
     'Mumbai': 'https://images.unsplash.com/photo-1570155436410-ce5e5c9bd600?w=800&h=400&fit=crop', // Gateway
-    'Delhi': 'https://images.unsplash.com/photo-1587474260584-136574528ee0?w=800&h=400&fit=crop', // City
     'Coorg': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop', // Coffee plantations/hills
     'Hampi': 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=400&fit=crop', // Ruins
     'Gokarna': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=400&fit=crop', // Beach

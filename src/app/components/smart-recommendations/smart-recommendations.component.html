@@ -193,7 +193,7 @@
       <div *ngIf="!itineraryLoading && drawerMode === 'explore'" class="drawer-explore-state">
         <div class="explore-state-content">
           <p class="explore-icon">🗺️</p>
-          <p class="explore-message">Explore {{drawerDestination?.destination.state}}</p>
+          <p class="explore-message">Explore {{drawerDestination?.destination?.state}}</p>
           <p class="explore-hint">This is a region. Select a specific destination to view detailed itinerary</p>
           <button class="explore-cta" (click)="closeItinerary()">← Back to Results</button>
         </div>
